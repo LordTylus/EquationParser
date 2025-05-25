@@ -1,6 +1,8 @@
 package io.github.lordtylus.jep.functions;
 
 import io.github.lordtylus.jep.Equation;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.function.Function;
@@ -9,7 +11,8 @@ import java.util.function.Function;
  * This class contains a set of default functions to be used for solving {@link Equation eqations}.
  * All the functions provided convert the number object to a double first before performing the calculations.
  */
-public class StandardFunctions {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class StandardFunctions {
 
     /**
      * No function, returns the same number

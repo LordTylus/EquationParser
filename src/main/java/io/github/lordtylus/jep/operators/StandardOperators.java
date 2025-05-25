@@ -1,6 +1,8 @@
 package io.github.lordtylus.jep.operators;
 
 import io.github.lordtylus.jep.Equation;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -9,7 +11,8 @@ import java.util.function.BiFunction;
  * This class contains a set of default operators to be used for solving {@link Equation eqations}.
  * All the operators provided convert the number object to a double first before performing the calculations.
  */
-public class StandardOperators {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class StandardOperators {
 
     /**
      * Adds number B to A (A+B)
