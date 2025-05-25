@@ -1,10 +1,11 @@
 plugins {
     id 'java-library'
     id 'jacoco'
+    id 'maven-publish'
 }
 
 group 'io.github.lordtylus.equation'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -47,4 +48,22 @@ jacocoTestReport {
 test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/LordTylus/JavaEquationParser")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
