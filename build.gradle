@@ -10,6 +10,13 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    create("demo") {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
 dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
