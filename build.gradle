@@ -30,6 +30,12 @@ java {
     withJavadocJar()
 }
 
+jacocoTestReport {
+    reports {
+        csv.required.set(true)
+    }
+}
+
 test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
