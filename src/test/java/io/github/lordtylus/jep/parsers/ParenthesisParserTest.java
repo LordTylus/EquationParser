@@ -36,6 +36,8 @@ class ParenthesisParserTest {
             "ceil(1+2);ceil(1+2)",
             "sqrt(1+2);sqrt(1+2)",
             "cbrt(1+2);cbrt(1+2)",
+            "rad(1+2);rad(1+2)",
+            "deg(1+2);deg(1+2)",
             "((1+2)*(2+3));((1+2)*(2+3))",
             "(([hallo]+2)*(2+[Hal lo]));(([hallo]+2)*(2+[Hal lo]))"
     }, delimiter = ';')

@@ -123,11 +123,24 @@ public class StandardFunctions {
      * @see Math#cbrt(double)
      */
     public static final MathFunction CBRT = new MathFunction("cbrt", fromDouble(Math::cbrt));
+    /**
+     * Converts the passed number to radians.
+     *
+     * @see Math#toRadians(double)
+     */
+    public static final MathFunction RAD = new MathFunction("rad", fromDouble(Math::toRadians));
+    /**
+     * Converts the passed number to degrees.
+     *
+     * @see Math#toDegrees(double)
+     */
+    public static final MathFunction DEG = new MathFunction("deg", fromDouble(Math::toDegrees));
 
     private static final List<MathFunction> ALL = List.of(
             NOP, ABS, SIN, ASIN, SINH, COS, ACOS,
             COSH, TAN, ATAN, TANH, EXP, LOG,
-            LOG10, FLOOR, ROUND, CEIL, SQRT, CBRT
+            LOG10, FLOOR, ROUND, CEIL, SQRT, CBRT,
+            RAD, DEG
     );
 
     /**

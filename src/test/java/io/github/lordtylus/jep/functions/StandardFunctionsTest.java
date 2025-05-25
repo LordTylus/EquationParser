@@ -329,6 +329,38 @@ class StandardFunctionsTest {
     }
 
     @Test
+    void evaluatesRad() {
+
+        /* Given */
+
+        MathFunction sut = StandardFunctions.RAD;
+
+        /* When */
+
+        double actual = sut.evaluate(65).doubleValue();
+
+        /* Then */
+
+        assertEquals(1.1344640137963142, actual, 0.0001);
+    }
+
+    @Test
+    void evaluatesDeg() {
+
+        /* Given */
+
+        MathFunction sut = StandardFunctions.DEG;
+
+        /* When */
+
+        double actual = sut.evaluate(1.1344640137963142).doubleValue();
+
+        /* Then */
+
+        assertEquals(65, actual, 0.0001);
+    }
+
+    @Test
     void allContainsCorrectFunctions() {
 
         /* Given / When */
@@ -356,7 +388,9 @@ class StandardFunctionsTest {
                 StandardFunctions.ROUND,
                 StandardFunctions.CEIL,
                 StandardFunctions.SQRT,
-                StandardFunctions.CBRT
+                StandardFunctions.CBRT,
+                StandardFunctions.RAD,
+                StandardFunctions.DEG
         );
 
         assertEquals(expected, actual);

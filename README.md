@@ -59,15 +59,15 @@ supported:
 |----------|-------------|-------------------------------------------------------------------|
 | NOP      | ()          | No operator, returns same number                                  |
 | ABS      | abs()       | Converts number to positive                                       |
-| SIN      | sin()       | Calculates Sine of number in radiant                              |
-| ASIN     | asin()      | Calculates Arc Sine of number in radiant                          |
-| SINH     | sinh()      | Calculates Hyperbolic Sine of number in radiant                   |
-| COS      | cos()       | Calculates Cosine of number in radiant                            |
-| ACOS     | acos()      | Calculates Arc Cosine of number in radiant                        |
-| COSH     | cosh()      | Calculates Hyperbolic Cosine of number in radiant                 |
-| TAN      | tan()       | Calculates Tangents of number in radiant                          |
-| ATAN     | atan()      | Calculates Arc Tangents of number in radiant                      |
-| TANH     | tanh()      | Calculates Hyperbolic Tangents of number in radiant               |
+| SIN      | sin()       | Calculates Sine of number in radians                              |
+| ASIN     | asin()      | Calculates Arc Sine of number in radians                          |
+| SINH     | sinh()      | Calculates Hyperbolic Sine of number in radians                   |
+| COS      | cos()       | Calculates Cosine of number in radians                            |
+| ACOS     | acos()      | Calculates Arc Cosine of number in radians                        |
+| COSH     | cosh()      | Calculates Hyperbolic Cosine of number in radians                 |
+| TAN      | tan()       | Calculates Tangents of number in radians                          |
+| ATAN     | atan()      | Calculates Arc Tangents of number in radians                      |
+| TANH     | tanh()      | Calculates Hyperbolic Tangents of number in radians               |
 | EXP      | exp()       | Calculates Euler's number raised to the power of the given number |
 | LOG      | log(), ln() | Calculates the natural logarithm of the given number              |
 | LOG10    | log10()     | Calculates the decimal logarithm of the given number              |
@@ -76,6 +76,8 @@ supported:
 | CEIL     | ceil()      | Rounds the number up to the next whole integer                    |
 | SQRT     | sqrt()      | Calculates the square root of the given number                    |
 | CBRT     | cbrt()      | Calculates the cube root of the given number                      |
+| RAD      | rad()       | Converts the number in degrees to radians                         |
+| DEG      | deg()       | Converts the number in radians to degrees                         |
 
 Additional roots like fourth root can be calculated by passing a fractional exponent `x^(1/4)`.
 
