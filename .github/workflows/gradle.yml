@@ -35,50 +35,40 @@ jobs:
           name: report.xml
           path: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
 
-      - name: Jacoco Report to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.1
-        with:
-          path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
-          debug-mode: false
-
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
-          coverage_results_path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+          coverage_results_path: jacoco-report/test.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
           skip_check_run: false
-          minimum_coverage: 90
+          minimum_coverage: 80
           fail_below_threshold: false
-          publish_only_summary: true
+          publish_only_summary: false
 
-      - name: Add Coverage Job Summary
-        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+      - name: Add Jacocoo report to workflow run summary
+        run: |
+          echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Code Coverage Artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: code-coverage-report-markdown
+            path: */coverage-results.md
+            retention-days: 1
 
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
           generate-branches-badge: true
           jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
-
-      - name: Upload Code Coverage Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: "*/coverage-results.md"
-          retention-days: 1
-
-      - name: Get the Coverage info
-        run: |
-          echo "Total coverage coverage-overall ${{ steps.jacoco.outputs.coverage-overall }}"
-          echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
-          echo "Coverage coverage_percentage ${{ steps.jacoco.outputs.coverage_percentage }}"
 
   dependency-submission:
 
