@@ -85,7 +85,22 @@ Negative numbers can be passed when put in parentheses `2*(-3)`
 
 ## Installation
 
-to be done
+Maven
+
+```xml
+
+<dependency>
+    <groupId>io.github.lordtylus.equation</groupId>
+    <artifactId>equation-parser</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+Gradle
+
+```groovy
+implementation 'io.github.lordtylus.equation:equation-parser:1.0'
+```
 
 ## Demo
 
