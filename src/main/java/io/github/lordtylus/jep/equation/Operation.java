@@ -4,10 +4,35 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.Result;
 import io.github.lordtylus.jep.Storage;
 import io.github.lordtylus.jep.operators.Operator;
+import io.github.lordtylus.jep.parsers.OperationParser;
 import lombok.NonNull;
 
 import java.util.Locale;
 
+/**
+ * This part of an equation represents an operation consisting of an operator and an {@link Equation} on its left and right.
+ * <p>
+ * {@link Equation Equations} are composites and operations create a binary tree.
+ * <p>
+ * In the simples example where only an operator and two constants are involved something like 3+4 would result in a tree like this:
+ * <pre>
+ *       +
+ *      / \
+ *     3   4
+ * </pre>
+ * However, an operation can hold any other equation and therefore more levels to the tree are possible.
+ * 1+2+3+4 would therefore translate to the following binary tree:
+ * <pre>
+ *       +
+ *      / \
+ *     +   4
+ *    / \
+ *   +   3
+ *  / \
+ * 1   2
+ * </pre>
+ * You can find more information in the {@link OperationParser}
+ */
 public record Operation(
         @NonNull Equation left,
         @NonNull Equation right,

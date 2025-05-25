@@ -14,7 +14,8 @@ import java.util.function.Function;
 /**
  * This object represents a parsed equation string. Such as 2*(2+3)^[x]
  * <p>
- * The parsed equation will represent a binary tree and can be solved using the {@link #evaluate(Storage)} method.
+ * The parsed equation will (usually) represent a binary tree and can be solved using the {@link #evaluate(Storage)} method.
+ * However, the implementation of this interface could also have more than two children, if a custom implementation doing so is provided.
  * <p>
  * The tree for the example equation will look like this:
  * <pre>

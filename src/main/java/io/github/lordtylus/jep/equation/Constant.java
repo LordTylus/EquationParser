@@ -3,6 +3,7 @@ package io.github.lordtylus.jep.equation;
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.Result;
 import io.github.lordtylus.jep.Storage;
+import io.github.lordtylus.jep.parsers.ConstantParser;
 import lombok.NonNull;
 
 import java.text.DecimalFormat;
@@ -10,6 +11,11 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/**
+ * This part of an {@link Equation} represents a constant double value.
+ * <p>
+ * The constant value is parsed using {@link ConstantParser}
+ */
 public record Constant(
         double value
 ) implements Equation {
