@@ -1,10 +1,10 @@
-# JavaEquationParser
+# Equation Parser for Java
 
-[![Build](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml/badge.svg)](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml)
-[![Coverage](.github/badges/jacoco.svg)](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml)
-[![Branches](.github/badges/branches.svg)](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml)
-[![License](https://img.shields.io/github/license/LordTylus/JavaEquationParser)](https://github.com/LordTylus/JavaEquationParser/blob/main/LICENSE)
-![GitHub top language](https://img.shields.io/github/languages/top/LordTylus/JavaEquationParser)
+[![Build](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml/badge.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
+[![Branches](.github/badges/branches.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
+[![License](https://img.shields.io/github/license/LordTylus/EquationParser)](https://github.com/LordTylus/EquationParser/blob/main/LICENSE)
+![GitHub top language](https://img.shields.io/github/languages/top/LordTylus/EquationParser)
 
 ## About
 
