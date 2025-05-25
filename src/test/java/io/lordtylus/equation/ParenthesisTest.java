@@ -132,7 +132,7 @@ class ParenthesisTest {
 
         /* Then */
 
-        long value = actual.asInt();
+        long value = actual.asLong();
 
         assertEquals(8, value);
     }

@@ -138,7 +138,7 @@ class OperationTest {
 
         /* Then */
 
-        long value = actual.asInt();
+        long value = actual.asLong();
 
         assertEquals(234, value);
     }

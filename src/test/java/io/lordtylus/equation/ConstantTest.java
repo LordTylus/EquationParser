@@ -112,7 +112,7 @@ class ConstantTest {
 
         /* Then */
 
-        long value = actual.asInt();
+        long value = actual.asLong();
 
         assertEquals(123, value);
     }
