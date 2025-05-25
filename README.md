@@ -1,8 +1,8 @@
 # JavaEquationParser
 
 [![Build](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml/badge.svg)](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml)
-![Coverage](.github/badges/jacoco.svg)
-![Branches](.github/badges/branches.svg)
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml)
+[![Branches](.github/badges/branches.svg)](https://github.com/LordTylus/JavaEquationParser/actions/workflows/gradle.yml)
 [![License](https://img.shields.io/github/license/LordTylus/JavaEquationParser)](https://github.com/LordTylus/JavaEquationParser/blob/main/LICENSE)
 ![GitHub top language](https://img.shields.io/github/languages/top/LordTylus/JavaEquationParser)
 
