@@ -29,33 +29,24 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: JaCoCo Code Coverage Report
-        id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v5.0
-        with:
-          coverage_results_path: build/reports/jacoco/test/jacocoTestReport.xml
-          coverage_report_name: Coverage
-          coverage_report_title: JaCoCo
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: true
-          minimum_coverage: 80
-          fail_below_threshold: false
-          publish_only_summary: false
-
-      - name: Add Jacocoo report to workflow run summary
-        run: |
-          echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
-          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
-          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
-
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
           generate-branches-badge: true
           jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
+
+      - name: Commit and push the badge (if it changed)
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
+          message: 'commit badge'
+          add: '*.svg'
+
+      - name: Upload JaCoCo coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
 
   dependency-submission:
 
