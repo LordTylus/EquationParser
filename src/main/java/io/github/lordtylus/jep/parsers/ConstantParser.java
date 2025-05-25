@@ -22,6 +22,9 @@ import java.util.regex.Pattern;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConstantParser implements EquationParser {
 
+    /**
+     * Singleton immutable instance of the {@link ConstantParser}
+     */
     public static final ConstantParser INSTANCE = new ConstantParser();
 
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");

@@ -17,6 +17,8 @@ public final class CustomRegister extends AbstractEquationParserRegister {
     /**
      * Creates a new Empty {@link EquationParserRegister} that is mutable can be manipulated
      * using {@link #register(EquationParser)} and {@link #unregister(EquationParser)}
+     *
+     * @return new mutable empty {@link CustomRegister} class
      */
     public static CustomRegister empty() {
         return new CustomRegister();
@@ -25,6 +27,8 @@ public final class CustomRegister extends AbstractEquationParserRegister {
     /**
      * Creates a new and mutable {@link EquationParserRegister} which already contains all
      * {@link EquationParser} objects from {@link DefaultRegister#INSTANCE}
+     *
+     * @return new mutable {@link CustomRegister} class with default {@link EquationParser parsers}
      */
     public static CustomRegister withDefaults() {
 

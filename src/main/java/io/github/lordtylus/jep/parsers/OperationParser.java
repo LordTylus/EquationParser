@@ -51,11 +51,19 @@ import java.util.Optional;
  */
 public final class OperationParser implements EquationParser {
 
+    /**
+     * Default instance of the {@link OperationParser} using all {@link StandardOperators}
+     */
     public static final OperationParser DEFAULT = new OperationParser(StandardOperators.all());
 
     private final List<Integer> relevantOperatorOrders;
     private final Map<Integer, OperatorInformation> operatorsMap = new HashMap<>();
 
+    /**
+     * Creates a new Parser instance with the {@link Operator operators} to use for parsing.
+     *
+     * @param relevantOperators operators this parser should recognize.
+     */
     public OperationParser(
             @NonNull List<Operator> relevantOperators) {
 

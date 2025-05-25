@@ -16,6 +16,9 @@ import io.github.lordtylus.jep.parsers.VariableParser;
  */
 public final class DefaultRegister extends AbstractEquationParserRegister {
 
+    /**
+     * Immutable singleton instance of this class
+     */
     public static final DefaultRegister INSTANCE = new DefaultRegister();
 
     private DefaultRegister() {

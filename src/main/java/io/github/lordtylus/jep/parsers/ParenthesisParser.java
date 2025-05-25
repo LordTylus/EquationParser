@@ -26,6 +26,9 @@ import java.util.regex.Pattern;
  */
 public final class ParenthesisParser implements EquationParser {
 
+    /**
+     * Default instance of the {@link ParenthesisParser} using all {@link StandardFunctions}
+     */
     public static final ParenthesisParser DEFAULT = new ParenthesisParser(StandardFunctions.all());
 
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
@@ -33,6 +36,11 @@ public final class ParenthesisParser implements EquationParser {
 
     private final List<MathFunction> relevantFunctions;
 
+    /**
+     * Creates a new Parser instance with the {@link MathFunction functions} to use for parsing.
+     *
+     * @param relevantFunctions functions this parser should recognize.
+     */
     public ParenthesisParser(
             @NonNull List<MathFunction> relevantFunctions) {
 

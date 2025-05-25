@@ -15,6 +15,11 @@ import io.github.lordtylus.jep.Equation;
  */
 public class ParseException extends RuntimeException {
 
+    /**
+     * Creates a new ParseException with the given cause
+     *
+     * @param cause cause of the exception during parsing.
+     */
     public ParseException(Throwable cause) {
         super(cause);
     }

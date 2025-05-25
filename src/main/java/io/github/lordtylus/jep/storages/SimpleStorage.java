@@ -37,6 +37,7 @@ public final class SimpleStorage implements Storage {
     /**
      * Initializes a new Storage with the provided mode and 0.0 as defaultValue.
      *
+     * @param storageMode {@link StorageMode} to be used.
      * @throws NullPointerException If any given argument is null.
      */
     public SimpleStorage(

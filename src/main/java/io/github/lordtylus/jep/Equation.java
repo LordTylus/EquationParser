@@ -60,6 +60,7 @@ public interface Equation {
      * The Locale may be used by implementations for purposes of formatting numbers to the correct decimal points.
      *
      * @param locale the Locale to be used.
+     * @return parsable string pattern of the given equation
      * @throws NullPointerException If any given argument is null.
      */
     String toPattern(

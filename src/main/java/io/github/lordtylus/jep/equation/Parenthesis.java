@@ -40,6 +40,9 @@ public record Parenthesis(
         return function.toPattern() + "(" + inner.toPattern(locale) + ")";
     }
 
+    /**
+     * This record represents the result of the evaluation of the {@link Parenthesis} class.
+     */
     public record ParenthesisResult(
             @NonNull
             MathFunction function,

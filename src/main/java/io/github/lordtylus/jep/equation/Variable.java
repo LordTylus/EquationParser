@@ -32,6 +32,9 @@ public record Variable(
         return "[" + name + "]";
     }
 
+    /**
+     * This record represents the result of the evaluation of the {@link Variable} class.
+     */
     public record VariableResult(
             @NonNull String name,
             Number result) implements Result {

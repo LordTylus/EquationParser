@@ -16,6 +16,14 @@ public enum StorageMode {
      */
     UNKNOWN_MEANS_DEFAULT;
 
+    /**
+     * This method executes the logic on what to do if the {@link SimpleStorage} was not able to find the value to a given variable name.
+     *
+     * @param variableName name of the variable whose value could not be determined.
+     * @param defaultValue default value to use in case of {@link #UNKNOWN_MEANS_DEFAULT}
+     * @return defaultValue if {@link #UNKNOWN_MEANS_DEFAULT} is set.
+     * @throws IllegalArgumentException if {@link #STRICT} mode is set.
+     */
     public Number handleNull(
             @NonNull String variableName,
             @NonNull Number defaultValue) {

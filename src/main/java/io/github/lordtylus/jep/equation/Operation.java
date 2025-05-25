@@ -54,6 +54,9 @@ public record Operation(
         return left.toPattern(locale) + operator.toPattern() + right.toPattern(locale);
     }
 
+    /**
+     * This record represents the result of the evaluation of the {@link Operation} class.
+     */
     public record OperationResult(
             @NonNull
             Operator operator,

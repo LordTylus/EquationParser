@@ -24,6 +24,9 @@ import java.util.regex.Pattern;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VariableParser implements EquationParser {
 
+    /**
+     * Singleton immutable instance of the {@link VariableParser}
+     */
     public static final VariableParser INSTANCE = new VariableParser();
 
     private static final Pattern NAME_PATTERN = Pattern.compile("^\\[(?<name>.+)]$", Pattern.CASE_INSENSITIVE);

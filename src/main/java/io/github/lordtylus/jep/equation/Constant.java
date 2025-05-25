@@ -36,6 +36,9 @@ public record Constant(
         return formatter.format(value);
     }
 
+    /**
+     * This record represents the result of the evaluation of the {@link Constant} class.
+     */
     public record ConstantResult(Number result) implements Result {
 
         @Override

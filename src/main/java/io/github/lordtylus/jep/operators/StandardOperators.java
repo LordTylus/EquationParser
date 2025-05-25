@@ -35,7 +35,7 @@ public class StandardOperators {
     private static final List<Operator> ALL = List.of(ADD, SUB, MULT, DIV, POW);
 
     /**
-     * Returns all standard {@link Operator operators} defined in this class.
+     * @return all standard {@link Operator operators} defined in this class.
      */
     public static List<Operator> all() {
         return ALL;

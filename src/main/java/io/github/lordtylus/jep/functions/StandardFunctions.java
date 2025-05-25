@@ -131,7 +131,7 @@ public class StandardFunctions {
     );
 
     /**
-     * Returns all standard {@link MathFunction functions} defined in this class.
+     * @return all standard {@link MathFunction functions} defined in this class.
      */
     public static List<MathFunction> all() {
         return ALL;

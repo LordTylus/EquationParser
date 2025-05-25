@@ -17,11 +17,15 @@ public interface Result {
 
     /**
      * This value represents the value of the Result as a number
+     *
+     * @return the unaltered number result.
      */
     Number result();
 
     /**
      * The results value as int. If {@link #result()} would return a non-integer value, the number is converted to integer by omitting the decimal places.
+     *
+     * @return the result as int
      */
     default int asInt() {
         return result().intValue();
@@ -29,6 +33,8 @@ public interface Result {
 
     /**
      * The results value as long. If {@link #result()} would return a non-integer value, the number is converted to long by omitting the decimal places.
+     *
+     * @return the result as long
      */
     default long asLong() {
         return result().longValue();
@@ -36,6 +42,8 @@ public interface Result {
 
     /**
      * The results value as float. If {@link #result()} a conversion may lead to loss in precision.
+     *
+     * @return the result as float
      */
     default float asFloat() {
         return result().floatValue();
@@ -44,6 +52,8 @@ public interface Result {
     /**
      * The results value as float. If {@link #result()} a conversion may lead to loss in precision.
      * The default implementation of the {@link Equation Equations} in this framework work with doubles, meaning there shouldn't be any additional downsides using it, unless custom implementations with higher precision are used.
+     *
+     * @return the result as double
      */
     default double asDouble() {
         return result().doubleValue();

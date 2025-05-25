@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AbstractEquationParserRegister implements EquationParserRegister {
+/**
+ * This abstract implementation of EquationParserRegister provides basic functionality
+ * for adding and removing equation parsers for für its implementations.
+ */
+public abstract class AbstractEquationParserRegister implements EquationParserRegister {
 
     private final List<EquationParser> registeredParsers = new ArrayList<>();
     private final List<EquationParser> registeredParsersUnmodifiable = Collections.unmodifiableList(registeredParsers);
@@ -19,15 +23,19 @@ public class AbstractEquationParserRegister implements EquationParserRegister {
 
     /**
      * Registers a new {@link EquationParser} to be used for parsing equation strings.
+     *
+     * @param parser {@link EquationParser} to be registered
      */
-    void register(@NonNull EquationParser parser) {
+    protected void register(@NonNull EquationParser parser) {
         this.registeredParsers.add(parser);
     }
 
     /**
      * Removes a registered {@link EquationParser} so it will no longer be used for parsing.
+     *
+     * @param parser {@link EquationParser} to be removed
      */
-    void unregister(@NonNull EquationParser parser) {
+    protected void unregister(@NonNull EquationParser parser) {
         this.registeredParsers.remove(parser);
     }
 }

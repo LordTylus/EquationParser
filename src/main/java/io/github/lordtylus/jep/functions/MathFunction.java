@@ -28,6 +28,12 @@ public class MathFunction {
     @NonNull
     Function<Number, Number> evalFunction;
 
+    /**
+     * Creates a new function with the given pattern and evaluation function.
+     *
+     * @param pattern      pattern the parser should recognize this function by
+     * @param evalFunction function to be executed when the equation is evaluated.
+     */
     public MathFunction(
             @NonNull String pattern,
             @NonNull Function<Number, Number> evalFunction) {
@@ -36,7 +42,11 @@ public class MathFunction {
     }
 
     /**
-     * Returns the pattern name of the function.
+     * Returns the pattern name of the function, ignoring any aliases. The purpose of the method
+     * is to help create an equation string that can be parsed later on.
+     * It is not meant to recreate the exact string this function was originally parsed from.
+     *
+     * @return parsable string pattern of this function.
      */
     public String toPattern() {
         return pattern;
@@ -50,12 +60,13 @@ public class MathFunction {
      * <p>
      * If precision is needed, using a custom implementation of an {@link MathFunction} is advised.
      *
+     * @param number the function should perform its calculation on.
      * @return Resulting number of {@link #evalFunction}
      * @throws NullPointerException If any given argument is null.
      */
     public Number evaluate(
-            @NonNull Number a) {
+            @NonNull Number number) {
 
-        return evalFunction.apply(a);
+        return evalFunction.apply(number);
     }
 }

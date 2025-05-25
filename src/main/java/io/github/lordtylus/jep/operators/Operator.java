@@ -41,6 +41,8 @@ public class Operator {
 
     /**
      * Returns the symbol of the operator.
+     *
+     * @return Character symbol of the Operator
      */
     public char toPattern() {
         return pattern;
@@ -54,6 +56,8 @@ public class Operator {
      * <p>
      * If precision is needed, using a custom implementation of an operator is advised.
      *
+     * @param a first number of the operation
+     * @param b second number of the equation edits the first
      * @return Resulting number of {@link #evalFunction}
      * @throws NullPointerException If any given argument is null.
      */
@@ -91,6 +95,8 @@ public class Operator {
     /**
      * This method is a filter for the passed operators, to the given order.
      *
+     * @param order             order to filter for.
+     * @param relevantOperators List of operators to be filtered.
      * @return List of operators matching the given order, retaining same order as input list.
      * @throws NullPointerException If any given argument is null.
      */

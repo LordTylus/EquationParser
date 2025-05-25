@@ -16,6 +16,9 @@ import lombok.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EmptyStorage implements Storage {
 
+    /**
+     * immutable singleton instance of this class.
+     */
     public static final Storage INSTANCE = new EmptyStorage();
 
     @Override
