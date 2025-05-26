@@ -85,21 +85,21 @@ Negative numbers can be passed when put in parentheses `2*(-3)`
 
 ## Installation
 
-Maven
+For the time being the framework is not published to maven-central yet, but I am planning to do so in the future.
 
-```xml
-
-<dependency>
-    <groupId>io.github.lordtylus.equation</groupId>
-    <artifactId>equation-parser</artifactId>
-    <version>1.0</version>
-</dependency>
-```
-
-Gradle
+Until then GitHub Packages can be used.
 
 ```groovy
-implementation 'io.github.lordtylus.equation:equation-parser:1.0'
+
+repositories {
+    maven {
+        url 'https://maven.pkg.github.com/LordTylus/EquationParser'
+    }
+}
+
+depedencies {
+    implementation 'io.github.lordtylus.equation:equation-parser:1.0'
+}
 ```
 
 ## Demo
