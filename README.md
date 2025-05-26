@@ -94,6 +94,10 @@ Until then GitHub Packages can be used.
 repositories {
     maven {
         url 'https://maven.pkg.github.com/LordTylus/EquationParser'
+        credentials {
+            username = "<USERNAME>"
+            password = "<TOKEN>"
+        }
     }
 }
 
