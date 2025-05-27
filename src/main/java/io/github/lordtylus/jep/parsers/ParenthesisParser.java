@@ -77,6 +77,24 @@ public final class ParenthesisParser implements EquationParser {
             if (index == -1)
                 return Optional.empty();
 
+            int depth = 0;
+            for (int i = trimmedEquation.length() - 1; i >= 0; i--) {
+
+                char c = trimmedEquation.charAt(i);
+
+                if (c == ')') {
+                    depth++;
+                    continue;
+                }
+
+                if (c == '(') {
+                    depth--;
+
+                    if (depth == 0 && i != index)
+                        return Optional.empty();
+                }
+            }
+
             String innerString = trimmedEquation.substring(index + 1, trimmedEquation.length() - 1);
             String functionName = trimmedEquation.substring(0, index);
 
