@@ -49,6 +49,9 @@ public final class ConstantParser implements EquationParser {
 
             String trimmedEquation = equation.replace(" ", "");
 
+            if (trimmedEquation.isEmpty())
+                return Optional.empty();
+
             int length = trimmedEquation.length();
 
             boolean encounteredDecimal = false;

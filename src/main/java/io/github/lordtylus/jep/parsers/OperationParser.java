@@ -106,6 +106,9 @@ public final class OperationParser implements EquationParser {
 
             String trimmedEquation = equation.trim();
 
+            if (trimmedEquation.isEmpty())
+                return Optional.empty();
+
             for (int relevantLevel : relevantOperatorOrders) {
 
                 OperatorInformation operatorInformation = operatorsMap.get(relevantLevel);

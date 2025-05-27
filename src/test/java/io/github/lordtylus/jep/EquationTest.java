@@ -43,6 +43,7 @@ class EquationTest {
             "1+2*3-4/2^2;1+2*3-4/2^2",
             "2+(s q r t(  9 )+ c  b r t (  8 ) ) + 4  ,  4;2+(sqrt(9)+cbrt(8))+4.4",
             "(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5;(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5",
+            "(-3)+abs(7.3+3)*sin(6+([hallo]-2))+216/3^3;(-3)+abs(7.3+3)*sin(6+([hallo]-2))+216/3^3"
     }, delimiter = ';')
     void parses(String equation, String expected) {
 
