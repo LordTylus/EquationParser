@@ -16,9 +16,9 @@
 package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.equation.Variable;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
 import io.github.lordtylus.jep.storages.EmptyStorage;
 import lombok.NonNull;
 
@@ -82,36 +82,36 @@ public interface Equation {
             @NonNull Locale locale);
 
     /**
-     * Parses the given equation String using the default {@link EquationParserRegister}.
+     * Parses the given equation String using the default {@link ParsingOptions}.
      *
      * @param equation The equation to be parsed.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link EquationParserRegister register} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
      * @throws NullPointerException If any given argument is null.
-     * @see EquationParserRegister#defaultRegister()
+     * @see ParsingOptions#defaultOptions()
      */
     static Optional<Equation> parse(
             @NonNull String equation) {
 
-        return parse(equation, EquationParserRegister.defaultRegister());
+        return parse(equation, ParsingOptions.defaultOptions());
     }
 
     /**
-     * Parses the given equation String using the specified {@link EquationParserRegister}.
+     * Parses the given equation String using the specified {@link ParsingOptions}.
      *
      * @param equation       The equation to be parsed.
-     * @param parserRegister The {@link EquationParserRegister Register} containing the {@link EquationParser parsers} to be used to parse the given equation.
+     * @param parsingOptions The {@link ParsingOptions} containing the {@link EquationParser parsers} to be used to parse the given equation.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link EquationParserRegister register} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
      * @throws NullPointerException If any given argument is null.
      */
     static Optional<Equation> parse(
             @NonNull String equation,
-            @NonNull EquationParserRegister parserRegister) {
+            @NonNull ParsingOptions parsingOptions) {
 
-        for (EquationParser registeredParser : parserRegister.getRegisteredParsers()) {
+        for (EquationParser registeredParser : parsingOptions.getRegisteredParsers()) {
 
-            Optional<Equation> parsed = registeredParser.parse(equation, parserRegister)
+            Optional<Equation> parsed = registeredParser.parse(equation, parsingOptions)
                     .map(Function.identity());
 
             if (parsed.isPresent())

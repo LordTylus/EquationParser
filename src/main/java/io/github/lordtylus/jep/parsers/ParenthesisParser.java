@@ -20,7 +20,7 @@ import io.github.lordtylus.jep.equation.Parenthesis;
 import io.github.lordtylus.jep.functions.MathFunction;
 import io.github.lordtylus.jep.functions.MathFunctionParser;
 import io.github.lordtylus.jep.functions.StandardFunctions;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public final class ParenthesisParser implements EquationParser {
     @Override
     public Optional<Parenthesis> parse(
             @NonNull String equation,
-            @NonNull EquationParserRegister register) {
+            @NonNull ParsingOptions options) {
 
         try {
 
@@ -104,7 +104,7 @@ public final class ParenthesisParser implements EquationParser {
             if (function.isEmpty())
                 return Optional.empty();
 
-            Optional<Equation> inner = Equation.parse(innerString, register);
+            Optional<Equation> inner = Equation.parse(innerString, options);
 
             return inner.map(e -> new Parenthesis(function.get(), e));
 

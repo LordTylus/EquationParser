@@ -16,7 +16,7 @@
 package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.equation.Operation;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.NonNull;
 
 /**
@@ -24,7 +24,7 @@ import lombok.NonNull;
  * <p>
  * It is expected that each implementation of {@link Equation} provides its own Result implementation such as {@link Operation Operation} and {@link Operation.OperationResult OperationResult}
  * <p>
- * The Results value is just a Number and the implementations of the equation determine which type of number it will be. The default implementations of this framework only work with doubles, but if the accuracy of floating point numbers proves insufficient, custom implementations of {@link Equation} could be added utilizing a custom {@link EquationParserRegister ParserRegister}.
+ * The Results value is just a Number and the implementations of the equation determine which type of number it will be. The default implementations of this framework only work with doubles, but if the accuracy of floating point numbers proves insufficient, custom implementations of {@link Equation} could be added utilizing custom {@link ParsingOptions}.
  * <p>
  * It is recommended that the implementations of this interface utilize records to maintain immutability.
  */

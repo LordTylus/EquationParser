@@ -16,7 +16,7 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.equation.Constant;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -43,7 +43,7 @@ public final class ConstantParser implements EquationParser {
     @Override
     public Optional<Constant> parse(
             @NonNull String equation,
-            @NonNull EquationParserRegister register) {
+            @NonNull ParsingOptions options) {
 
         try {
 

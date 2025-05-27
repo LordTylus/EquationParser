@@ -13,34 +13,41 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package io.github.lordtylus.jep.registers;
+package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.parsers.ConstantParser;
+import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import org.junit.jupiter.api.Test;
 
-/**
- * The default Register that contains the following parsers in order:
- * <ul>
- *     <li>{@link ParenthesisParser#DEFAULT}</li>
- *     <li>{@link OperationParser#DEFAULT}</li>
- *     <li>{@link ConstantParser#INSTANCE}</li>
- *     <li>{@link VariableParser#INSTANCE}</li>
- * </ul>
- */
-public final class DefaultRegister extends AbstractEquationParserRegister {
+import java.util.List;
 
-    /**
-     * Immutable singleton instance of this class
-     */
-    public static final DefaultRegister INSTANCE = new DefaultRegister();
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    private DefaultRegister() {
+class DefaultParserOptionsTest {
 
-        register(ParenthesisParser.DEFAULT);
-        register(OperationParser.DEFAULT);
-        register(ConstantParser.INSTANCE);
-        register(VariableParser.INSTANCE);
+    @Test
+    void containsCorrectParsers() {
+
+        /* Given */
+
+        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+
+        /* When */
+
+        List<EquationParser> actual = sut.getRegisteredParsers();
+
+        /* Then */
+
+        List<EquationParser> expected = List.of(
+                ParenthesisParser.DEFAULT,
+                OperationParser.DEFAULT,
+                ConstantParser.INSTANCE,
+                VariableParser.INSTANCE
+        );
+
+        assertEquals(actual, expected);
     }
 }

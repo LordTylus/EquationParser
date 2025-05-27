@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package io.github.lordtylus.jep.registers;
+package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.parsers.ConstantParser;
 import io.github.lordtylus.jep.parsers.EquationParser;
@@ -27,14 +27,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CustomRegisterTest {
+class CustomParserOptionsTest {
 
     @Test
     void createsEmpty() {
 
         /* Given */
 
-        CustomRegister sut = CustomRegister.empty();
+        CustomParserOptions sut = CustomParserOptions.empty();
 
         /* When */
 
@@ -50,7 +50,7 @@ class CustomRegisterTest {
 
         /* Given */
 
-        CustomRegister sut = CustomRegister.withDefaults();
+        CustomParserOptions sut = CustomParserOptions.withDefaults();
 
         /* When */
 
@@ -73,7 +73,7 @@ class CustomRegisterTest {
 
         /* Given */
 
-        CustomRegister sut = CustomRegister.empty();
+        CustomParserOptions sut = CustomParserOptions.empty();
 
         /* When */
 
@@ -95,7 +95,7 @@ class CustomRegisterTest {
 
         /* Given */
 
-        CustomRegister sut = CustomRegister.empty();
+        CustomParserOptions sut = CustomParserOptions.empty();
         sut.register(ConstantParser.INSTANCE);
 
         /* When */
@@ -119,7 +119,7 @@ class CustomRegisterTest {
 
         /* Given */
 
-        CustomRegister sut = CustomRegister.withDefaults();
+        CustomParserOptions sut = CustomParserOptions.withDefaults();
 
         /* When */
 

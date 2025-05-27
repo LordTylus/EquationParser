@@ -17,7 +17,7 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Operation;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.NonNull;
 
 import java.util.Optional;
@@ -55,12 +55,12 @@ public interface EquationParser {
      * It is ensured that the Root {@link Equation} will always match the implementation of this Parser. E.g. A {@link OperationParser} will always return an optional with an {@link Operation Operation} object if parsing was successful.
      *
      * @param equation The equation string to be parsed. E.g. 12.4^3*sqrt(2+[x])^3
-     * @param register {@link EquationParserRegister} to be used when recursively calling other parsers.
+     * @param options  {@link ParsingOptions} to be used when recursively calling other parsers.
      * @return Optional with parsed Equation if parsing was successful. If parsing failed the optional will be empty.
      * @throws ParseException If a parser cannot parse an equation string an empty optional is expected. This exception can be thrown if a parser encounters an unexpected situation it cannot recover from.
      */
     Optional<? extends Equation> parse(
             @NonNull String equation,
-            @NonNull EquationParserRegister register);
+            @NonNull ParsingOptions options);
 
 }

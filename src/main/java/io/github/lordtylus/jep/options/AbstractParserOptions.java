@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package io.github.lordtylus.jep.registers;
+package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.parsers.EquationParser;
 import lombok.NonNull;
@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This abstract implementation of EquationParserRegister provides basic functionality
- * for adding and removing equation parsers for für its implementations.
+ * This abstract implementation of {@link ParsingOptions} provides basic functionality
+ * for adding and removing {@link EquationParser} objects for its implementations.
  */
-public abstract class AbstractEquationParserRegister implements EquationParserRegister {
+public abstract class AbstractParserOptions implements ParsingOptions {
 
     private final List<EquationParser> registeredParsers = new ArrayList<>();
     private final List<EquationParser> registeredParsersUnmodifiable = Collections.unmodifiableList(registeredParsers);

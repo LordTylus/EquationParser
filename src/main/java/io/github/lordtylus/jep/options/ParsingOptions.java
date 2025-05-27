@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package io.github.lordtylus.jep.registers;
+package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
@@ -21,23 +21,23 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import java.util.List;
 
 /**
- * This register holds references to all {@link EquationParser EquationParsers} used for parsing equations.
+ * This Options object holds references to all {@link EquationParser EquationParsers} used for parsing equations.
  * <p>
- * It can be passed direction into {@link Equation#parse(String, EquationParserRegister)} and therefore can influence if and how an equation is parsed.
+ * It can be passed direction into {@link Equation#parse(String, ParsingOptions)} and therefore can influence if and how an equation is parsed.
  * <p>
  * Its implementations are free to decide which {@link EquationParser} objects to use, for as long as they return everything they need in {@link #getRegisteredParsers()}
  */
-public interface EquationParserRegister {
+public interface ParsingOptions {
 
     /**
      * Returns a list of {@link EquationParser} classes to be used for solving mathematical equations.
      * <p>
-     * See {@link DefaultRegister}
+     * See {@link DefaultParserOptions}
      *
-     * @return {@link DefaultRegister} instance
+     * @return {@link DefaultParserOptions} instance
      */
-    static EquationParserRegister defaultRegister() {
-        return DefaultRegister.INSTANCE;
+    static ParsingOptions defaultOptions() {
+        return DefaultParserOptions.INSTANCE;
     }
 
     /**

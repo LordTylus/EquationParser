@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package io.github.lordtylus.jep.registers;
+package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
@@ -22,34 +22,34 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
- * This is a custom {@link EquationParserRegister} that allows to freely configure
- * which {@link EquationParser parsers} should be used when Parsing Equations using
- * {@link Equation#parse(String, EquationParserRegister)}
+ * These are custom {@link ParsingOptions} which allow to be freely configured.
+ * The main function is to determine which {@link EquationParser parsers} should
+ * be used when Parsing Equations using {@link Equation#parse(String, ParsingOptions)}
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CustomRegister extends AbstractEquationParserRegister {
+public final class CustomParserOptions extends AbstractParserOptions {
 
     /**
-     * Creates a new Empty {@link EquationParserRegister} that is mutable can be manipulated
+     * Creates a new Empty {@link ParsingOptions} object which is mutable can be manipulated
      * using {@link #register(EquationParser)} and {@link #unregister(EquationParser)}
      *
-     * @return new mutable empty {@link CustomRegister} class
+     * @return new mutable empty {@link CustomParserOptions} object
      */
-    public static CustomRegister empty() {
-        return new CustomRegister();
+    public static CustomParserOptions empty() {
+        return new CustomParserOptions();
     }
 
     /**
-     * Creates a new and mutable {@link EquationParserRegister} which already contains all
-     * {@link EquationParser} objects from {@link DefaultRegister#INSTANCE}
+     * Creates a new and mutable {@link ParsingOptions} object which already contains all
+     * {@link EquationParser} objects from {@link DefaultParserOptions#INSTANCE}
      *
-     * @return new mutable {@link CustomRegister} class with default {@link EquationParser parsers}
+     * @return new mutable {@link CustomParserOptions} object with default {@link EquationParser parsers}
      */
-    public static CustomRegister withDefaults() {
+    public static CustomParserOptions withDefaults() {
 
-        CustomRegister empty = empty();
+        CustomParserOptions empty = empty();
 
-        DefaultRegister.INSTANCE.getRegisteredParsers()
+        DefaultParserOptions.INSTANCE.getRegisteredParsers()
                 .forEach(empty::register);
 
         return empty;

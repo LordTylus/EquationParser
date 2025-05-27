@@ -20,7 +20,7 @@ import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.Operator;
 import io.github.lordtylus.jep.operators.OperatorParser;
 import io.github.lordtylus.jep.operators.StandardOperators;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.NonNull;
 
 import java.util.HashMap;
@@ -100,7 +100,7 @@ public final class OperationParser implements EquationParser {
     @Override
     public Optional<Operation> parse(
             @NonNull String equation,
-            @NonNull EquationParserRegister register) {
+            @NonNull ParsingOptions options) {
 
         try {
 
@@ -115,7 +115,7 @@ public final class OperationParser implements EquationParser {
 
                 Optional<Operation> operation = tryParse(
                         trimmedEquation,
-                        register,
+                        options,
                         operatorInformation.operators,
                         operatorInformation.operators::containsKey);
 
@@ -134,7 +134,7 @@ public final class OperationParser implements EquationParser {
 
     private static Optional<Operation> tryParse(
             String equation,
-            EquationParserRegister register,
+            ParsingOptions options,
             Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
 
@@ -159,8 +159,8 @@ public final class OperationParser implements EquationParser {
                 String left = equation.substring(0, i);
                 String right = equation.substring(i + 1);
 
-                Optional<Equation> leftEquation = Equation.parse(left, register);
-                Optional<Equation> rightEquation = Equation.parse(right, register);
+                Optional<Equation> leftEquation = Equation.parse(left, options);
+                Optional<Equation> rightEquation = Equation.parse(right, options);
                 Operator parsedOperator = OperatorParser.parse(relevantOperators, c).orElseThrow();
 
                 if (leftEquation.isEmpty() || rightEquation.isEmpty())

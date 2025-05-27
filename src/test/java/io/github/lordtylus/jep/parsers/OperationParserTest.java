@@ -17,8 +17,8 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.operators.StandardOperators;
-import io.github.lordtylus.jep.registers.CustomRegister;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -73,11 +73,11 @@ class OperationParserTest {
 
         /* Given */
 
-        EquationParserRegister register = EquationParserRegister.defaultRegister();
+        ParsingOptions options = ParsingOptions.defaultOptions();
 
         /* When */
 
-        Equation actual = OperationParser.DEFAULT.parse(equation, register).orElseThrow();
+        Equation actual = OperationParser.DEFAULT.parse(equation, options).orElseThrow();
 
         /* Then */
 
@@ -105,15 +105,15 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomRegister customRegister = CustomRegister.withDefaults();
-        customRegister.unregister(OperationParser.DEFAULT);
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
-        customRegister.register(sut);
+        customParserOptions.register(sut);
 
         /* When */
 
-        Equation actual = sut.parse(equation, customRegister).orElseThrow();
+        Equation actual = sut.parse(equation, customParserOptions).orElseThrow();
 
         /* Then */
 
@@ -144,15 +144,15 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomRegister customRegister = CustomRegister.withDefaults();
-        customRegister.unregister(OperationParser.DEFAULT);
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
-        customRegister.register(sut);
+        customParserOptions.register(sut);
 
         /* When */
 
-        Equation actual = OperationParser.DEFAULT.parse(equation, customRegister).orElseThrow();
+        Equation actual = OperationParser.DEFAULT.parse(equation, customParserOptions).orElseThrow();
 
         /* Then */
 
@@ -174,11 +174,11 @@ class OperationParserTest {
 
         /* Given */
 
-        EquationParserRegister register = EquationParserRegister.defaultRegister();
+        ParsingOptions options = ParsingOptions.defaultOptions();
 
         /* When */
 
-        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(equation, register);
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(equation, options);
 
         /* Then */
 
@@ -204,15 +204,15 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomRegister customRegister = CustomRegister.withDefaults();
-        customRegister.unregister(OperationParser.DEFAULT);
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
-        customRegister.register(sut);
+        customParserOptions.register(sut);
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(equation, customRegister);
+        Optional<? extends Equation> actual = sut.parse(equation, customParserOptions);
 
         /* Then */
 
@@ -239,15 +239,15 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomRegister customRegister = CustomRegister.withDefaults();
-        customRegister.unregister(OperationParser.DEFAULT);
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
-        customRegister.register(sut);
+        customParserOptions.register(sut);
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(equation, customRegister);
+        Optional<? extends Equation> actual = sut.parse(equation, customParserOptions);
 
         /* Then */
 

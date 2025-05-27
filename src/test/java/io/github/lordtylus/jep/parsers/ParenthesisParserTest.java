@@ -16,7 +16,7 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -60,11 +60,11 @@ class ParenthesisParserTest {
 
         /* Given */
 
-        EquationParserRegister register = EquationParserRegister.defaultRegister();
+        ParsingOptions options = ParsingOptions.defaultOptions();
 
         /* When */
 
-        Equation actual = ParenthesisParser.DEFAULT.parse(equation, register).orElseThrow();
+        Equation actual = ParenthesisParser.DEFAULT.parse(equation, options).orElseThrow();
 
         /* Then */
 
@@ -84,11 +84,11 @@ class ParenthesisParserTest {
 
         /* Given */
 
-        EquationParserRegister register = EquationParserRegister.defaultRegister();
+        ParsingOptions options = ParsingOptions.defaultOptions();
 
         /* When */
 
-        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(equation, register);
+        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(equation, options);
 
         /* Then */
 

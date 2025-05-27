@@ -16,7 +16,7 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.equation.Variable;
-import io.github.lordtylus.jep.registers.EquationParserRegister;
+import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -45,7 +45,7 @@ public final class VariableParser implements EquationParser {
     @Override
     public Optional<Variable> parse(
             @NonNull String equation,
-            @NonNull EquationParserRegister register) {
+            @NonNull ParsingOptions options) {
 
         try {
 
