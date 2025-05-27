@@ -38,7 +38,7 @@ public class ParsingPerformanceDemo {
 
             long end = System.nanoTime();
 
-            // 8.853 ms
+            // 1.947 ms
             System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
         }
 
@@ -52,7 +52,7 @@ public class ParsingPerformanceDemo {
 
             long end = System.nanoTime();
 
-            // 81.146 ms
+            // 14.818 ms
             System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
         }
 
@@ -66,6 +66,7 @@ public class ParsingPerformanceDemo {
 
             long end = System.nanoTime();
 
+            // 150.955 ms
             System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
         }
     }
