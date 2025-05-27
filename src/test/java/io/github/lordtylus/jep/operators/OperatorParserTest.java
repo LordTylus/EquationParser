@@ -17,7 +17,8 @@ package io.github.lordtylus.jep.operators;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -34,11 +35,14 @@ class OperatorParserTest {
         Operator operator2 = new Operator(2, '-', (a, b) -> a.doubleValue() - b.doubleValue());
         Operator operator3 = new Operator(3, '*', (a, b) -> a.doubleValue() * b.doubleValue());
 
-        List<Operator> operators = List.of(operator1, operator2, operator3);
+        Map<Character, Operator> operatorMap = new HashMap<>();
+        operatorMap.put(operator1.getPattern(), operator1);
+        operatorMap.put(operator2.getPattern(), operator2);
+        operatorMap.put(operator3.getPattern(), operator3);
 
         /* When */
 
-        Operator actual = OperatorParser.parse(operators, '-').orElseThrow();
+        Operator actual = OperatorParser.parse(operatorMap, '-').orElseThrow();
 
         /* Then */
 
@@ -54,11 +58,14 @@ class OperatorParserTest {
         Operator operator2 = new Operator(2, '-', (a, b) -> a.doubleValue() - b.doubleValue());
         Operator operator3 = new Operator(3, '*', (a, b) -> a.doubleValue() * b.doubleValue());
 
-        List<Operator> operators = List.of(operator1, operator2, operator3);
+        Map<Character, Operator> operatorMap = new HashMap<>();
+        operatorMap.put(operator1.getPattern(), operator1);
+        operatorMap.put(operator2.getPattern(), operator2);
+        operatorMap.put(operator3.getPattern(), operator3);
 
         /* When */
 
-        Optional<Operator> actual = OperatorParser.parse(operators, '/');
+        Optional<Operator> actual = OperatorParser.parse(operatorMap, '/');
 
         /* Then */
 

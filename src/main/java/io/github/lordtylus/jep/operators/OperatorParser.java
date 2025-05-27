@@ -20,7 +20,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -42,11 +42,9 @@ public final class OperatorParser {
      * @see OperationParser
      */
     public static Optional<Operator> parse(
-            @NonNull Collection<Operator> relevantOperators,
+            @NonNull Map<Character, Operator> relevantOperators,
             char pattern) {
 
-        return relevantOperators.stream()
-                .filter(operator -> pattern == operator.getPattern())
-                .findFirst();
+        return Optional.ofNullable(relevantOperators.get(pattern));
     }
 }

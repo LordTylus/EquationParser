@@ -22,8 +22,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This parser implementation parses the given input string and extracts the variable name from it.
@@ -44,8 +42,6 @@ public final class VariableParser implements EquationParser {
      */
     public static final VariableParser INSTANCE = new VariableParser();
 
-    private static final Pattern NAME_PATTERN = Pattern.compile("^\\[(?<name>.+)]$", Pattern.CASE_INSENSITIVE);
-
     @Override
     public Optional<Variable> parse(
             @NonNull String equation,
@@ -55,12 +51,15 @@ public final class VariableParser implements EquationParser {
 
             String trimmedEquation = equation.trim();
 
-            Matcher matcher = NAME_PATTERN.matcher(trimmedEquation);
-
-            if (!matcher.matches())
+            if (!trimmedEquation.startsWith("["))
                 return Optional.empty();
 
-            return Optional.of(new Variable(matcher.group("name")));
+            if (!trimmedEquation.endsWith("]"))
+                return Optional.empty();
+
+            trimmedEquation = trimmedEquation.substring(1, trimmedEquation.length() - 1);
+
+            return Optional.of(new Variable(trimmedEquation));
 
         } catch (RuntimeException e) {
             throw new ParseException(e);

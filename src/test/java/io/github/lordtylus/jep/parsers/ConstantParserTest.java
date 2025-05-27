@@ -54,12 +54,15 @@ class ConstantParserTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @CsvSource(value = {
             "abc",
+            "1.2.3",
+            "1,2.3",
+            "+1",
             "([Hallo])",
             "1+1",
             "sqrt([hallo])",
-    })
+    }, delimiter = ';')
     void doesNotParse(String equation) {
 
         /* Given */

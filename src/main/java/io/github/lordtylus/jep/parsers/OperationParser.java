@@ -87,12 +87,13 @@ public final class OperationParser implements EquationParser {
         for (int operatorOrder : relevantOperatorOrders) {
 
             List<Operator> operators = Operator.getRelevantOperatorsForOrder(operatorOrder, relevantOperators);
-            List<Character> operatorPatterns = operators.stream()
-                    .map(Operator::getPattern)
-                    .toList();
+            Map<Character, Operator> operatorMap = new HashMap<>();
+
+            for (Operator operator : operators)
+                operatorMap.put(operator.getPattern(), operator);
 
             operatorsMap.put(operatorOrder,
-                    new OperatorInformation(operators, operatorPatterns));
+                    new OperatorInformation(operatorMap));
         }
     }
 
@@ -113,7 +114,7 @@ public final class OperationParser implements EquationParser {
                         trimmedEquation,
                         register,
                         operatorInformation.operators,
-                        operatorInformation.patterns::contains);
+                        operatorInformation.operators::containsKey);
 
                 if (operation.isPresent())
                     return operation;
@@ -131,7 +132,7 @@ public final class OperationParser implements EquationParser {
     private static Optional<Operation> tryParse(
             String equation,
             EquationParserRegister register,
-            List<Operator> relevantOperators,
+            Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
 
         int depth = 0;
@@ -176,8 +177,7 @@ public final class OperationParser implements EquationParser {
     }
 
     private record OperatorInformation(
-            List<Operator> operators,
-            List<Character> patterns
+            Map<Character, Operator> operators
     ) {
     }
 }

@@ -26,7 +26,6 @@ import lombok.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -71,31 +70,25 @@ public final class ParenthesisParser implements EquationParser {
 
             String trimmedEquation = equation.trim();
 
-            Matcher matcher = PARENTHESES_PATTERN.matcher(trimmedEquation);
-
-            if (!matcher.matches())
+            if (!trimmedEquation.endsWith(")"))
                 return Optional.empty();
 
-            String inner = matcher.group("inner");
-            Optional<Equation> innerEquation = Equation.parse(inner, register);
-
-            if (innerEquation.isEmpty())
+            int index = trimmedEquation.indexOf("(");
+            if (index == -1)
                 return Optional.empty();
 
-            String functionName = matcher.group("function");
-            if (functionName == null)
-                functionName = "";
+            String innerString = trimmedEquation.substring(index + 1, trimmedEquation.length() - 1);
+            String functionName = trimmedEquation.substring(0, index);
 
-            functionName = WHITESPACE_PATTERN.matcher(functionName)
-                    .replaceAll("");
+            functionName = functionName.replace(" ", "");
 
-            Optional<MathFunction> functionOptional = MathFunctionParser.parse(relevantFunctions, functionName);
-            if (functionOptional.isEmpty())
+            Optional<MathFunction> function = MathFunctionParser.parse(relevantFunctions, functionName);
+            if (function.isEmpty())
                 return Optional.empty();
 
-            MathFunction function = functionOptional.get();
+            Optional<Equation> inner = Equation.parse(innerString, register);
 
-            return Optional.of(new Parenthesis(function, innerEquation.get()));
+            return inner.map(e -> new Parenthesis(function.get(), e));
 
         } catch (ParseException e) {
             throw e;
