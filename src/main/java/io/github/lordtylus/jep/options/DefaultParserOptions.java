@@ -21,7 +21,6 @@ import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
 import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
 import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
-import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
 
 /**
  * The default options contain the following parsers in order:
@@ -51,7 +50,6 @@ public final class DefaultParserOptions extends AbstractParserOptions {
         register(ConstantParser.INSTANCE);
         register(VariableParser.INSTANCE);
 
-        register(VariableTokenizer.INSTANCE);
         register(ParenthesisTokenizer.DEFAULT);
         register(OperatorTokenizer.DEFAULT);
     }

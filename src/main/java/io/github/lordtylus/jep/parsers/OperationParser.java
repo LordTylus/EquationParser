@@ -21,8 +21,6 @@ import io.github.lordtylus.jep.operators.Operator;
 import io.github.lordtylus.jep.operators.OperatorParser;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.ParsingOptions;
-import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
-import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
 import java.util.Collection;
@@ -104,12 +102,14 @@ public final class OperationParser implements EquationParser {
 
     @Override
     public Optional<Operation> parse(
-            @NonNull List<Token> tokenizedEquation,
+            @NonNull String equation,
             @NonNull ParsingOptions options) {
 
         try {
 
-            if (tokenizedEquation.size() < 3)
+            String trimmedEquation = equation.trim();
+
+            if (trimmedEquation.isEmpty())
                 return Optional.empty();
 
             for (int relevantLevel : relevantOperatorOrders) {
@@ -117,7 +117,7 @@ public final class OperationParser implements EquationParser {
                 OperatorInformation operatorInformation = operatorsMap.get(relevantLevel);
 
                 Optional<Operation> operation = tryParse(
-                        tokenizedEquation,
+                        trimmedEquation,
                         options,
                         operatorInformation.operators,
                         operatorInformation.operators::containsKey);
@@ -136,30 +136,35 @@ public final class OperationParser implements EquationParser {
     }
 
     private static Optional<Operation> tryParse(
-            List<Token> tokenizedEquation,
+            String equation,
             ParsingOptions options,
             Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
 
         int depth = 0;
 
-        for (int i = tokenizedEquation.size() - 1; i >= 0; i--) {
+        for (int i = equation.length() - 1; i >= 0; i--) {
 
-            Token token = tokenizedEquation.get(i);
+            char c = equation.charAt(i);
 
-            depth = token.adjustDepth(depth);
+            if (c == ')' || c == ']') {
+                depth++;
+                continue;
+            }
 
-            if (depth == 0 && token instanceof OperatorToken operatorToken) {
+            if (c == '(' || c == '[') {
+                depth--;
+                continue;
+            }
 
-                if (!checkFunction.check(operatorToken.operator()))
-                    continue;
+            if (depth == 0 && checkFunction.check(c)) {
 
-                List<Token> left = tokenizedEquation.subList(0, i);
-                List<Token> right = tokenizedEquation.subList(i + 1, tokenizedEquation.size());
+                String left = equation.substring(0, i);
+                String right = equation.substring(i + 1);
 
-                Optional<Equation> leftEquation = EquationParser.parseEquation(left, options);
-                Optional<Equation> rightEquation = EquationParser.parseEquation(right, options);
-                Operator parsedOperator = OperatorParser.parse(relevantOperators, operatorToken.operator()).orElseThrow();
+                Optional<Equation> leftEquation = Equation.parse(left, options);
+                Optional<Equation> rightEquation = Equation.parse(right, options);
+                Operator parsedOperator = OperatorParser.parse(relevantOperators, c).orElseThrow();
 
                 if (leftEquation.isEmpty() || rightEquation.isEmpty())
                     return Optional.empty();

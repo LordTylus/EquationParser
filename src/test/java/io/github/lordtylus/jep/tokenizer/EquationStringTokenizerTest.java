@@ -34,9 +34,6 @@ class EquationStringTokenizerTest {
             "2(x+2) ; 2(|x|+|2|)",
             "2(x+2 ; 2(|x|+|2",
             "2x+2) ; 2x|+|2|)",
-            "1-[1+1]+1 ; 1|-|[1+1]|+|1",
-            "1+[1+1]+1 ; 1|+|[1+1]|+|1",
-            "1-([1+1]+1)*2 ; 1|-|(|[1+1]|+|1|)|*|2",
     }, delimiter = ';')
     void tokenizesDefault(String input, String expected) {
 
@@ -67,16 +64,14 @@ class EquationStringTokenizerTest {
             " 1 + 1  ; 1 |+| 1",
             " 1 + 1 ^ 2 ; 1 |+| 1 |^| 2",
             " - 1 + 1 ^ 2  ; - 1 |+| 1 |^| 2",
-            " - 1 + -   1 ^  2 ; - 1 |+|-|   1 |^|  2",
-            " 2 *   ( 2 + 3 ) ^ 2 ; 2 |*|   (| 2 |+| 3 |)|^| 2",
-            "   2 * ( 2  +  3 ) ^ ( 1 / 2  ) ; 2 |*| (| 2  |+|  3 |)|^| (| 1 |/| 2  |)",
-            "   2 * (   2   +   3   ) ^ (  - 1 / 2 )  ; 2 |*| (|   2   |+|   3   |)|^| (|-| 1 |/| 2 |)",
-            " 2   * s q r   t ( 2 + 3 ) ^ 2 ; 2   |*| s q r   t (| 2 |+| 3 |)|^| 2",
-            "  2 * s q r t  ( 2 + 3 ) ^ a b c ( 1/ 2 )  ; 2 |*| s q r t  (| 2 |+| 3 |)|^| a b c (| 1|/| 2 |)",
-            " (  - 3 )  + a b s (7   . 3 + 3  ) *  s i  n ( 6 +  ( [ h a l   l  o ] - 2 ) )   + 2 1 6 /    3^ 3 ; (|-| 3 |)|+| a b s (|7   . 3 |+| 3  |)|*|  s i  n (| 6 |+|  (| [ h a l   l  o ] |-| 2 |)|)|+| 2 1 6 |/|    3|^| 3",
-            "  (  ( ( 1 + 2   ) * ( 3 + 4 ) )+  ((  ( 1 - 2  ) ^ 2) + ) )  ; (|  (| (| 1 |+| 2   |)|*| (| 3 |+| 4 |)|)|+|  (|(|  (| 1 |-| 2  |)|^| 2|)|+|)|)",
-            "1 + [ 1 + 1 ] + 1 ; 1 |+| [ 1 + 1 ] |+| 1",
-            " 1 - ( [ 1 + 1 ] + 1 ) * 2 ; 1 |-| (| [ 1 + 1 ] |+| 1 |)|*| 2",
+            " - 1 + -   1 ^  2 ; - 1 |+| |-|   1 |^|  2",
+            " 2 *   ( 2 + 3 ) ^ 2 ; 2 |*|   (| 2 |+| 3 |)| |^| 2",
+            "   2 * ( 2  +  3 ) ^ ( 1 / 2  ) ; 2 |*| (| 2  |+|  3 |)| |^| (| 1 |/| 2  |)",
+            "   2 * (   2   +   3   ) ^ (  - 1 / 2 )  ; 2 |*| (|   2   |+|   3   |)| |^| (|  |-| 1 |/| 2 |)",
+            " 2   * s q r   t ( 2 + 3 ) ^ 2 ; 2   |*| s q r   t (| 2 |+| 3 |)| |^| 2",
+            "  2 * s q r t  ( 2 + 3 ) ^ a b c ( 1/ 2 )  ; 2 |*| s q r t  (| 2 |+| 3 |)| |^| a b c (| 1|/| 2 |)",
+            " (  - 3 )  + a b s (7   . 3 + 3  ) *  s i  n ( 6 +  ( [ h a l   l  o ] - 2 ) )   + 2 1 6 /    3^ 3 ; (|  |-| 3 |)|  |+| a b s (|7   . 3 |+| 3  |)| |*|  s i  n (| 6 |+|  (| [ h a l   l  o ] |-| 2 |)| |)|   |+| 2 1 6 |/|    3|^| 3",
+            "  (  ( ( 1 + 2   ) * ( 3 + 4 ) )+  ((  ( 1 - 2  ) ^ 2) + ) )  ; (|  (| (| 1 |+| 2   |)| |*| (| 3 |+| 4 |)| |)|+|  (|(|  (| 1 |-| 2  |)| |^| 2|)| |+| |)| |)",
     }, delimiter = ';')
     void tokenizesSpaces(String input, String expected) {
 
@@ -118,8 +113,6 @@ class EquationStringTokenizerTest {
             "abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf) ; abs|(|sin|(|sqrt|(|1|+|2|)|*|cos|(|3|+|4|)|)|+|lol|(|sss|(|ddd|(|1|-|2|)|^|2|)|+|)|sdf|)",
             "-1--1 ; -1|-|-|1",
             "2(x+2) ; 2|(|x|+|2|)",
-            "1+[1+1]+1 ; 1|+|[1+1]|+|1",
-            "1-([1+1]+1)*2 ; 1|-|(|[1+1]|+|1|)|*|2",
     }, delimiter = ';')
     void tokenizesWithoutFunctions(String input, String expected) {
 
@@ -163,8 +156,6 @@ class EquationStringTokenizerTest {
             "abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf) ; abs|(|sin|(|sqrt|(|1+2|)|*cos|(|3+4|)|)|+lol|(|sss|(|ddd|(|1-2|)|^2|)|+|)|sdf|)",
             "-1--1 ; -1--1",
             "2(x+2) ; 2|(|x+2|)",
-            "1+[1+1]+1 ; 1+[1+1]+1",
-            "1-([1+1]+1)*2 ; 1-|(|[1+1]+1|)|*2",
     }, delimiter = ';')
     void tokenizesWithoutFunctionsAndOperators(String input, String expected) {
 
@@ -209,8 +200,6 @@ class EquationStringTokenizerTest {
             "abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf) ; abs(sin(sqrt(1|+|2)|*|cos(3|+|4))|+|lol(sss(ddd(1|-|2)|^|2)|+|)sdf)",
             "-1--1 ; -1|-|-|1",
             "2(x+2) ; 2(x|+|2)",
-            "1+[1+1]+1 ; 1|+|[1+1]|+|1",
-            "1-([1+1]+1)*2 ; 1|-|([1+1]|+|1)|*|2",
     }, delimiter = ';')
     void tokenizesOnlyOperators(String input, String expected) {
 
@@ -253,9 +242,6 @@ class EquationStringTokenizerTest {
             "abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf) ; abs(sin(sqrt(1|+|2)*cos(3|+|4))|+|lol(sss(ddd(1-2)^2)|+|)sdf)",
             "-1--1 ; -1--1",
             "2(x+2) ; 2(x|+|2)",
-            "1-[1+1]+1 ; 1-[1+1]|+|1",
-            "1+[1+1]+1 ; 1|+|[1+1]|+|1",
-            "1-([1+1]+1)*2 ; 1-([1+1]|+|1)*2",
     }, delimiter = ';')
     void tokenizesOnlyPlusSign(String input, String expected) {
 
@@ -301,7 +287,6 @@ class EquationStringTokenizerTest {
             "abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf) ; abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf)",
             "-1--1 ; -1--1",
             "2(x+2) ; 2(x+2)",
-            "1-([1+1]+1)*2 ; 1-([1+1]+1)*2",
     }, delimiter = ';')
     void tokenizesNothing(String input, String expected) {
 

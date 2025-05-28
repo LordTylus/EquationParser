@@ -23,7 +23,6 @@ import io.github.lordtylus.jep.parsers.VariableParser;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
 import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
-import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -73,7 +72,6 @@ class CustomParserOptionsTest {
         );
 
         List<EquationTokenizer> expected2 = List.of(
-                VariableTokenizer.INSTANCE,
                 ParenthesisTokenizer.DEFAULT,
                 OperatorTokenizer.DEFAULT
         );
@@ -214,7 +212,6 @@ class CustomParserOptionsTest {
         List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
 
         List<EquationTokenizer> expected = List.of(
-                VariableTokenizer.INSTANCE,
                 OperatorTokenizer.DEFAULT
         );
 

@@ -21,8 +21,6 @@ import io.github.lordtylus.jep.functions.MathFunction;
 import io.github.lordtylus.jep.functions.MathFunctionParser;
 import io.github.lordtylus.jep.functions.StandardFunctions;
 import io.github.lordtylus.jep.options.ParsingOptions;
-import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
-import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -65,39 +63,48 @@ public final class ParenthesisParser implements EquationParser {
 
     @Override
     public Optional<Parenthesis> parse(
-            @NonNull List<Token> tokenizedEquation,
+            @NonNull String equation,
             @NonNull ParsingOptions options) {
 
         try {
 
-            if (tokenizedEquation.size() < 3)
+            String trimmedEquation = equation.trim();
+
+            if (!trimmedEquation.endsWith(")"))
                 return Optional.empty();
 
-            Token first = tokenizedEquation.get(0);
-
-            if (!(first instanceof ParenthesisToken openingToken)
-                    || !openingToken.isOpening())
+            int index = trimmedEquation.indexOf("(");
+            if (index == -1)
                 return Optional.empty();
 
-            Token last = tokenizedEquation.get(tokenizedEquation.size() - 1);
+            int depth = 0;
+            for (int i = trimmedEquation.length() - 1; i >= 0; i--) {
 
-            if (!(last instanceof ParenthesisToken closingToken)
-                    || !closingToken.isClosing())
-                return Optional.empty();
+                char c = trimmedEquation.charAt(i);
 
-            if (openingToken.getClosing() != closingToken)
-                return Optional.empty();
+                if (c == ')') {
+                    depth++;
+                    continue;
+                }
 
-            String functionName = openingToken.getFunction();
+                if (c == '(') {
+                    depth--;
+
+                    if (depth == 0 && i != index)
+                        return Optional.empty();
+                }
+            }
+
+            String innerString = trimmedEquation.substring(index + 1, trimmedEquation.length() - 1);
+            String functionName = trimmedEquation.substring(0, index);
+
             functionName = functionName.replace(" ", "");
 
             Optional<MathFunction> function = MathFunctionParser.parse(relevantFunctions, functionName);
             if (function.isEmpty())
                 return Optional.empty();
 
-            List<Token> innerList = tokenizedEquation.subList(1, tokenizedEquation.size() - 1);
-
-            Optional<Equation> inner = EquationParser.parseEquation(innerList, options);
+            Optional<Equation> inner = Equation.parse(innerString, options);
 
             return inner.map(e -> new Parenthesis(function.get(), e));
 

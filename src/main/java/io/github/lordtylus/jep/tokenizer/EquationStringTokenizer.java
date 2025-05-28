@@ -50,11 +50,9 @@ public final class EquationStringTokenizer {
         List<Token> tokenList = new ArrayList<>();
         int beginIndex = 0;
 
-        TokenizerContext context = new TokenizerContext();
-
         for (int i = 0; i < equation.length(); i++)
             for (EquationTokenizer tokenizer : options.getRegisteredTokenizers())
-                if (tokenizer.handle(beginIndex, i, equation, tokenList, context))
+                if (tokenizer.handle(beginIndex, i, equation, tokenList))
                     beginIndex = i + 1;
 
         String substring = equation.substring(beginIndex);

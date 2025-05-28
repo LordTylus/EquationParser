@@ -37,6 +37,5 @@ public interface EquationTokenizer {
             int beginIndex,
             int currentIndex,
             @NonNull String equation,
-            @NonNull List<Token> tokenList,
-            @NonNull TokenizerContext context);
+            @NonNull List<Token> tokenList);
 }

@@ -17,12 +17,9 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.options.ParsingOptions;
-import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
-import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -47,11 +44,9 @@ class ConstantParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
-
         /* When */
 
-        Equation actual = ConstantParser.INSTANCE.parse(tokenized, options).orElseThrow();
+        Equation actual = ConstantParser.INSTANCE.parse(equation, options).orElseThrow();
 
         /* Then */
 
@@ -74,11 +69,9 @@ class ConstantParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
-
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, options);
+        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(equation, options);
 
         /* Then */
 
