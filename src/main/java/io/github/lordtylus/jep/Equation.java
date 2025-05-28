@@ -20,11 +20,13 @@ import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.storages.EmptyStorage;
+import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * This object represents a parsed equation string. Such as 2*(2+3)^[x]
@@ -109,15 +111,8 @@ public interface Equation {
             @NonNull String equation,
             @NonNull ParsingOptions parsingOptions) {
 
-        for (EquationParser registeredParser : parsingOptions.getRegisteredParsers()) {
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
 
-            Optional<Equation> parsed = registeredParser.parse(equation, parsingOptions)
-                    .map(Function.identity());
-
-            if (parsed.isPresent())
-                return parsed;
-        }
-
-        return Optional.empty();
+        return EquationParser.parseEquation(tokenized, parsingOptions);
     }
 }

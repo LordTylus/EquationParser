@@ -17,9 +17,12 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -62,9 +65,11 @@ class ParenthesisParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Equation actual = ParenthesisParser.DEFAULT.parse(equation, options).orElseThrow();
+        Equation actual = ParenthesisParser.DEFAULT.parse(tokenized, options).orElseThrow();
 
         /* Then */
 
@@ -89,9 +94,11 @@ class ParenthesisParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(equation, options);
+        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(tokenized, options);
 
         /* Then */
 

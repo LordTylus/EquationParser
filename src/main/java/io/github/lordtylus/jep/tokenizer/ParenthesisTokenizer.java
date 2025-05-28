@@ -44,7 +44,11 @@ public final class ParenthesisTokenizer implements EquationTokenizer {
             int beginIndex,
             int currentIndex,
             @NonNull String equation,
-            @NonNull List<Token> tokenList) {
+            @NonNull List<Token> tokenList,
+            @NonNull TokenizerContext context) {
+
+        if (context.isSplitProhibited())
+            return false;
 
         char currentCharacter = equation.charAt(currentIndex);
 
@@ -55,9 +59,19 @@ public final class ParenthesisTokenizer implements EquationTokenizer {
 
         ParenthesisToken token = new ParenthesisToken(currentCharacter);
 
+        if (token.isOpening()) {
+            context.addOpeningToken(token);
+        } else {
+
+            ParenthesisToken openingToken = context.retrieveOpeningToken();
+
+            if (openingToken != null)
+                openingToken.setClosing(token);
+        }
+
         if (tokenizeFunctions && token.isOpening())
             token.setFunction(substring);
-        else if (!substring.isEmpty())
+        else if (!substring.isBlank())
             tokenList.add(new ValueToken(substring));
 
         tokenList.add(token);

@@ -16,6 +16,7 @@
 package io.github.lordtylus.jep.tokenizer.tokens;
 
 import io.github.lordtylus.jep.Equation;
+import lombok.Getter;
 
 /**
  * This token visualizes parenthesis in an equation and can either be opening or closing.
@@ -23,10 +24,13 @@ import io.github.lordtylus.jep.Equation;
  * Additionally, an opening parenthesis can have a function string, which
  * identifies a math function to be applied when the {@link Equation} is evaluated.
  */
+@Getter
 public class ParenthesisToken implements Token {
 
     private final char character;
     private String function;
+
+    private ParenthesisToken closing;
 
     /**
      * Creates a new {@link ParenthesisToken} with the given character.
@@ -87,5 +91,13 @@ public class ParenthesisToken implements Token {
             return currentDepth + 1;
 
         return currentDepth - 1;
+    }
+
+    public void setClosing(ParenthesisToken token) {
+
+        if (isClosing())
+            throw new IllegalArgumentException("Can only be set on an opening parenthesis!");
+
+        this.closing = token;
     }
 }
