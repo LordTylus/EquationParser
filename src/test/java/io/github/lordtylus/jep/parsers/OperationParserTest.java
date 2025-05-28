@@ -19,55 +19,17 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OperationParserTest {
-
-    @Test
-    void returnsDefaultOperatorPatterns() {
-
-        /* Given */
-
-        OperationParser sut = OperationParser.DEFAULT;
-
-        /* When */
-
-        Set<Character> actual = sut.getOperatorCharacters();
-
-        /* Then */
-
-        Set<Character> expected = Set.of('+', '-', '*', '/', '^');
-
-        assertEquals(actual, expected);
-    }
-
-    @Test
-    void returnsCustomOperatorPatterns() {
-
-        /* Given */
-
-        OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
-
-        /* When */
-
-        Set<Character> actual = sut.getOperatorCharacters();
-
-        /* Then */
-
-        Set<Character> expected = Set.of('+', '-');
-
-        assertEquals(actual, expected);
-    }
 
     @ParameterizedTest
     @CsvSource(value = {

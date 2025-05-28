@@ -17,16 +17,15 @@ package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
-import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 
 import java.util.List;
 
 /**
- * This Options object holds references to all {@link EquationParser EquationParsers},
- * as well as the mandatory {@link EquationTokenizer} objects to be used for parsing.
+ * This Options object holds references to all {@link EquationParser EquationParsers} used for parsing equations.
  * <p>
- * It can be passed directly into {@link Equation#parse(String, ParsingOptions)} and
- * therefore can influence if and how an equation is parsed.
+ * It can be passed direction into {@link Equation#parse(String, ParsingOptions)} and therefore can influence if and how an equation is parsed.
+ * <p>
+ * Its implementations are free to decide which {@link EquationParser} objects to use, for as long as they return everything they need in {@link #getRegisteredParsers()}
  */
 public interface ParsingOptions {
 
@@ -50,14 +49,4 @@ public interface ParsingOptions {
      * @return List of {@link EquationParser} to be used for parsing
      */
     List<EquationParser> getRegisteredParsers();
-
-    /**
-     * Returns a List of {@link EquationTokenizer} objects to be used for tokenizing the
-     * equation string before parsing. The order of the list is important as it may impact
-     * how equation is later parsed.
-     *
-     * @return List of {@link EquationTokenizer} objects to prepare the string for parsing.
-     */
-    List<EquationTokenizer> getRegisteredTokenizers();
-
 }

@@ -20,9 +20,6 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
-import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
-import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
-import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -41,13 +38,11 @@ class CustomParserOptionsTest {
 
         /* When */
 
-        List<EquationParser> actual1 = sut.getRegisteredParsers();
-        List<EquationTokenizer> actual2 = sut.getRegisteredTokenizers();
+        List<EquationParser> actual = sut.getRegisteredParsers();
 
         /* Then */
 
-        assertTrue(actual1.isEmpty());
-        assertTrue(actual2.isEmpty());
+        assertTrue(actual.isEmpty());
     }
 
     @Test
@@ -59,25 +54,18 @@ class CustomParserOptionsTest {
 
         /* When */
 
-        List<EquationParser> actual1 = sut.getRegisteredParsers();
-        List<EquationTokenizer> actual2 = sut.getRegisteredTokenizers();
+        List<EquationParser> actual = sut.getRegisteredParsers();
 
         /* Then */
 
-        List<EquationParser> expected1 = List.of(
+        List<EquationParser> expected = List.of(
                 ParenthesisParser.DEFAULT,
                 OperationParser.DEFAULT,
                 ConstantParser.INSTANCE,
                 VariableParser.INSTANCE
         );
 
-        List<EquationTokenizer> expected2 = List.of(
-                ParenthesisTokenizer.INSTANCE,
-                OperatorTokenizer.DEFAULT
-        );
-
-        assertEquals(actual1, expected1);
-        assertEquals(actual2, expected2);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -127,52 +115,6 @@ class CustomParserOptionsTest {
     }
 
     @Test
-    void registersOneTokenizer() {
-
-        /* Given */
-
-        CustomParserOptions sut = CustomParserOptions.empty();
-
-        /* When */
-
-        sut.register(ParenthesisTokenizer.INSTANCE);
-
-        /* Then */
-
-        List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
-
-        List<EquationTokenizer> expected = List.of(
-                ParenthesisTokenizer.INSTANCE
-        );
-
-        assertEquals(actual, expected);
-    }
-
-    @Test
-    void registersASecondTokenizer() {
-
-        /* Given */
-
-        CustomParserOptions sut = CustomParserOptions.empty();
-        sut.register(ParenthesisTokenizer.INSTANCE);
-
-        /* When */
-
-        sut.register(OperatorTokenizer.DEFAULT);
-
-        /* Then */
-
-        List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
-
-        List<EquationTokenizer> expected = List.of(
-                ParenthesisTokenizer.INSTANCE,
-                OperatorTokenizer.DEFAULT
-        );
-
-        assertEquals(actual, expected);
-    }
-
-    @Test
     void canUnregisterAParser() {
 
         /* Given */
@@ -191,28 +133,6 @@ class CustomParserOptionsTest {
                 OperationParser.DEFAULT,
                 ConstantParser.INSTANCE,
                 VariableParser.INSTANCE
-        );
-
-        assertEquals(actual, expected);
-    }
-
-    @Test
-    void canUnregisterATokenizer() {
-
-        /* Given */
-
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
-
-        /* When */
-
-        sut.unregister(ParenthesisTokenizer.INSTANCE);
-
-        /* Then */
-
-        List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
-
-        List<EquationTokenizer> expected = List.of(
-                OperatorTokenizer.DEFAULT
         );
 
         assertEquals(actual, expected);
