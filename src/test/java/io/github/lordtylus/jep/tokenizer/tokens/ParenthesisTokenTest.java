@@ -137,4 +137,36 @@ class ParenthesisTokenTest {
         assertFalse(actual1);
         assertTrue(actual2);
     }
+
+    @Test
+    void closingAdjustsDepthPlus1() {
+
+        /* Given */
+
+        ParenthesisToken sut = new ParenthesisToken('(');
+
+        /* When */
+
+        int actual = sut.adjustDepth(10);
+
+        /* Then */
+
+        assertEquals(11, actual);
+    }
+
+    @Test
+    void closingAdjustsDepthMinus1() {
+
+        /* Given */
+
+        ParenthesisToken sut = new ParenthesisToken(')');
+
+        /* When */
+
+        int actual = sut.adjustDepth(10);
+
+        /* Then */
+
+        assertEquals(9, actual);
+    }
 }

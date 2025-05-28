@@ -36,4 +36,20 @@ class OperatorTokenTest {
 
         assertEquals("+", actual);
     }
+
+    @Test
+    void doesNotAdjustDepth() {
+
+        /* Given */
+
+        OperatorToken sut = new OperatorToken('+');
+
+        /* When */
+
+        int actual = sut.adjustDepth(10);
+
+        /* Then */
+
+        assertEquals(10, actual);
+    }
 }
