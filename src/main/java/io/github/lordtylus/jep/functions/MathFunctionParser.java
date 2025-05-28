@@ -15,12 +15,12 @@
 */
 package io.github.lordtylus.jep.functions;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,31 +30,48 @@ import java.util.Optional;
  * <p>
  * If an uppercase pattern is passed as an argument, it will be converted to lowercase first.
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MathFunctionParser {
+public class MathFunctionParser {
+
+    private final Map<String, MathFunction> relevantFunctions = new HashMap<>();
+
+    /**
+     * Constructs a new {@link MathFunctionParser} with the given collection of functions to check for.
+     * <p>
+     * The order may or may not be important depending on the use case of the caller. If an order of
+     * functions is needed, a list should be passed. That way conflicts of operator names, which this
+     * class does not handle, will be predictable.
+     * <p>
+     * If an unordered collection is passed, name conflicts may lead to non-deterministic results.
+     *
+     * @param relevantFunctions Collection of relevant functions to parse.
+     */
+    public MathFunctionParser(Collection<MathFunction> relevantFunctions) {
+
+        for (MathFunction relevantFunction : relevantFunctions) {
+
+            this.relevantFunctions.put(relevantFunction.getPattern(), relevantFunction);
+
+            for (String alias : relevantFunction.getAliases())
+                this.relevantFunctions.put(alias, relevantFunction);
+        }
+    }
 
     /**
      * Performs the parsing according to class definition.
      * <p>
      * This class does not handle conflicts of aliases and patters in the provided {@link MathFunction functions}.
-     * If there is a conflict, the first {@link MathFunction} encountered will be returned. What is first depends on the order of the passed Collection.
+     * If there is a conflict, the last {@link MathFunction} encountered will be returned. What is first depends on the order of the passed Collection.
      * In case of an unordered set, it cannot be predicted which {@link MathFunction} will be first.
      *
-     * @param relevantFunctions Collection of {@link MathFunction} used for matching.
-     * @param pattern           String pattern to match.
+     * @param pattern String pattern to match.
      * @return Optional with parsed {@link MathFunction} or empty() if there is no match.
      * @see MathFunctionParser
      */
-    public static Optional<MathFunction> parse(
-            @NonNull Collection<MathFunction> relevantFunctions,
+    public Optional<MathFunction> parse(
             @NonNull String pattern) {
 
         String lowerCasePattern = pattern.toLowerCase(Locale.ENGLISH);
 
-        return relevantFunctions.stream()
-                .filter(function ->
-                        lowerCasePattern.equals(function.getPattern())
-                                || function.getAliases().contains(lowerCasePattern))
-                .findFirst();
+        return Optional.ofNullable(relevantFunctions.get(lowerCasePattern));
     }
 }

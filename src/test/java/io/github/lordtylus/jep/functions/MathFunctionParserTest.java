@@ -40,9 +40,11 @@ class MathFunctionParserTest {
 
         List<MathFunction> functions = List.of(function1, function2, function3);
 
+        MathFunctionParser sut = new MathFunctionParser(functions);
+
         /* When */
 
-        MathFunction actual = MathFunctionParser.parse(functions, "bcd").orElseThrow();
+        MathFunction actual = sut.parse("bcd").orElseThrow();
 
         /* Then */
 
@@ -50,7 +52,7 @@ class MathFunctionParserTest {
     }
 
     @Test
-    void parsesFunctionConflictFirstWins() {
+    void parsesFunctionConflictLastWins() {
 
         /* Given */
 
@@ -60,13 +62,15 @@ class MathFunctionParserTest {
 
         List<MathFunction> functions = List.of(function1, function2, function3);
 
+        MathFunctionParser sut = new MathFunctionParser(functions);
+
         /* When */
 
-        MathFunction actual = MathFunctionParser.parse(functions, "bcd").orElseThrow();
+        MathFunction actual = sut.parse("bcd").orElseThrow();
 
         /* Then */
 
-        assertSame(function2, actual);
+        assertSame(function3, actual);
     }
 
     @Test
@@ -80,9 +84,11 @@ class MathFunctionParserTest {
 
         List<MathFunction> functions = List.of(function1, function2, function3);
 
+        MathFunctionParser sut = new MathFunctionParser(functions);
+
         /* When */
 
-        MathFunction actual = MathFunctionParser.parse(functions, "BCD").orElseThrow();
+        MathFunction actual = sut.parse("BCD").orElseThrow();
 
         /* Then */
 
@@ -107,9 +113,11 @@ class MathFunctionParserTest {
 
         List<MathFunction> functions = List.of(function1, function2, function3);
 
+        MathFunctionParser sut = new MathFunctionParser(functions);
+
         /* When */
 
-        MathFunction actual = MathFunctionParser.parse(functions, pattern).orElseThrow();
+        MathFunction actual = sut.parse(pattern).orElseThrow();
 
         /* Then */
 
@@ -127,9 +135,11 @@ class MathFunctionParserTest {
 
         List<MathFunction> functions = List.of(function1, function2, function3);
 
+        MathFunctionParser sut = new MathFunctionParser(functions);
+
         /* When */
 
-        Optional<MathFunction> actual = MathFunctionParser.parse(functions, "d");
+        Optional<MathFunction> actual = sut.parse("d");
 
         /* Then */
 

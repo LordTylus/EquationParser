@@ -23,10 +23,8 @@ import io.github.lordtylus.jep.functions.StandardFunctions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * This parser takes care of parenthesis in the equation and also matches functions directly in front of the opening parenthesis.
@@ -45,10 +43,7 @@ public final class ParenthesisParser implements EquationParser {
      */
     public static final ParenthesisParser DEFAULT = new ParenthesisParser(StandardFunctions.all());
 
-    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
-    private static final Pattern PARENTHESES_PATTERN = Pattern.compile("^(?<function>[a-z0-9\\s]+)?\\((?<inner>.+)(?<right>.*)\\)$", Pattern.CASE_INSENSITIVE);
-
-    private final List<MathFunction> relevantFunctions;
+    private final MathFunctionParser mathFunctionParser;
 
     /**
      * Creates a new Parser instance with the {@link MathFunction functions} to use for parsing.
@@ -58,7 +53,7 @@ public final class ParenthesisParser implements EquationParser {
     public ParenthesisParser(
             @NonNull List<MathFunction> relevantFunctions) {
 
-        this.relevantFunctions = new ArrayList<>(relevantFunctions);
+        this.mathFunctionParser = new MathFunctionParser(relevantFunctions);
     }
 
     @Override
@@ -82,16 +77,18 @@ public final class ParenthesisParser implements EquationParser {
 
                 char c = trimmedEquation.charAt(i);
 
-                if (c == ')') {
-                    depth++;
-                    continue;
-                }
+                switch (c) {
 
-                if (c == '(') {
-                    depth--;
+                    case ')':
+                        depth++;
+                        continue;
 
-                    if (depth == 0 && i != index)
-                        return Optional.empty();
+                    case '(':
+
+                        depth--;
+
+                        if (depth == 0 && i != index)
+                            return Optional.empty();
                 }
             }
 
@@ -100,7 +97,7 @@ public final class ParenthesisParser implements EquationParser {
 
             functionName = functionName.replace(" ", "");
 
-            Optional<MathFunction> function = MathFunctionParser.parse(relevantFunctions, functionName);
+            Optional<MathFunction> function = mathFunctionParser.parse(functionName);
             if (function.isEmpty())
                 return Optional.empty();
 
