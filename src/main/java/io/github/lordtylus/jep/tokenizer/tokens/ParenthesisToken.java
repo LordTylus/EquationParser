@@ -79,13 +79,4 @@ public class ParenthesisToken implements Token {
 
         return String.valueOf(character);
     }
-
-    @Override
-    public int adjustDepth(int currentDepth) {
-
-        if (isOpening())
-            return currentDepth + 1;
-
-        return currentDepth - 1;
-    }
 }

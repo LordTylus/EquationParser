@@ -37,19 +37,4 @@ class ValueTokenTest {
         assertEquals("Test String", actual);
     }
 
-    @Test
-    void doesNotAdjustDepth() {
-
-        /* Given */
-
-        ValueToken sut = new ValueToken("Test String");
-
-        /* When */
-
-        int actual = sut.adjustDepth(10);
-
-        /* Then */
-
-        assertEquals(10, actual);
-    }
 }

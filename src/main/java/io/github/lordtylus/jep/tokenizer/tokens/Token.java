@@ -25,15 +25,4 @@ public interface Token {
      */
     String getString();
 
-    /**
-     * When traversing through all tokens we can determine on what layer we currently are.
-     * Each opening parenthesis for example may increase the depth while a closing one decreases it.
-     * <p>
-     * that way we can check if everything is in order or if its unparsable.
-     *
-     * @return new depth
-     */
-    default int adjustDepth(int currentDepth) {
-        return currentDepth;
-    }
 }
