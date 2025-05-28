@@ -57,12 +57,43 @@ class EquationTest {
     }
 
     @ParameterizedTest
+    @CsvSource(value = {
+            "1 ; 1",
+            "-  1 ;-1",
+            " [a b c]  ; [a b c]",
+            " 1 + 1  ; 1+1",
+            " 1 + 1 ^ 2 ; 1+1^2",
+            " - 1 + 1 ^ 2  ; -1+1^2",
+            " 2 *   ( 2 + 3 ) ^ 2 ; 2*(2+3)^2",
+            "   2 * ( 2  +  3 ) ^ ( 1 / 2  ) ; 2*(2+3)^(1/2)",
+            "   2 * (   2   +   3   ) ^ (  - 1 / 2 )  ; 2*(2+3)^(-1/2)",
+            " 2   * s q r   t ( 2 + 3 ) ^ 2 ; 2*sqrt(2+3)^2",
+            "  2 * s q r t  ( 2 + 3 ) ^ l o g ( 1/ 2 )  ; 2*sqrt(2+3)^log(1/2)",
+            " (  - 3 )  + a b s (7   . 3 + 3  ) *  s i  n ( 6 +  ( [ h a l   l  o ] - 2 ) )   + 2 1 6 /    3^ 3 ; (-3)+abs(7.3+3)*sin(6+([ h a l   l  o ]-2))+216/3^3",
+            "  (  ( ( 1 + 2   ) * ( 3 + 4 ) )+  ((  ( 1 - 2  ) ^ 2) + 5) )  ; (((1+2)*(3+4))+(((1-2)^2)+5))",
+    }, delimiter = ';')
+    void parsesSpaces(String equation, String expected) {
+
+        /* Given / When */
+
+        Equation actual = Equation.parse(equation).orElseThrow();
+
+        /* Then */
+
+        assertEquals(expected, actual.toPattern(Locale.ENGLISH));
+    }
+
+    @ParameterizedTest
     @CsvSource({
             "(1+1",
             "abc",
             "a#c",
+            "-1+-1^2",
             "lol([hallo])",
-            "(2+((1+2)^2+(4+[hallo])^2))+(2*2))+5"
+            "(2+((1+2)^2+(4+[hallo])^2))+(2*2))+5",
+            "(((1+2)*(3+4))+(((1-2)^2)+))",
+            "(  ( ( 1 + 2   ) * ( 3 + 4 ) )+  ((  ( 1 - 2  ) ^ 2) + ) )",
+            "2*((2-4)hallo)",
     })
     void doesNotParse(String equation) {
 

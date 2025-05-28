@@ -76,7 +76,9 @@ class ParenthesisParserTest {
             "1",
             "1+1",
             "(1+1",
+            "1+1)",
             "lol(123+333)",
+            "1*((1+2)lol)",
             "a#c",
             "[hallo]",
     })
