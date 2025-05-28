@@ -144,14 +144,13 @@ public final class OperationParser implements EquationParser {
 
             char c = equation.charAt(i);
 
-            if (c == ')' || c == ']') {
-                depth++;
-                continue;
-            }
-
-            if (c == '(' || c == '[') {
-                depth--;
-                continue;
+            switch (c) {
+                case ')', ']':
+                    depth++;
+                    continue;
+                case '(', '[':
+                    depth--;
+                    continue;
             }
 
             if (depth == 0 && checkFunction.check(c)) {
