@@ -18,8 +18,8 @@ package io.github.lordtylus.jep.tokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -29,13 +29,15 @@ import java.util.List;
  * <p>
  * Everything that wasn't tokenized before an opening parenthesis will be added as a function token.
  */
-@NoArgsConstructor
+@RequiredArgsConstructor
 public final class ParenthesisTokenizer implements EquationTokenizer {
 
     /**
-     * immutable singleton instance of this class.
+     * Default instance of this class which tokenizes values before an opening parenthesis as a function.
      */
-    public static final ParenthesisTokenizer INSTANCE = new ParenthesisTokenizer();
+    public static final ParenthesisTokenizer DEFAULT = new ParenthesisTokenizer(true);
+
+    private final boolean tokenizeFunctions;
 
     @Override
     public boolean handle(
@@ -53,7 +55,7 @@ public final class ParenthesisTokenizer implements EquationTokenizer {
 
         ParenthesisToken token = new ParenthesisToken(currentCharacter);
 
-        if (token.isOpening())
+        if (tokenizeFunctions && token.isOpening())
             token.setFunction(substring);
         else if (!substring.isEmpty())
             tokenList.add(new ValueToken(substring));

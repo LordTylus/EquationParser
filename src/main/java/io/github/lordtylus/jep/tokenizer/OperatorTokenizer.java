@@ -34,7 +34,7 @@ import java.util.Set;
 public class OperatorTokenizer implements EquationTokenizer {
 
     /**
-     * immutable singleton instance of this class.
+     * Default instance of this class which can tokenize all default operators.
      */
     public static final OperatorTokenizer DEFAULT = new OperatorTokenizer(OperationParser.DEFAULT.getOperatorCharacters());
 

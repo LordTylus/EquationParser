@@ -68,7 +68,7 @@ class DefaultParserOptionsTest {
         /* Then */
 
         List<EquationTokenizer> expected = List.of(
-                ParenthesisTokenizer.INSTANCE,
+                ParenthesisTokenizer.DEFAULT,
                 OperatorTokenizer.DEFAULT
         );
 

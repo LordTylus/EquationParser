@@ -72,7 +72,7 @@ class CustomParserOptionsTest {
         );
 
         List<EquationTokenizer> expected2 = List.of(
-                ParenthesisTokenizer.INSTANCE,
+                ParenthesisTokenizer.DEFAULT,
                 OperatorTokenizer.DEFAULT
         );
 
@@ -135,14 +135,14 @@ class CustomParserOptionsTest {
 
         /* When */
 
-        sut.register(ParenthesisTokenizer.INSTANCE);
+        sut.register(ParenthesisTokenizer.DEFAULT);
 
         /* Then */
 
         List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
 
         List<EquationTokenizer> expected = List.of(
-                ParenthesisTokenizer.INSTANCE
+                ParenthesisTokenizer.DEFAULT
         );
 
         assertEquals(actual, expected);
@@ -154,7 +154,7 @@ class CustomParserOptionsTest {
         /* Given */
 
         CustomParserOptions sut = CustomParserOptions.empty();
-        sut.register(ParenthesisTokenizer.INSTANCE);
+        sut.register(ParenthesisTokenizer.DEFAULT);
 
         /* When */
 
@@ -165,7 +165,7 @@ class CustomParserOptionsTest {
         List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
 
         List<EquationTokenizer> expected = List.of(
-                ParenthesisTokenizer.INSTANCE,
+                ParenthesisTokenizer.DEFAULT,
                 OperatorTokenizer.DEFAULT
         );
 
@@ -205,7 +205,7 @@ class CustomParserOptionsTest {
 
         /* When */
 
-        sut.unregister(ParenthesisTokenizer.INSTANCE);
+        sut.unregister(ParenthesisTokenizer.DEFAULT);
 
         /* Then */
 

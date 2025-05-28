@@ -33,7 +33,7 @@ import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
  *  Alongside the parsers there are also the following tokenizers to be used:
  * <ul>
  *     <li>{@link OperatorTokenizer#DEFAULT}</li>
- *     <li>{@link ParenthesisTokenizer#INSTANCE}</li>
+ *     <li>{@link ParenthesisTokenizer#DEFAULT}</li>
  * </ul>
  */
 public final class DefaultParserOptions extends AbstractParserOptions {
@@ -50,7 +50,7 @@ public final class DefaultParserOptions extends AbstractParserOptions {
         register(ConstantParser.INSTANCE);
         register(VariableParser.INSTANCE);
 
-        register(ParenthesisTokenizer.INSTANCE);
+        register(ParenthesisTokenizer.DEFAULT);
         register(OperatorTokenizer.DEFAULT);
     }
 }
