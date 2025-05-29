@@ -46,7 +46,6 @@ public enum StorageMode {
         return switch (this) {
             case STRICT -> throw new IllegalArgumentException("Variable '" + variableName + "' not set!");
             case UNKNOWN_MEANS_DEFAULT -> defaultValue;
-            default -> throw new UnsupportedOperationException("Mode " + this + " is not handled!");
         };
     }
 }
