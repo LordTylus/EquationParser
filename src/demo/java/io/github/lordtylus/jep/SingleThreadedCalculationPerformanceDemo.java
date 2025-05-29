@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * This demo contains a simple performance test, which parses the equation once,
  * but calculates it 1 million, 10 million and 100 million times.
  */
-public class CalculationPerformanceDemo {
+public class SingleThreadedCalculationPerformanceDemo {
 
     public static void main(String[] args) {
 
@@ -43,10 +43,8 @@ public class CalculationPerformanceDemo {
                 equation.evaluate(simpleStorage);
             }
 
-            long end = System.nanoTime();
-
             // 758 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
@@ -61,10 +59,8 @@ public class CalculationPerformanceDemo {
                 equation.evaluate(simpleStorage);
             }
 
-            long end = System.nanoTime();
-
-            // 2.304 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+            // 2,304 ms
+            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
@@ -79,10 +75,8 @@ public class CalculationPerformanceDemo {
                 equation.evaluate(simpleStorage);
             }
 
-            long end = System.nanoTime();
-
-            // 22.801 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+            // 22,801 ms
+            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
     }
 }

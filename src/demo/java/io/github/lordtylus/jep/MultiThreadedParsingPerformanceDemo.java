@@ -16,14 +16,14 @@
 package io.github.lordtylus.jep;
 
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 /**
- * This demo contains a simple performance test, which parses the input 1 Million,
- * 10 Million and 100 Million times.
- * This framework is not optimized for parsing speed, but for calculation performance
- * with different variables.
+ * This Demo shows the performance when parsing a bunch of Equations using in
+ * a multithreaded manner utilizing parallel streams. This example just shows an
+ * IntStream but there's nothing stopping you doing the same with a large collection.
  */
-public class ParsingPerformanceDemo {
+public class MultiThreadedParsingPerformanceDemo {
 
     public static void main(String[] args) {
 
@@ -33,41 +33,33 @@ public class ParsingPerformanceDemo {
         {
             long start = System.nanoTime();
 
-            for (int i = 0; i < 1_000_000; i++)
-                Equation.parse(input);
+            IntStream.range(0, 1_000_000).parallel()
+                    .forEach((i) -> Equation.parse(input));
 
-            long end = System.nanoTime();
-
-            // 1.947 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+            // 384 ms
+            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
         {
-
             long start = System.nanoTime();
 
-            for (int i = 0; i < 10_000_000; i++)
-                Equation.parse(input);
+            IntStream.range(0, 10_000_000).parallel()
+                    .forEach((i) -> Equation.parse(input));
 
-            long end = System.nanoTime();
-
-            // 14.818 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+            // 1,941 ms
+            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
         {
-
             long start = System.nanoTime();
 
-            for (int i = 0; i < 100_000_000; i++)
-                Equation.parse(input);
+            IntStream.range(0, 100_000_000).parallel()
+                    .forEach((i) -> Equation.parse(input));
 
-            long end = System.nanoTime();
-
-            // 150.955 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+            // 19,405 ms
+            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
     }
 }
