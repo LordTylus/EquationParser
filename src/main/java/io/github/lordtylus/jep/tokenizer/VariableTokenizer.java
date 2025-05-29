@@ -48,10 +48,10 @@ public final class VariableTokenizer implements EquationTokenizer {
             @NonNull List<Token> tokenList,
             @NonNull TokenizerContext context) {
 
-        switch (currentCharacter) {
-            case '[' -> context.increaseBracketCount();
-            case ']' -> context.decreaseBracketCount();
-        }
+        if (currentCharacter == '[')
+            context.increaseBracketCount();
+        else
+            context.decreaseBracketCount();
 
         return false;
     }

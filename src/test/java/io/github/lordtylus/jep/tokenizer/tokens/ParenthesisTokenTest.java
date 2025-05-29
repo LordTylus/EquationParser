@@ -20,6 +20,7 @@ import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -168,5 +169,39 @@ class ParenthesisTokenTest {
         /* Then */
 
         assertEquals(9, actual);
+    }
+
+    @Test
+    void anOpeningParenthesisCanBeSetAClosingOne() {
+
+        /* Given */
+
+        ParenthesisToken sut1 = new ParenthesisToken('(');
+        ParenthesisToken sut2 = new ParenthesisToken(')');
+
+        /* When */
+
+        sut1.setClosing(sut2);
+
+        /* Then */
+
+        assertSame(sut2, sut1.getClosing());
+    }
+
+    @Test
+    void anClosingParenthesisCannotBeSetAnything() {
+
+        /* Given */
+
+        ParenthesisToken sut1 = new ParenthesisToken('(');
+        ParenthesisToken sut2 = new ParenthesisToken(')');
+
+        /* When */
+
+        Executable result = () -> sut2.setClosing(sut1);
+
+        /* Then */
+
+        assertThrows(UnsupportedOperationException.class, result);
     }
 }

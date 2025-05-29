@@ -16,9 +16,14 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Constant;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
+import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -60,10 +65,12 @@ class ConstantParserTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "+",
             "abc",
             "1.2.3",
             "1,2.3",
             "+1",
+            "1-1",
             "([Hallo])",
             "1+1",
             "sqrt([hallo])",
@@ -83,5 +90,111 @@ class ConstantParserTest {
         /* Then */
 
         assertTrue(actual.isEmpty());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "+",
+            "abc",
+            "1.2.3",
+            "1,2.3",
+            "+1",
+            "1-1",
+            "([Hallo])",
+            "1+1",
+            "sqrt([hallo])",
+    }, delimiter = ';')
+    void doesNotParseTokens(String token) {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new ValueToken(token));
+
+        /* When */
+
+        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotAcceptOperators() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new OperatorToken('+'));
+
+        /* When */
+
+        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotAcceptParenthesisTokens() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new ParenthesisToken('('));
+
+        /* When */
+
+        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotAcceptBlankStrings() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new ValueToken("   "));
+
+        /* When */
+
+        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void parsesSublist() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                new ValueToken("2"),
+                new OperatorToken('+'),
+                new ValueToken("3"));
+
+        /* When */
+
+        Constant constant = ConstantParser.INSTANCE.parse(tokenized, 2, 2, options).orElseThrow();
+
+        /* Then */
+
+        assertEquals("2", constant.toPattern(Locale.US));
     }
 }

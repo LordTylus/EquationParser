@@ -37,6 +37,7 @@ class EquationStringTokenizerTest {
             "1-[1+1]+1 ; 1|-|[1+1]|+|1",
             "1+[1+1]+1 ; 1|+|[1+1]|+|1",
             "1-([1+1]+1)*2 ; 1|-|(|[1+1]|+|1|)|*|2",
+            "1+[1(1+1)]+1 ; 1|+|[1(1+1)]|+|1",
     }, delimiter = ';')
     void tokenizesDefault(String input, String expected) {
 
@@ -301,6 +302,7 @@ class EquationStringTokenizerTest {
             "abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf) ; abs(sin(sqrt(1+2)*cos(3+4))+lol(sss(ddd(1-2)^2)+)sdf)",
             "-1--1 ; -1--1",
             "2(x+2) ; 2(x+2)",
+            "1-([1+1]+1)*2 ; 1-([1+1]+1)*2",
             "1-([1+1]+1)*2 ; 1-([1+1]+1)*2",
     }, delimiter = ';')
     void tokenizesNothing(String input, String expected) {

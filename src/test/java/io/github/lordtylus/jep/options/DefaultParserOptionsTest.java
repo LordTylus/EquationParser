@@ -26,7 +26,9 @@ import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
 import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -73,6 +75,33 @@ class DefaultParserOptionsTest {
                 ParenthesisTokenizer.DEFAULT,
                 OperatorTokenizer.DEFAULT
         );
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void returnsDefaultDelimiterMapping() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.withDefaults();
+
+        /* When */
+
+        Map<Character, EquationTokenizer> actual = sut.getTokenizerForDelimiterMap();
+
+        /* Then */
+
+        Map<Character, EquationTokenizer> expected = new HashMap<>();
+        expected.put('(', ParenthesisTokenizer.DEFAULT);
+        expected.put(')', ParenthesisTokenizer.DEFAULT);
+        expected.put('[', VariableTokenizer.INSTANCE);
+        expected.put(']', VariableTokenizer.INSTANCE);
+        expected.put('*', OperatorTokenizer.DEFAULT);
+        expected.put('+', OperatorTokenizer.DEFAULT);
+        expected.put('-', OperatorTokenizer.DEFAULT);
+        expected.put('/', OperatorTokenizer.DEFAULT);
+        expected.put('^', OperatorTokenizer.DEFAULT);
 
         assertEquals(actual, expected);
     }

@@ -16,11 +16,14 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -350,5 +353,66 @@ class OperationParserTest {
         /* Then */
 
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotParseWhenLeftIsEmpty() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new OperatorToken('+'), new ValueToken("1"), new OperatorToken('*'), new ValueToken("1"));
+
+        /* When */
+
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotParseWhenRightIsEmpty() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new OperatorToken('+'), new ValueToken("1"), new OperatorToken('+'));
+
+        /* When */
+
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void parsesSublist() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                new ValueToken("2"),
+                new OperatorToken('+'),
+                new ValueToken("3"),
+                new OperatorToken('+'),
+                new ValueToken("4"));
+
+        /* When */
+
+        Operation operation = OperationParser.DEFAULT.parse(tokenized, 2, 4, options).orElseThrow();
+
+        /* Then */
+
+        assertEquals("2+3", operation.toPattern(Locale.US));
     }
 }
