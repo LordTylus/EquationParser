@@ -18,6 +18,8 @@ package io.github.lordtylus.jep.tokenizer;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -31,7 +33,8 @@ import java.util.List;
  * "12", "*", "(", "[x]", "3", ")", "^", "2"
  * </pre>
  */
-public class EquationStringTokenizer {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class EquationStringTokenizer {
 
     /**
      * Tokenizes the given equation string according to the class definition.

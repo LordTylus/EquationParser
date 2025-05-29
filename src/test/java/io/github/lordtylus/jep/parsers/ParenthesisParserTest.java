@@ -75,8 +75,10 @@ class ParenthesisParserTest {
     @CsvSource({
             "1",
             "1+1",
-            "(1+1",
             "1+1)",
+            "(1+1",
+            "lol(1+1",
+            "lol1+1)",
             "lol(123+333)",
             "1*((1+2)lol)",
             "a#c",
