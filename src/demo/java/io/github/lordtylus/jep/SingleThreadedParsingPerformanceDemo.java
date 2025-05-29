@@ -36,7 +36,7 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 1_000_000; i++)
                 Equation.parse(input);
 
-            // 1.633 ms
+            // 1,633 ms
             System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
 
@@ -48,7 +48,7 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 10_000_000; i++)
                 Equation.parse(input);
 
-            // 13.861 ms
+            // 13,453 ms
             System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
 
@@ -60,7 +60,7 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 100_000_000; i++)
                 Equation.parse(input);
 
-            // 138.553 ms
+            // 134,781 ms
             System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
         }
     }

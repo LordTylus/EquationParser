@@ -20,6 +20,7 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This Options object holds references to all {@link EquationParser EquationParsers},
@@ -40,6 +41,16 @@ public interface ParsingOptions {
     static ParsingOptions defaultOptions() {
         return DefaultParserOptions.INSTANCE;
     }
+
+    /**
+     * Returns a Map containing a mapping of a character to the corresponding {@link EquationTokenizer}
+     * <p>
+     * This set would include Brackets, Parenthesis, Operators to be used according to the registered
+     * {@link EquationTokenizer} implementations returned by {@link #getRegisteredTokenizers()}
+     *
+     * @return immutable mapping of tokenizer delimiter to {@link EquationTokenizer}
+     */
+    Map<Character, EquationTokenizer> getTokenizerForDelimiterMap();
 
     /**
      * Returns a list of {@link EquationParser} objects to be used for parsing.

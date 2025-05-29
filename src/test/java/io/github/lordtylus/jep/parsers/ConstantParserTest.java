@@ -51,7 +51,7 @@ class ConstantParserTest {
 
         /* When */
 
-        Equation actual = ConstantParser.INSTANCE.parse(tokenized, options).orElseThrow();
+        Equation actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
 
         /* Then */
 
@@ -78,7 +78,7 @@ class ConstantParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, options);
+        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 

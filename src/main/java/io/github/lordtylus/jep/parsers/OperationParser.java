@@ -105,11 +105,13 @@ public final class OperationParser implements EquationParser {
     @Override
     public Optional<Operation> parse(
             @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             @NonNull ParsingOptions options) {
 
         try {
 
-            if (tokenizedEquation.size() < 3)
+            if (endIndex - startIndex < 2)
                 return Optional.empty();
 
             for (int relevantLevel : relevantOperatorOrders) {
@@ -118,6 +120,8 @@ public final class OperationParser implements EquationParser {
 
                 Optional<Operation> operation = tryParse(
                         tokenizedEquation,
+                        startIndex,
+                        endIndex,
                         options,
                         operatorInformation.operators,
                         operatorInformation.operators::containsKey);
@@ -137,13 +141,15 @@ public final class OperationParser implements EquationParser {
 
     private static Optional<Operation> tryParse(
             List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             ParsingOptions options,
             Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
 
         int depth = 0;
 
-        for (int i = tokenizedEquation.size() - 1; i >= 0; i--) {
+        for (int i = endIndex; i >= startIndex; i--) {
 
             Token token = tokenizedEquation.get(i);
 
@@ -154,11 +160,14 @@ public final class OperationParser implements EquationParser {
                 if (!checkFunction.check(operatorToken.operator()))
                     continue;
 
-                List<Token> left = tokenizedEquation.subList(0, i);
-                List<Token> right = tokenizedEquation.subList(i + 1, tokenizedEquation.size());
+                int endLeft = i - 1;
+                int startRight = i + 1;
 
-                Optional<Equation> leftEquation = EquationParser.parseEquation(left, options);
-                Optional<Equation> rightEquation = EquationParser.parseEquation(right, options);
+                if (endLeft - startIndex < 0 || endIndex - startRight < 0)
+                    return Optional.empty();
+
+                Optional<Equation> leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
+                Optional<Equation> rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
                 Operator parsedOperator = OperatorParser.parse(relevantOperators, operatorToken.operator()).orElseThrow();
 
                 if (leftEquation.isEmpty() || rightEquation.isEmpty())

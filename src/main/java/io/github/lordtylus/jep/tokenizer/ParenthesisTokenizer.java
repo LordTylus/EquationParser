@@ -18,10 +18,12 @@ package io.github.lordtylus.jep.tokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This tokenizer implementation reacts to parentheses ( and ) and add these
@@ -37,22 +39,21 @@ public final class ParenthesisTokenizer implements EquationTokenizer {
      */
     public static final ParenthesisTokenizer DEFAULT = new ParenthesisTokenizer(true);
 
+    @Getter
+    private final Set<Character> delimiters = Set.of('(', ')');
+
     private final boolean tokenizeFunctions;
 
     @Override
     public boolean handle(
             int beginIndex,
             int currentIndex,
+            char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
             @NonNull TokenizerContext context) {
 
         if (context.isSplitProhibited())
-            return false;
-
-        char currentCharacter = equation.charAt(currentIndex);
-
-        if (currentCharacter != '(' && currentCharacter != ')')
             return false;
 
         String substring = equation.substring(beginIndex, currentIndex);

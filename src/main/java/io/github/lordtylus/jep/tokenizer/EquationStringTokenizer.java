@@ -24,6 +24,7 @@ import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The purpose of this class is to take a given Equation String and tokenize it for parsing.
@@ -47,19 +48,29 @@ public final class EquationStringTokenizer {
             @NonNull String equation,
             @NonNull ParsingOptions options) {
 
-        List<Token> tokenList = new ArrayList<>();
+        Map<Character, EquationTokenizer> registeredTokenizers = options.getTokenizerForDelimiterMap();
+
+        List<Token> tokenList = new ArrayList<>(32);
         int beginIndex = 0;
 
         TokenizerContext context = new TokenizerContext();
 
-        for (int i = 0; i < equation.length(); i++)
-            for (EquationTokenizer tokenizer : options.getRegisteredTokenizers())
-                if (tokenizer.handle(beginIndex, i, equation, tokenList, context))
-                    beginIndex = i + 1;
+        for (int i = 0; i < equation.length(); i++) {
+
+            char c = equation.charAt(i);
+
+            EquationTokenizer tokenizer = registeredTokenizers.get(c);
+
+            if (tokenizer == null)
+                continue;
+
+            if (tokenizer.handle(beginIndex, i, c, equation, tokenList, context))
+                beginIndex = i + 1;
+        }
 
         String substring = equation.substring(beginIndex);
 
-        if (!substring.isEmpty())
+        if (!substring.isBlank())
             tokenList.add(new ValueToken(substring));
 
         return tokenList;

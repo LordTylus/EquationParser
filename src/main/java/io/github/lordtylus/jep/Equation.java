@@ -113,6 +113,6 @@ public interface Equation {
 
         List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
 
-        return EquationParser.parseEquation(tokenized, parsingOptions);
+        return EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
     }
 }

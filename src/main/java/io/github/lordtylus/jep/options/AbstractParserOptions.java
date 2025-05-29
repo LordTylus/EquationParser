@@ -21,7 +21,9 @@ import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This abstract implementation of {@link ParsingOptions} provides basic functionality
@@ -34,6 +36,14 @@ public abstract class AbstractParserOptions implements ParsingOptions {
 
     private final List<EquationTokenizer> registeredTokenizers = new ArrayList<>();
     private final List<EquationTokenizer> registeredTokenizersUnmodifiable = Collections.unmodifiableList(registeredTokenizers);
+
+    private final Map<Character, EquationTokenizer> tokenizerMapping = new HashMap<>();
+    private final Map<Character, EquationTokenizer> tokenizerMappingUnmodifiable = Collections.unmodifiableMap(tokenizerMapping);
+
+    @Override
+    public Map<Character, EquationTokenizer> getTokenizerForDelimiterMap() {
+        return tokenizerMappingUnmodifiable;
+    }
 
     @Override
     public List<EquationParser> getRegisteredParsers() {
@@ -67,9 +77,18 @@ public abstract class AbstractParserOptions implements ParsingOptions {
      * Registers a new {@link EquationTokenizer} to be used for parsing equation strings.
      *
      * @param tokenizer {@link EquationTokenizer} to be registered
+     * @throws IllegalArgumentException if a tokenizer using the same delimiters is already registered.
      */
     protected void register(@NonNull EquationTokenizer tokenizer) {
+
+        for (Character delimiter : tokenizer.getDelimiters())
+            if (this.tokenizerMapping.containsKey(delimiter))
+                throw new IllegalArgumentException("Tokenizer already exists!");
+
         this.registeredTokenizers.add(tokenizer);
+
+        for (Character delimiter : tokenizer.getDelimiters())
+            this.tokenizerMapping.put(delimiter, tokenizer);
     }
 
     /**
@@ -78,6 +97,9 @@ public abstract class AbstractParserOptions implements ParsingOptions {
      * @param tokenizer {@link EquationTokenizer} to be removed
      */
     protected void unregister(@NonNull EquationTokenizer tokenizer) {
-        this.registeredTokenizers.remove(tokenizer);
+
+        if (this.registeredTokenizers.remove(tokenizer))
+            for (Character delimiter : tokenizer.getDelimiters())
+                this.tokenizerMapping.remove(delimiter);
     }
 }

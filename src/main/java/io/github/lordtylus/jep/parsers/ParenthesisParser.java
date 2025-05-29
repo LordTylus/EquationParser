@@ -61,20 +61,22 @@ public final class ParenthesisParser implements EquationParser {
     @Override
     public Optional<Parenthesis> parse(
             @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             @NonNull ParsingOptions options) {
 
         try {
 
-            if (tokenizedEquation.size() < 3)
+            if (endIndex - startIndex < 2)
                 return Optional.empty();
 
-            Token first = tokenizedEquation.get(0);
+            Token first = tokenizedEquation.get(startIndex);
 
             if (!(first instanceof ParenthesisToken openingToken)
                     || !openingToken.isOpening())
                 return Optional.empty();
 
-            Token last = tokenizedEquation.get(tokenizedEquation.size() - 1);
+            Token last = tokenizedEquation.get(endIndex);
 
             if (!(last instanceof ParenthesisToken closingToken)
                     || !closingToken.isClosing())
@@ -90,9 +92,8 @@ public final class ParenthesisParser implements EquationParser {
             if (function.isEmpty())
                 return Optional.empty();
 
-            List<Token> innerList = tokenizedEquation.subList(1, tokenizedEquation.size() - 1);
-
-            Optional<Equation> inner = EquationParser.parseEquation(innerList, options);
+            Optional<Equation> inner = EquationParser.parseEquation(tokenizedEquation,
+                    startIndex + 1, endIndex - 1, options);
 
             return inner.map(e -> new Parenthesis(function.get(), e));
 

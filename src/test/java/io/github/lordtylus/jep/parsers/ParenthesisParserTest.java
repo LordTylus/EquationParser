@@ -69,7 +69,7 @@ class ParenthesisParserTest {
 
         /* When */
 
-        Equation actual = ParenthesisParser.DEFAULT.parse(tokenized, options).orElseThrow();
+        Equation actual = ParenthesisParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
 
         /* Then */
 
@@ -99,7 +99,7 @@ class ParenthesisParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(tokenized, options);
+        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 

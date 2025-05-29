@@ -48,14 +48,16 @@ public final class VariableParser implements EquationParser {
     @Override
     public Optional<Variable> parse(
             @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             @NonNull ParsingOptions options) {
 
         try {
 
-            if (tokenizedEquation.size() != 1)
+            if (endIndex - startIndex != 0)
                 return Optional.empty();
 
-            Token token = tokenizedEquation.get(0);
+            Token token = tokenizedEquation.get(startIndex);
 
             if (!(token instanceof ValueToken))
                 return Optional.empty();

@@ -16,16 +16,19 @@
 package io.github.lordtylus.jep.tokenizer;
 
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This tokenizer never does anything to the string, however it ensures that nobody else
  * splits while we are between [ and ] this is very important, because otherwise parenthesis
  * or operators between [ and ] would be detected as things they are not.
  */
+@Getter
 @RequiredArgsConstructor
 public final class VariableTokenizer implements EquationTokenizer {
 
@@ -34,15 +37,16 @@ public final class VariableTokenizer implements EquationTokenizer {
      */
     public static final VariableTokenizer INSTANCE = new VariableTokenizer();
 
+    private final Set<Character> delimiters = Set.of('[', ']');
+
     @Override
     public boolean handle(
             int beginIndex,
             int currentIndex,
+            char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
             @NonNull TokenizerContext context) {
-
-        char currentCharacter = equation.charAt(currentIndex);
 
         switch (currentCharacter) {
             case '[' -> context.increaseBracketCount();

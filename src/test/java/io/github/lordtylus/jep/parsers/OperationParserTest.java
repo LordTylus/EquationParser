@@ -119,7 +119,7 @@ class OperationParserTest {
 
         /* When */
 
-        Equation actual = OperationParser.DEFAULT.parse(tokenized, options).orElseThrow();
+        Equation actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
 
         /* Then */
 
@@ -157,7 +157,7 @@ class OperationParserTest {
 
         /* When */
 
-        Equation actual = sut.parse(tokenized, customParserOptions).orElseThrow();
+        Equation actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions).orElseThrow();
 
         /* Then */
 
@@ -198,7 +198,7 @@ class OperationParserTest {
 
         /* When */
 
-        Equation actual = sut.parse(tokenized, customParserOptions).orElseThrow();
+        Equation actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions).orElseThrow();
 
         /* Then */
 
@@ -244,7 +244,7 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(tokenized, customParserOptions);
+        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
 
         /* Then */
 
@@ -272,7 +272,7 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, options);
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 
@@ -308,7 +308,7 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(tokenized, customParserOptions);
+        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
 
         /* Then */
 
@@ -345,7 +345,7 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(tokenized, customParserOptions);
+        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
 
         /* Then */
 

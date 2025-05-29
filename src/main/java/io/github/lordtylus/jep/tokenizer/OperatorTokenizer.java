@@ -19,6 +19,7 @@ import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import java.util.Set;
  * <p>
  * Everything that wasn't tokenized before an opening parenthesis will be added as a function token.
  */
+@Getter
 public class OperatorTokenizer implements EquationTokenizer {
 
     /**
@@ -38,7 +40,7 @@ public class OperatorTokenizer implements EquationTokenizer {
      */
     public static final OperatorTokenizer DEFAULT = new OperatorTokenizer(OperationParser.DEFAULT.getOperatorCharacters());
 
-    private final Set<Character> operatorCharacterToCheck;
+    private final Set<Character> delimiters;
 
     /**
      * Creates a new OperatorTokenizer with the given list of Tokenizers to check.
@@ -48,13 +50,14 @@ public class OperatorTokenizer implements EquationTokenizer {
     public OperatorTokenizer(
             @NonNull Set<Character> operatorCharacterToCheck) {
 
-        this.operatorCharacterToCheck = new HashSet<>(operatorCharacterToCheck);
+        this.delimiters = new HashSet<>(operatorCharacterToCheck);
     }
 
     @Override
     public boolean handle(
             int beginIndex,
             int currentIndex,
+            char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
             @NonNull TokenizerContext context) {
@@ -62,10 +65,7 @@ public class OperatorTokenizer implements EquationTokenizer {
         if (context.isSplitProhibited())
             return false;
 
-        char currentCharacter = equation.charAt(currentIndex);
-
-        if (!operatorCharacterToCheck.contains(currentCharacter))
-            return false;
+        String substring = equation.substring(beginIndex, currentIndex);
 
         /*
          * Negative numbers have an operator in front.
@@ -75,10 +75,15 @@ public class OperatorTokenizer implements EquationTokenizer {
         if (currentIndex == 0 || equation.charAt(currentIndex - 1) == '(')
             return false;
 
-        String substring = equation.substring(beginIndex, currentIndex);
+        if (substring.isBlank()) {
 
-        if (!substring.isBlank())
+            /* Special case if there are spaces */
+            if (equation.charAt(beginIndex - 1) == '(')
+                return false;
+
+        } else {
             tokenList.add(new ValueToken(substring));
+        }
 
         tokenList.add(new OperatorToken(currentCharacter));
 
