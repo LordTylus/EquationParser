@@ -56,7 +56,11 @@ public class OperatorTokenizer implements EquationTokenizer {
             int beginIndex,
             int currentIndex,
             @NonNull String equation,
-            @NonNull List<Token> tokenList) {
+            @NonNull List<Token> tokenList,
+            @NonNull TokenizerContext context) {
+
+        if (context.isSplitProhibited())
+            return false;
 
         char currentCharacter = equation.charAt(currentIndex);
 
@@ -73,7 +77,7 @@ public class OperatorTokenizer implements EquationTokenizer {
 
         String substring = equation.substring(beginIndex, currentIndex);
 
-        if (!substring.isEmpty())
+        if (!substring.isBlank())
             tokenList.add(new ValueToken(substring));
 
         tokenList.add(new OperatorToken(currentCharacter));

@@ -17,26 +17,38 @@ package io.github.lordtylus.jep.tokenizer;
 
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 /**
- * This interface defines the API to be used by {@link EquationStringTokenizer} to evaluate
- * a character and decide what to do with the equation string.
+ * This tokenizer never does anything to the string, however it ensures that nobody else
+ * splits while we are between [ and ] this is very important, because otherwise parenthesis
+ * or operators between [ and ] would be detected as things they are not.
  */
-public interface EquationTokenizer {
+@RequiredArgsConstructor
+public final class VariableTokenizer implements EquationTokenizer {
 
     /**
-     * @param beginIndex   index of the string after the last token was added.
-     * @param currentIndex current index of the string to be tokenized.
-     * @param equation     equation string to be tokenized.
-     * @param tokenList    mutable List of Tokens this tokenizer can add a token to.
-     * @return true if this tokenizer added a token to the list.
+     * Default immutable instance of this singleton class
      */
-    boolean handle(
+    public static final VariableTokenizer INSTANCE = new VariableTokenizer();
+
+    @Override
+    public boolean handle(
             int beginIndex,
             int currentIndex,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
-            @NonNull TokenizerContext context);
+            @NonNull TokenizerContext context) {
+
+        char currentCharacter = equation.charAt(currentIndex);
+
+        switch (currentCharacter) {
+            case '[' -> context.increaseBracketCount();
+            case ']' -> context.decreaseBracketCount();
+        }
+
+        return false;
+    }
 }

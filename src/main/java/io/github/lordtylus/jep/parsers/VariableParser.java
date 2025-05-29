@@ -17,10 +17,13 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,12 +47,20 @@ public final class VariableParser implements EquationParser {
 
     @Override
     public Optional<Variable> parse(
-            @NonNull String equation,
+            @NonNull List<Token> tokenizedEquation,
             @NonNull ParsingOptions options) {
 
         try {
 
-            String trimmedEquation = equation.trim();
+            if (tokenizedEquation.size() != 1)
+                return Optional.empty();
+
+            Token token = tokenizedEquation.get(0);
+
+            if (!(token instanceof ValueToken))
+                return Optional.empty();
+
+            String trimmedEquation = token.getString().trim();
 
             if (!trimmedEquation.startsWith("["))
                 return Optional.empty();
