@@ -17,6 +17,7 @@ package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -52,6 +53,9 @@ public final class CustomParserOptions extends AbstractParserOptions {
         DefaultParserOptions.INSTANCE.getRegisteredParsers()
                 .forEach(empty::register);
 
+        DefaultParserOptions.INSTANCE.getRegisteredTokenizers()
+                .forEach(empty::register);
+
         return empty;
     }
 
@@ -69,5 +73,21 @@ public final class CustomParserOptions extends AbstractParserOptions {
     @Override
     public void unregister(@NonNull EquationParser parser) {
         super.unregister(parser);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(@NonNull EquationTokenizer tokenizer) {
+        super.register(tokenizer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unregister(@NonNull EquationTokenizer tokenizer) {
+        super.unregister(tokenizer);
     }
 }

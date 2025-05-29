@@ -23,10 +23,13 @@ import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import lombok.NonNull;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This parser parses operations such as 1+2 by extracting the operator and splitting the string in two expressions.
@@ -170,6 +173,21 @@ public final class OperationParser implements EquationParser {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * This method figures out the symbols of all operators to be recognized by this parser.
+     *
+     * @return Set of characters for operator symbols.
+     */
+    public Set<Character> getOperatorCharacters() {
+
+        return operatorsMap.values().stream()
+                .map(OperatorInformation::operators)
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .map(Operator::getPattern)
+                .collect(Collectors.toSet());
     }
 
     private interface CheckFunction {

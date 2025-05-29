@@ -16,6 +16,7 @@
 package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ public abstract class AbstractParserOptions implements ParsingOptions {
 
     private final List<EquationParser> registeredParsers = new ArrayList<>();
     private final List<EquationParser> registeredParsersUnmodifiable = Collections.unmodifiableList(registeredParsers);
+
+    private final List<EquationTokenizer> registeredTokenizers = new ArrayList<>();
+    private final List<EquationTokenizer> registeredTokenizersUnmodifiable = Collections.unmodifiableList(registeredTokenizers);
 
     @Override
     public List<EquationParser> getRegisteredParsers() {
@@ -52,5 +56,28 @@ public abstract class AbstractParserOptions implements ParsingOptions {
      */
     protected void unregister(@NonNull EquationParser parser) {
         this.registeredParsers.remove(parser);
+    }
+
+    @Override
+    public List<EquationTokenizer> getRegisteredTokenizers() {
+        return registeredTokenizersUnmodifiable;
+    }
+
+    /**
+     * Registers a new {@link EquationTokenizer} to be used for parsing equation strings.
+     *
+     * @param tokenizer {@link EquationTokenizer} to be registered
+     */
+    protected void register(@NonNull EquationTokenizer tokenizer) {
+        this.registeredTokenizers.add(tokenizer);
+    }
+
+    /**
+     * Removes a registered {@link EquationTokenizer} so it will no longer be used for parsing.
+     *
+     * @param tokenizer {@link EquationTokenizer} to be removed
+     */
+    protected void unregister(@NonNull EquationTokenizer tokenizer) {
+        this.registeredTokenizers.remove(tokenizer);
     }
 }

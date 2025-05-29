@@ -20,6 +20,9 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
+import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
+import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -46,6 +49,27 @@ class DefaultParserOptionsTest {
                 OperationParser.DEFAULT,
                 ConstantParser.INSTANCE,
                 VariableParser.INSTANCE
+        );
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void containsCorrectTokenizers() {
+
+        /* Given */
+
+        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+
+        /* When */
+
+        List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
+
+        /* Then */
+
+        List<EquationTokenizer> expected = List.of(
+                ParenthesisTokenizer.INSTANCE,
+                OperatorTokenizer.DEFAULT
         );
 
         assertEquals(actual, expected);
