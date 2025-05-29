@@ -31,6 +31,7 @@ public interface Token {
      * <p>
      * that way we can check if everything is in order or if its unparsable.
      *
+     * @param currentDepth current depth in the string to parse.
      * @return new depth
      */
     default int adjustDepth(int currentDepth) {

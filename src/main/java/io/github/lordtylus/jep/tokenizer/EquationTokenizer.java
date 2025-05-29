@@ -27,6 +27,11 @@ import java.util.Set;
  */
 public interface EquationTokenizer {
 
+    /**
+     * Returns a set of delimiters this tokenizer recognizes and works with.
+     *
+     * @return character set of delimiters
+     */
     Set<Character> getDelimiters();
 
     /**
@@ -43,6 +48,7 @@ public interface EquationTokenizer {
      * @param currentCharacter the character the currentIndex points to.
      * @param equation         equation string to be tokenized.
      * @param tokenList        mutable List of Tokens this tokenizer can add a token to.
+     * @param context          the {@link TokenizerContext} for tokenizers to store and exchange data.
      * @return true if this tokenizer added a token to the list.
      */
     boolean handle(

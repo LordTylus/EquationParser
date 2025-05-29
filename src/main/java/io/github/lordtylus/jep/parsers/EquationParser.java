@@ -61,6 +61,7 @@ public interface EquationParser {
      * @param startIndex        start index of the list to parse.
      * @param endIndex          endIndex of the List to parse.
      * @param parsingOptions    Options which serve as source for the Parsers to be used.
+     * @return an optional with the parsed equation or empty if parsing failed.
      */
     static Optional<Equation> parseEquation(
             @NonNull List<Token> tokenizedEquation,

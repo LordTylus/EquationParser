@@ -93,10 +93,17 @@ public class ParenthesisToken implements Token {
         return currentDepth - 1;
     }
 
+    /**
+     * Sets the instance of the closing parenthesis to this opening one.
+     * That way they are forming a parenthesis pair.
+     *
+     * @param token The token of the closing parenthesis.
+     * @throws UnsupportedOperationException if the parenthesis this method is called is not an opening one.
+     */
     public void setClosing(ParenthesisToken token) {
 
         if (isClosing())
-            throw new IllegalArgumentException("Can only be set on an opening parenthesis!");
+            throw new UnsupportedOperationException("Can only be set on an opening parenthesis!");
 
         this.closing = token;
     }
