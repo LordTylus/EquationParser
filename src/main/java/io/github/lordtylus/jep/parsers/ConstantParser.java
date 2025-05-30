@@ -17,10 +17,13 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.equation.Constant;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -42,12 +45,22 @@ public final class ConstantParser implements EquationParser {
 
     @Override
     public Optional<Constant> parse(
-            @NonNull String equation,
+            @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             @NonNull ParsingOptions options) {
 
         try {
 
-            String trimmedEquation = equation.replace(" ", "");
+            if (endIndex - startIndex != 0)
+                return Optional.empty();
+
+            Token token = tokenizedEquation.get(startIndex);
+
+            if (!(token instanceof ValueToken))
+                return Optional.empty();
+
+            String trimmedEquation = token.getString().replace(" ", "");
 
             if (trimmedEquation.isEmpty())
                 return Optional.empty();

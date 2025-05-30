@@ -21,12 +21,17 @@ import io.github.lordtylus.jep.operators.Operator;
 import io.github.lordtylus.jep.operators.OperatorParser;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This parser parses operations such as 1+2 by extracting the operator and splitting the string in two expressions.
@@ -99,14 +104,14 @@ public final class OperationParser implements EquationParser {
 
     @Override
     public Optional<Operation> parse(
-            @NonNull String equation,
+            @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             @NonNull ParsingOptions options) {
 
         try {
 
-            String trimmedEquation = equation.trim();
-
-            if (trimmedEquation.isEmpty())
+            if (endIndex - startIndex < 2)
                 return Optional.empty();
 
             for (int relevantLevel : relevantOperatorOrders) {
@@ -114,7 +119,9 @@ public final class OperationParser implements EquationParser {
                 OperatorInformation operatorInformation = operatorsMap.get(relevantLevel);
 
                 Optional<Operation> operation = tryParse(
-                        trimmedEquation,
+                        tokenizedEquation,
+                        startIndex,
+                        endIndex,
                         options,
                         operatorInformation.operators,
                         operatorInformation.operators::containsKey);
@@ -133,34 +140,35 @@ public final class OperationParser implements EquationParser {
     }
 
     private static Optional<Operation> tryParse(
-            String equation,
+            List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             ParsingOptions options,
             Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
 
         int depth = 0;
 
-        for (int i = equation.length() - 1; i >= 0; i--) {
+        for (int i = endIndex; i >= startIndex; i--) {
 
-            char c = equation.charAt(i);
+            Token token = tokenizedEquation.get(i);
 
-            switch (c) {
-                case ')', ']':
-                    depth++;
+            depth = token.adjustDepth(depth);
+
+            if (depth == 0 && token instanceof OperatorToken operatorToken) {
+
+                if (!checkFunction.check(operatorToken.operator()))
                     continue;
-                case '(', '[':
-                    depth--;
-                    continue;
-            }
 
-            if (depth == 0 && checkFunction.check(c)) {
+                int endLeft = i - 1;
+                int startRight = i + 1;
 
-                String left = equation.substring(0, i);
-                String right = equation.substring(i + 1);
+                if (endLeft - startIndex < 0 || endIndex - startRight < 0)
+                    return Optional.empty();
 
-                Optional<Equation> leftEquation = Equation.parse(left, options);
-                Optional<Equation> rightEquation = Equation.parse(right, options);
-                Operator parsedOperator = OperatorParser.parse(relevantOperators, c).orElseThrow();
+                Optional<Equation> leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
+                Optional<Equation> rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
+                Operator parsedOperator = OperatorParser.parse(relevantOperators, operatorToken.operator()).orElseThrow();
 
                 if (leftEquation.isEmpty() || rightEquation.isEmpty())
                     return Optional.empty();
@@ -170,6 +178,21 @@ public final class OperationParser implements EquationParser {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * This method figures out the symbols of all operators to be recognized by this parser.
+     *
+     * @return Set of characters for operator symbols.
+     */
+    public Set<Character> getOperatorCharacters() {
+
+        return operatorsMap.values().stream()
+                .map(OperatorInformation::operators)
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .map(Operator::getPattern)
+                .collect(Collectors.toSet());
     }
 
     private interface CheckFunction {

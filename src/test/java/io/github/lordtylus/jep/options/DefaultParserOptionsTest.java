@@ -20,9 +20,15 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
+import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
+import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
+import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -47,6 +53,55 @@ class DefaultParserOptionsTest {
                 ConstantParser.INSTANCE,
                 VariableParser.INSTANCE
         );
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void containsCorrectTokenizers() {
+
+        /* Given */
+
+        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+
+        /* When */
+
+        List<EquationTokenizer> actual = sut.getRegisteredTokenizers();
+
+        /* Then */
+
+        List<EquationTokenizer> expected = List.of(
+                VariableTokenizer.INSTANCE,
+                ParenthesisTokenizer.DEFAULT,
+                OperatorTokenizer.DEFAULT
+        );
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void returnsDefaultDelimiterMapping() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.withDefaults();
+
+        /* When */
+
+        Map<Character, EquationTokenizer> actual = sut.getTokenizerForDelimiterMap();
+
+        /* Then */
+
+        Map<Character, EquationTokenizer> expected = new HashMap<>();
+        expected.put('(', ParenthesisTokenizer.DEFAULT);
+        expected.put(')', ParenthesisTokenizer.DEFAULT);
+        expected.put('[', VariableTokenizer.INSTANCE);
+        expected.put(']', VariableTokenizer.INSTANCE);
+        expected.put('*', OperatorTokenizer.DEFAULT);
+        expected.put('+', OperatorTokenizer.DEFAULT);
+        expected.put('-', OperatorTokenizer.DEFAULT);
+        expected.put('/', OperatorTokenizer.DEFAULT);
+        expected.put('^', OperatorTokenizer.DEFAULT);
 
         assertEquals(actual, expected);
     }

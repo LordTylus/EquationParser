@@ -16,10 +16,18 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Parenthesis;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
+import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -62,9 +70,11 @@ class ParenthesisParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Equation actual = ParenthesisParser.DEFAULT.parse(equation, options).orElseThrow();
+        Equation actual = ParenthesisParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
 
         /* Then */
 
@@ -75,8 +85,12 @@ class ParenthesisParserTest {
     @CsvSource({
             "1",
             "1+1",
-            "(1+1",
             "1+1)",
+            "(1+1",
+            "(1+1(",
+            ")1+1",
+            "lol(1+1",
+            "lol1+1)",
             "lol(123+333)",
             "1*((1+2)lol)",
             "a#c",
@@ -88,12 +102,45 @@ class ParenthesisParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(equation, options);
+        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void parsesSublist() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        ParenthesisToken opening = new ParenthesisToken('(');
+        ParenthesisToken closing = new ParenthesisToken(')');
+        opening.setClosing(closing);
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                opening,
+                new ValueToken("2"),
+                new OperatorToken('+'),
+                new ValueToken("3"),
+                closing,
+                new OperatorToken('+'),
+                new ValueToken("4"));
+
+        /* When */
+
+        Parenthesis parenthesis = ParenthesisParser.DEFAULT.parse(tokenized, 2, 6, options).orElseThrow();
+
+        /* Then */
+
+        assertEquals("(2+3)", parenthesis.toPattern(Locale.US));
     }
 }

@@ -17,15 +17,17 @@ package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * This Options object holds references to all {@link EquationParser EquationParsers} used for parsing equations.
+ * This Options object holds references to all {@link EquationParser EquationParsers},
+ * as well as the mandatory {@link EquationTokenizer} objects to be used for parsing.
  * <p>
- * It can be passed direction into {@link Equation#parse(String, ParsingOptions)} and therefore can influence if and how an equation is parsed.
- * <p>
- * Its implementations are free to decide which {@link EquationParser} objects to use, for as long as they return everything they need in {@link #getRegisteredParsers()}
+ * It can be passed directly into {@link Equation#parse(String, ParsingOptions)} and
+ * therefore can influence if and how an equation is parsed.
  */
 public interface ParsingOptions {
 
@@ -41,6 +43,16 @@ public interface ParsingOptions {
     }
 
     /**
+     * Returns a Map containing a mapping of a character to the corresponding {@link EquationTokenizer}
+     * <p>
+     * This set would include Brackets, Parenthesis, Operators to be used according to the registered
+     * {@link EquationTokenizer} implementations returned by {@link #getRegisteredTokenizers()}
+     *
+     * @return immutable mapping of tokenizer delimiter to {@link EquationTokenizer}
+     */
+    Map<Character, EquationTokenizer> getTokenizerForDelimiterMap();
+
+    /**
      * Returns a list of {@link EquationParser} objects to be used for parsing.
      * The order is important for parsing to prevent unnecessary checks and prevent
      * incorrect matches in case the EquationParsers must be executed in order to succeed.
@@ -49,4 +61,14 @@ public interface ParsingOptions {
      * @return List of {@link EquationParser} to be used for parsing
      */
     List<EquationParser> getRegisteredParsers();
+
+    /**
+     * Returns a List of {@link EquationTokenizer} objects to be used for tokenizing the
+     * equation string before parsing. The order of the list is important as it may impact
+     * how equation is later parsed.
+     *
+     * @return List of {@link EquationTokenizer} objects to prepare the string for parsing.
+     */
+    List<EquationTokenizer> getRegisteredTokenizers();
+
 }

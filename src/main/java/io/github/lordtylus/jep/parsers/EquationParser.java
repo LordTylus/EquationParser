@@ -16,11 +16,13 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
-import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * This interface is the base for parsing equation strings. It is expected that each {@link Equation} has one parser that is capable of creating the composite object hierarchy of parsed {@link Equation Equations}.
@@ -50,17 +52,55 @@ import java.util.Optional;
 public interface EquationParser {
 
     /**
-     * This Method parses a given equation string to an {@link Equation} object. The returned Optional is empty, if the string couldn't be parsed. Otherwise, it contains the root {@link Equation} of the equation Tree.
+     * This method parses the given tokenized equation to an equation object using the specified parsing options.
      * <p>
-     * It is ensured that the Root {@link Equation} will always match the implementation of this Parser. E.g. A {@link OperationParser} will always return an optional with an {@link Operation Operation} object if parsing was successful.
+     * This method will be called recursively and requires a start and end index of the list to be passed in.
+     * Those indices are altered by different parsers before starting the next recursion.
      *
-     * @param equation The equation string to be parsed. E.g. 12.4^3*sqrt(2+[x])^3
-     * @param options  {@link ParsingOptions} to be used when recursively calling other parsers.
+     * @param tokenizedEquation List of string tokens to be used for parsing.
+     * @param startIndex        start index of the list to parse.
+     * @param endIndex          endIndex of the List to parse.
+     * @param parsingOptions    Options which serve as source for the Parsers to be used.
+     * @return an optional with the parsed equation or empty if parsing failed.
+     */
+    static Optional<Equation> parseEquation(
+            @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
+            @NonNull ParsingOptions parsingOptions) {
+
+        List<EquationParser> registeredParsers = parsingOptions.getRegisteredParsers();
+
+        for (int i = 0; i < registeredParsers.size(); i++) {
+
+            EquationParser parser = registeredParsers.get(i);
+
+            Optional<Equation> parsed = parser.parse(tokenizedEquation, startIndex, endIndex, parsingOptions)
+                    .map(Function.identity());
+
+            if (parsed.isPresent())
+                return parsed;
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * This method parses the given tokenized equation to an equation object using the specified parsing options.
+     * <p>
+     * The provided list may contain more information than needed, so the implementation has to respect the passed in start and end index of the list to parse correctly.
+     *
+     * @param tokenizedEquation The tokenized equation string to be parsed. E.g. 12.4|^|3|*|sqrt(|2|+|[x]|)|^|3
+     * @param startIndex        start index of the list to parse.
+     * @param endIndex          endIndex of the List to parse.
+     * @param options           {@link ParsingOptions} to be used when recursively calling other parsers.
      * @return Optional with parsed Equation if parsing was successful. If parsing failed the optional will be empty.
      * @throws ParseException If a parser cannot parse an equation string an empty optional is expected. This exception can be thrown if a parser encounters an unexpected situation it cannot recover from.
      */
     Optional<? extends Equation> parse(
-            @NonNull String equation,
+            @NonNull List<Token> tokenizedEquation,
+            int startIndex,
+            int endIndex,
             @NonNull ParsingOptions options);
 
 }

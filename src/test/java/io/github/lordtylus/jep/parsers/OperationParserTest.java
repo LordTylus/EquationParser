@@ -16,20 +16,63 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OperationParserTest {
+
+    @Test
+    void returnsDefaultOperatorPatterns() {
+
+        /* Given */
+
+        OperationParser sut = OperationParser.DEFAULT;
+
+        /* When */
+
+        Set<Character> actual = sut.getOperatorCharacters();
+
+        /* Then */
+
+        Set<Character> expected = Set.of('+', '-', '*', '/', '^');
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void returnsCustomOperatorPatterns() {
+
+        /* Given */
+
+        OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
+
+        /* When */
+
+        Set<Character> actual = sut.getOperatorCharacters();
+
+        /* Then */
+
+        Set<Character> expected = Set.of('+', '-');
+
+        assertEquals(actual, expected);
+    }
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -75,9 +118,11 @@ class OperationParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Equation actual = OperationParser.DEFAULT.parse(equation, options).orElseThrow();
+        Equation actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
 
         /* Then */
 
@@ -111,9 +156,11 @@ class OperationParserTest {
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
         customParserOptions.register(sut);
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+
         /* When */
 
-        Equation actual = sut.parse(equation, customParserOptions).orElseThrow();
+        Equation actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions).orElseThrow();
 
         /* Then */
 
@@ -150,13 +197,61 @@ class OperationParserTest {
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
         customParserOptions.register(sut);
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+
         /* When */
 
-        Equation actual = OperationParser.DEFAULT.parse(equation, customParserOptions).orElseThrow();
+        Equation actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions).orElseThrow();
 
         /* Then */
 
         assertEquals(expected, actual.toPattern(Locale.ENGLISH));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1-2;1-2",
+            "1.1-2,2;1.1-2.2",
+            "123.1-223,2;123.1-223.2",
+            "1*2;1*2",
+            "1.1*2,2;1.1*2.2",
+            "123.1*223,2;123.1*223.2",
+            "1/2;1/2",
+            "1.1/2,2;1.1/2.2",
+            "123.1/223,2;123.1/223.2",
+            "(10+20)*(10-20)/(20+30);(10+20)*(10-20)/(20+30)",
+            "(10*20)-(10/20)+(20*30);(10*20)-(10/20)+(20*30)",
+            "(10*20)-(10/20)^(20*30);(10*20)-(10/20)^(20*30)",
+            "(10-20)-(10-20)-(20-30);(10-20)-(10-20)-(20-30)",
+            "(10/20)/(10/20)/(20/30);(10/20)/(10/20)/(20/30)",
+            "(10*20)*(10*20)*(20*30);(10*20)*(10*20)*(20*30)",
+            "  1 2  3  . 1 / 2 2  3 , 2   ;123.1/223.2",
+            "5-(6-(7-3));5-(6-(7-3))",
+            "5*(6*(7*3));5*(6*(7*3))",
+            "5/(6/(7/3));5/(6/(7/3))",
+            "5+(6+(7-(7-3)));5+(6+(7-(7-3)))",
+            "2*2+2;2*2+2",
+            "2*(2+2);2*(2+2)",
+    }, delimiter = ';')
+    void whenOnlyPlusAndExponentTheRestIsNotParsed(String equation) {
+
+        /* Given */
+
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.unregister(OperationParser.DEFAULT);
+
+        OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
+        customParserOptions.register(sut);
+
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+
+        /* When */
+
+        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
     }
 
     @ParameterizedTest
@@ -176,9 +271,11 @@ class OperationParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(equation, options);
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 
@@ -210,9 +307,11 @@ class OperationParserTest {
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
         customParserOptions.register(sut);
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(equation, customParserOptions);
+        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
 
         /* Then */
 
@@ -245,12 +344,75 @@ class OperationParserTest {
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
         customParserOptions.register(sut);
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(equation, customParserOptions);
+        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
 
         /* Then */
 
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotParseWhenLeftIsEmpty() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new OperatorToken('+'), new ValueToken("1"), new OperatorToken('*'), new ValueToken("1"));
+
+        /* When */
+
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotParseWhenRightIsEmpty() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new OperatorToken('+'), new ValueToken("1"), new OperatorToken('+'));
+
+        /* When */
+
+        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void parsesSublist() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                new ValueToken("2"),
+                new OperatorToken('+'),
+                new ValueToken("3"),
+                new OperatorToken('+'),
+                new ValueToken("4"));
+
+        /* When */
+
+        Operation operation = OperationParser.DEFAULT.parse(tokenized, 2, 4, options).orElseThrow();
+
+        /* Then */
+
+        assertEquals("2+3", operation.toPattern(Locale.US));
     }
 }

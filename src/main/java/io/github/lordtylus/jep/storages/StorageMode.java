@@ -43,9 +43,9 @@ public enum StorageMode {
             @NonNull String variableName,
             @NonNull Number defaultValue) {
 
-        return switch (this) {
-            case STRICT -> throw new IllegalArgumentException("Variable '" + variableName + "' not set!");
-            case UNKNOWN_MEANS_DEFAULT -> defaultValue;
-        };
+        if (this == STRICT)
+            throw new IllegalArgumentException("Variable '" + variableName + "' not set!");
+
+        return defaultValue;
     }
 }

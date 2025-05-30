@@ -16,10 +16,18 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
+import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
+import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
+import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -43,9 +51,11 @@ class VariableParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Equation actual = VariableParser.INSTANCE.parse(equation, options).orElseThrow();
+        Equation actual = VariableParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
 
         /* Then */
 
@@ -56,6 +66,8 @@ class VariableParserTest {
     @CsvSource({
             "1",
             "abc",
+            "[bc",
+            "bc]",
             "([Hallo])",
             "1+1",
             "sqrt([hallo])",
@@ -66,12 +78,101 @@ class VariableParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, options);
+
         /* When */
 
-        Optional<? extends Equation> actual = VariableParser.INSTANCE.parse(equation, options);
+        Optional<? extends Equation> actual = VariableParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 
         assertTrue(actual.isEmpty());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1",
+            "-1",
+            "abc",
+            "[bc",
+            "bc]",
+            "([Hallo])",
+            "1+1",
+            "sqrt([hallo])",
+    })
+    void doesNotParseTokens(String token) {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new ValueToken(token));
+
+        /* When */
+
+        Optional<? extends Equation> actual = VariableParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotAcceptOperators() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new OperatorToken('+'));
+
+        /* When */
+
+        Optional<? extends Equation> actual = VariableParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void doesNotAcceptParenthesisTokens() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(new ParenthesisToken('('));
+
+        /* When */
+
+        Optional<? extends Equation> actual = VariableParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+
+        /* Then */
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void parsesSublist() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                new ValueToken("[hallo]"),
+                new OperatorToken('+'),
+                new ValueToken("3"));
+
+        /* When */
+
+        Variable variable = VariableParser.INSTANCE.parse(tokenized, 2, 2, options).orElseThrow();
+
+        /* Then */
+
+        assertEquals("[hallo]", variable.toPattern(Locale.US));
     }
 }

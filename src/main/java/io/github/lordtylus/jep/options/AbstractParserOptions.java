@@ -16,11 +16,14 @@
 package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This abstract implementation of {@link ParsingOptions} provides basic functionality
@@ -30,6 +33,17 @@ public abstract class AbstractParserOptions implements ParsingOptions {
 
     private final List<EquationParser> registeredParsers = new ArrayList<>();
     private final List<EquationParser> registeredParsersUnmodifiable = Collections.unmodifiableList(registeredParsers);
+
+    private final List<EquationTokenizer> registeredTokenizers = new ArrayList<>();
+    private final List<EquationTokenizer> registeredTokenizersUnmodifiable = Collections.unmodifiableList(registeredTokenizers);
+
+    private final Map<Character, EquationTokenizer> tokenizerMapping = new HashMap<>();
+    private final Map<Character, EquationTokenizer> tokenizerMappingUnmodifiable = Collections.unmodifiableMap(tokenizerMapping);
+
+    @Override
+    public Map<Character, EquationTokenizer> getTokenizerForDelimiterMap() {
+        return tokenizerMappingUnmodifiable;
+    }
 
     @Override
     public List<EquationParser> getRegisteredParsers() {
@@ -52,5 +66,40 @@ public abstract class AbstractParserOptions implements ParsingOptions {
      */
     protected void unregister(@NonNull EquationParser parser) {
         this.registeredParsers.remove(parser);
+    }
+
+    @Override
+    public List<EquationTokenizer> getRegisteredTokenizers() {
+        return registeredTokenizersUnmodifiable;
+    }
+
+    /**
+     * Registers a new {@link EquationTokenizer} to be used for parsing equation strings.
+     *
+     * @param tokenizer {@link EquationTokenizer} to be registered
+     * @throws IllegalArgumentException if a tokenizer using the same delimiters is already registered.
+     */
+    protected void register(@NonNull EquationTokenizer tokenizer) {
+
+        for (Character delimiter : tokenizer.getDelimiters())
+            if (this.tokenizerMapping.containsKey(delimiter))
+                throw new IllegalArgumentException("Tokenizer already exists!");
+
+        this.registeredTokenizers.add(tokenizer);
+
+        for (Character delimiter : tokenizer.getDelimiters())
+            this.tokenizerMapping.put(delimiter, tokenizer);
+    }
+
+    /**
+     * Removes a registered {@link EquationTokenizer} so it will no longer be used for parsing.
+     *
+     * @param tokenizer {@link EquationTokenizer} to be removed
+     */
+    protected void unregister(@NonNull EquationTokenizer tokenizer) {
+
+        if (this.registeredTokenizers.remove(tokenizer))
+            for (Character delimiter : tokenizer.getDelimiters())
+                this.tokenizerMapping.remove(delimiter);
     }
 }
