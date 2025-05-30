@@ -15,7 +15,6 @@
 */
 package io.github.lordtylus.jep.parsers;
 
-import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Parenthesis;
 import io.github.lordtylus.jep.functions.MathFunction;
 import io.github.lordtylus.jep.functions.MathFunctionParser;
@@ -59,7 +58,7 @@ public final class ParenthesisParser implements EquationParser {
     }
 
     @Override
-    public Optional<Parenthesis> parse(
+    public ParseResult parse(
             @NonNull List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,
@@ -68,34 +67,47 @@ public final class ParenthesisParser implements EquationParser {
         try {
 
             if (endIndex - startIndex < 2)
-                return Optional.empty();
+                return ParseResult.notMine();
 
             Token first = tokenizedEquation.get(startIndex);
 
-            if (!(first instanceof ParenthesisToken openingToken)
-                    || !openingToken.isOpening())
-                return Optional.empty();
+            if (first instanceof ParenthesisToken openingToken) {
+                if (!openingToken.isOpening())
+                    return ParseResult.error("");
+            } else {
+                return ParseResult.notMine();
+            }
 
             Token last = tokenizedEquation.get(endIndex);
 
-            if (!(last instanceof ParenthesisToken closingToken)
-                    || !closingToken.isClosing())
-                return Optional.empty();
+            if (last instanceof ParenthesisToken closingToken) {
+                if (!closingToken.isClosing())
+                    return ParseResult.error("");
+            } else {
+                return ParseResult.notMine();
+            }
+
+            if (openingToken.getClosing() == null)
+                return ParseResult.error("");
 
             if (openingToken.getClosing() != closingToken)
-                return Optional.empty();
+                return ParseResult.notMine();
 
             String functionName = openingToken.getFunction();
             functionName = functionName.replace(" ", "");
 
             Optional<MathFunction> function = mathFunctionParser.parse(functionName);
             if (function.isEmpty())
-                return Optional.empty();
+                return ParseResult.error("");
 
-            Optional<Equation> inner = EquationParser.parseEquation(tokenizedEquation,
+            ParseResult inner = EquationParser.parseEquation(tokenizedEquation,
                     startIndex + 1, endIndex - 1, options);
 
-            return inner.map(e -> new Parenthesis(function.get(), e));
+            return switch (inner.getParseType()) {
+                case ERROR -> inner;
+                case NOT_MINE -> ParseResult.error("");
+                default -> ParseResult.ok(new Parenthesis(function.get(), inner.getNullableEquation()));
+            };
 
         } catch (ParseException e) {
             throw e;

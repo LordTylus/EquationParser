@@ -16,10 +16,10 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
-import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
@@ -30,11 +30,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class OperationParserTest {
 
@@ -122,7 +121,10 @@ class OperationParserTest {
 
         /* When */
 
-        Equation actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
+        Equation actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, tokenized.size() - 1, options)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
@@ -160,7 +162,10 @@ class OperationParserTest {
 
         /* When */
 
-        Equation actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions).orElseThrow();
+        Equation actual = sut
+                .parse(tokenized, 0, tokenized.size() - 1, customParserOptions)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
@@ -201,7 +206,10 @@ class OperationParserTest {
 
         /* When */
 
-        Equation actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions).orElseThrow();
+        Equation actual = sut
+                .parse(tokenized, 0, tokenized.size() - 1, customParserOptions)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
@@ -247,11 +255,12 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
+        ParseResult actual = sut
+                .parse(tokenized, 0, 0, customParserOptions);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @ParameterizedTest
@@ -275,11 +284,12 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @ParameterizedTest
@@ -311,11 +321,12 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
+        ParseResult actual = sut
+                .parse(tokenized, 0, 0, customParserOptions);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @ParameterizedTest
@@ -348,11 +359,12 @@ class OperationParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = sut.parse(tokenized, 0, tokenized.size() - 1, customParserOptions);
+        ParseResult actual = sut
+                .parse(tokenized, 0, 0, customParserOptions);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -362,15 +374,20 @@ class OperationParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
-        List<Token> tokenized = List.of(new OperatorToken('+'), new ValueToken("1"), new OperatorToken('*'), new ValueToken("1"));
+        List<Token> tokenized = List.of(
+                new OperatorToken('+'),
+                new ValueToken("1"),
+                new OperatorToken('*'),
+                new ValueToken("1"));
 
         /* When */
 
-        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -380,15 +397,19 @@ class OperationParserTest {
 
         ParsingOptions options = ParsingOptions.defaultOptions();
 
-        List<Token> tokenized = List.of(new OperatorToken('+'), new ValueToken("1"), new OperatorToken('+'));
+        List<Token> tokenized = List.of(
+                new OperatorToken('+'),
+                new ValueToken("1"),
+                new OperatorToken('+'));
 
         /* When */
 
-        Optional<? extends Equation> actual = OperationParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -409,10 +430,13 @@ class OperationParserTest {
 
         /* When */
 
-        Operation operation = OperationParser.DEFAULT.parse(tokenized, 2, 4, options).orElseThrow();
+        Equation actual = OperationParser.DEFAULT
+                .parse(tokenized, 2, 4, options)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
-        assertEquals("2+3", operation.toPattern(Locale.US));
+        assertEquals("2+3", actual.toPattern(Locale.ENGLISH));
     }
 }

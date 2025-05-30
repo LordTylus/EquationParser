@@ -16,8 +16,8 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
-import io.github.lordtylus.jep.equation.Parenthesis;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
@@ -29,10 +29,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ParenthesisParserTest {
 
@@ -74,7 +73,10 @@ class ParenthesisParserTest {
 
         /* When */
 
-        Equation actual = ParenthesisParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
+        Equation actual = ParenthesisParser.DEFAULT
+                .parse(tokenized, 0, tokenized.size() - 1, options)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
@@ -106,11 +108,12 @@ class ParenthesisParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ParenthesisParser.DEFAULT.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = ParenthesisParser.DEFAULT
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -137,10 +140,13 @@ class ParenthesisParserTest {
 
         /* When */
 
-        Parenthesis parenthesis = ParenthesisParser.DEFAULT.parse(tokenized, 2, 6, options).orElseThrow();
+        Equation actual = ParenthesisParser.DEFAULT
+                .parse(tokenized, 2, 6, options)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
-        assertEquals("(2+3)", parenthesis.toPattern(Locale.US));
+        assertEquals("(2+3)", actual.toPattern(Locale.ENGLISH));
     }
 }

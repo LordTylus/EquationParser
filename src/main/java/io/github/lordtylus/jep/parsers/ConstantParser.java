@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This parser implementation parses the given input string as a double.
@@ -44,7 +43,7 @@ public final class ConstantParser implements EquationParser {
     public static final ConstantParser INSTANCE = new ConstantParser();
 
     @Override
-    public Optional<Constant> parse(
+    public ParseResult parse(
             @NonNull List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,
@@ -53,17 +52,17 @@ public final class ConstantParser implements EquationParser {
         try {
 
             if (endIndex - startIndex != 0)
-                return Optional.empty();
+                return ParseResult.notMine();
 
             Token token = tokenizedEquation.get(startIndex);
 
             if (!(token instanceof ValueToken))
-                return Optional.empty();
+                return ParseResult.notMine();
 
             String trimmedEquation = token.getString().replace(" ", "");
 
             if (trimmedEquation.isEmpty())
-                return Optional.empty();
+                return ParseResult.error("");
 
             int length = trimmedEquation.length();
 
@@ -79,7 +78,7 @@ public final class ConstantParser implements EquationParser {
                 if (c == '.' || c == ',') {
 
                     if (encounteredDecimal)
-                        return Optional.empty();
+                        return ParseResult.error("Malicious decimal points!");
 
                     encounteredDecimal = true;
                     continue;
@@ -90,12 +89,12 @@ public final class ConstantParser implements EquationParser {
                         continue;
                 }
 
-                return Optional.empty();
+                return ParseResult.notMine();
             }
 
             trimmedEquation = trimmedEquation.replace(",", ".");
 
-            return Optional.of(new Constant(Double.parseDouble(trimmedEquation)));
+            return ParseResult.ok(new Constant(Double.parseDouble(trimmedEquation)));
 
         } catch (RuntimeException e) {
             throw new ParseException(e);

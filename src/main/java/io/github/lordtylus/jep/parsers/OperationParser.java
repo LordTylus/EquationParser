@@ -21,6 +21,7 @@ import io.github.lordtylus.jep.operators.Operator;
 import io.github.lordtylus.jep.operators.OperatorParser;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
@@ -29,7 +30,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -103,7 +103,7 @@ public final class OperationParser implements EquationParser {
     }
 
     @Override
-    public Optional<Operation> parse(
+    public ParseResult parse(
             @NonNull List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,
@@ -112,13 +112,13 @@ public final class OperationParser implements EquationParser {
         try {
 
             if (endIndex - startIndex < 2)
-                return Optional.empty();
+                return ParseResult.notMine();
 
             for (int relevantLevel : relevantOperatorOrders) {
 
                 OperatorInformation operatorInformation = operatorsMap.get(relevantLevel);
 
-                Optional<Operation> operation = tryParse(
+                ParseResult parseResult = tryParse(
                         tokenizedEquation,
                         startIndex,
                         endIndex,
@@ -126,11 +126,11 @@ public final class OperationParser implements EquationParser {
                         operatorInformation.operators,
                         operatorInformation.operators::containsKey);
 
-                if (operation.isPresent())
-                    return operation;
+                if (parseResult.getParseType() != ParseType.NOT_MINE)
+                    return parseResult;
             }
 
-            return Optional.empty();
+            return ParseResult.notMine();
 
         } catch (ParseException e) {
             throw e;
@@ -139,7 +139,7 @@ public final class OperationParser implements EquationParser {
         }
     }
 
-    private static Optional<Operation> tryParse(
+    private static ParseResult tryParse(
             List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,
@@ -164,20 +164,26 @@ public final class OperationParser implements EquationParser {
                 int startRight = i + 1;
 
                 if (endLeft - startIndex < 0 || endIndex - startRight < 0)
-                    return Optional.empty();
+                    return ParseResult.notMine();
 
-                Optional<Equation> leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
-                Optional<Equation> rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
+                ParseResult leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
+                ParseResult rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
+
                 Operator parsedOperator = OperatorParser.parse(relevantOperators, operatorToken.operator()).orElseThrow();
 
-                if (leftEquation.isEmpty() || rightEquation.isEmpty())
-                    return Optional.empty();
-
-                return Optional.of(new Operation(leftEquation.get(), rightEquation.get(), parsedOperator));
+                return switch (leftEquation.getParseType()) {
+                    case ERROR -> leftEquation;
+                    case NOT_MINE -> ParseResult.error("");
+                    default -> switch (rightEquation.getParseType()) {
+                        case ERROR -> rightEquation;
+                        case NOT_MINE -> ParseResult.error("");
+                        default -> ParseResult.ok(new Operation(leftEquation.getNullableEquation(), rightEquation.getNullableEquation(), parsedOperator));
+                    };
+                };
             }
         }
 
-        return Optional.empty();
+        return ParseResult.notMine();
     }
 
     /**

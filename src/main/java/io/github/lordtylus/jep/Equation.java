@@ -19,6 +19,8 @@ import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
+import io.github.lordtylus.jep.parsers.ParseResult;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.storages.EmptyStorage;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
@@ -113,6 +115,11 @@ public interface Equation {
 
         List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
 
-        return EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
+        ParseResult parseResult = EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
+
+        if (parseResult.getParseType() == ParseType.OK)
+            return parseResult.getEquation();
+
+        return Optional.empty();
     }
 }
