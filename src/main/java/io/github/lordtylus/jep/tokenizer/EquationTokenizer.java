@@ -39,6 +39,7 @@ public interface EquationTokenizer {
      * <p>
      * It will already have determined that this {@link EquationTokenizer} is the right one to call and
      * pass it the current delimiter as well as other meta information of the tokenizing process.
+     * So it will not happen that this method is called on any unrelated character.
      * <p>
      * The delimiter is already extracted for performance reasons, so the implementation doesn't
      * need to read it from the string itself.
