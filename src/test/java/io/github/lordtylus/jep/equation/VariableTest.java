@@ -166,4 +166,47 @@ class VariableTest {
 
         assertEquals("Test 123 = 123.456789123456\n", sb.toString());
     }
+
+    @Test
+    void toStaticEquationDisplaysCorrectString() {
+
+        /* Given */
+
+        Variable sut = new Variable("Test 123");
+
+        SimpleStorage storage = new SimpleStorage();
+        storage.putValue("Test 123", 123.456789123456);
+
+        Result result = sut.evaluate(storage);
+        StringBuilder sb = new StringBuilder();
+
+        /* When */
+
+        result.toStaticEquation(sb);
+
+        /* Then */
+
+        assertEquals("123.456789123456", sb.toString());
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Variable sut = new Variable("Test 123");
+
+        SimpleStorage storage = new SimpleStorage();
+        storage.putValue("Test 123", 123.456789123456);
+
+        Result result = sut.evaluate(storage);
+
+        /* When */
+
+        String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("123.456789123456=123.456789123456", actual);
+    }
 }

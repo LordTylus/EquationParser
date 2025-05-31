@@ -178,4 +178,47 @@ class ParenthesisTest {
 
         assertEquals(expected, sb.toString());
     }
+
+    @Test
+    void toStaticEquationDisplaysCorrectString() {
+
+        /* Given */
+
+        Constant inner = new Constant(72.25);
+        MathFunction function = StandardFunctions.SQRT;
+
+        Parenthesis sut = new Parenthesis(function, inner);
+
+        Result result = sut.evaluate();
+        StringBuilder sb = new StringBuilder();
+
+        /* When */
+
+        result.toStaticEquation(sb);
+
+        /* Then */
+
+        assertEquals("sqrt(72.25)", sb.toString());
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Constant inner = new Constant(72.25);
+        MathFunction function = StandardFunctions.SQRT;
+
+        Parenthesis sut = new Parenthesis(function, inner);
+
+        Result result = sut.evaluate();
+
+        /* When */
+
+        String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("sqrt(72.25)=8.5", actual);
+    }
 }

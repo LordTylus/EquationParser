@@ -82,5 +82,18 @@ public record Parenthesis(
 
             innerResult.print(sb, currentIndent + indent, indent);
         }
+
+        @Override
+        public void toStaticEquation(@NonNull StringBuilder sb) {
+            sb.append(function.toPattern());
+            sb.append("(");
+            innerResult.toStaticEquation(sb);
+            sb.append(")");
+        }
+
+        @Override
+        public String toString() {
+            return toDisplayString();
+        }
     }
 }

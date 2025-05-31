@@ -68,5 +68,15 @@ public record Constant(
                     .append(result)
                     .append("\n");
         }
+
+        @Override
+        public void toStaticEquation(@NonNull StringBuilder sb) {
+            sb.append(result);
+        }
+
+        @Override
+        public String toString() {
+            return toDisplayString();
+        }
     }
 }
