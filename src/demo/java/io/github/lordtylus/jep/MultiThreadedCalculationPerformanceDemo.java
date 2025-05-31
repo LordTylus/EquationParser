@@ -38,12 +38,12 @@ public class MultiThreadedCalculationPerformanceDemo {
             long start = System.nanoTime();
 
             IntStream.range(0, 1_000_000).parallel()
-                    .forEach((i) -> {
-                        equation.evaluate(variable -> i);
-                    });
+                    .forEach((i) -> equation.evaluate(variable -> i));
 
-            // 139 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
+            // 146 ms
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+
+            System.out.println("1 million passes: " + duration + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
@@ -51,12 +51,12 @@ public class MultiThreadedCalculationPerformanceDemo {
             long start = System.nanoTime();
 
             IntStream.range(0, 10_000_000).parallel()
-                    .forEach((i) -> {
-                        equation.evaluate(variable -> i);
-                    });
+                    .forEach((i) -> equation.evaluate(variable -> i));
 
-            // 817 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
+            // 841 ms
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+
+            System.out.println("10 million passes: " + duration + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
@@ -64,12 +64,12 @@ public class MultiThreadedCalculationPerformanceDemo {
             long start = System.nanoTime();
 
             IntStream.range(0, 100_000_000).parallel()
-                    .forEach((i) -> {
-                        equation.evaluate(variable -> i);
-                    });
+                    .forEach((i) -> equation.evaluate(variable -> i));
 
-            // 7,429 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
+            // 7,573 ms
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+
+            System.out.println("100 million passes: " + duration + " ms");
         }
     }
 }

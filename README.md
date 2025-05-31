@@ -8,7 +8,8 @@
 
 ## About
 
-This framework allows you to parse mathematical equations such as `2*x^2+5` and calculate the result for a given value
+This framework allows you to parse mathematical expressions such as `2*[x]^2+5` and calculate the result for a given
+value
 x.
 
 In order to do that the equation is parsed using a recursive algorithm following the order of operations in a composite
@@ -28,7 +29,7 @@ The above example would end up like a binary tree of the following structure:
 
 Parentheses and functions such as square roots are also supported.
 
-A hypothetical equation like `2*sqrt(x+2)^3` would be converted to the following tree:
+A hypothetical equation like `2*sqrt([x]+2)^3` would be converted to the following tree:
 
 ```
   *
@@ -41,6 +42,11 @@ sqrt  3
  / \
 x   2
 ```
+
+## Variables
+
+Variables in the expression are currently added between brackets [] to allow use of numbers, spaces, and operators as
+variable names.
 
 ## List of supported functions
 
@@ -85,12 +91,19 @@ Negative numbers can be passed when put in parentheses `2*(-3)`
 
 ## Installation
 
-For the time being the framework is not published to maven-central yet, but I am planning to do so in the future.
+This framework is published to both Maven Central using Sonatype, and GitHub Packages.
 
-Until then GitHub Packages can be used.
+You can install the latest release here:
+
+Maven:
 
 ```groovy
+TBD
+```
 
+Gradle:
+
+```groovy
 repositories {
     maven {
         url 'https://maven.pkg.github.com/LordTylus/EquationParser'
@@ -106,13 +119,28 @@ depedencies {
 }
 ```
 
+Or you can install the latest snapshot build here:
+
+```groovy
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://central.sonatype.com/repository/maven-snapshots/'
+    }
+}
+
+depedencies {
+    implementation 'io.github.lordtylus.equation:equation-parser:1.1-SNAPSHOT'
+}
+```
+
 ## Demo
 
 ```java
 
 public static void main(String[] args) {
 
-    String input = "2*[x]^2+5";
+    String input = "2*(2+[x])^2+5";
 
     Equation equation = Equation.parse(input).orElseThrow();
 
@@ -125,3 +153,124 @@ public static void main(String[] args) {
 ```
 
 You can find more demos [here](src/demo/java/io/github/lordtylus/jep)
+
+## Performance
+
+This framework is designed in a way that it only needs to parse an equation once, and can evaluate it with different
+variables as many times as needed.
+
+Additionally, neither parsing nor evaluation depends on any internal states making it safe for multithreaded
+applications.
+
+Here is an overview of a very basic performance test. Please note that evaluation times are dependent on many factors
+and therefore will likely differ for you. However, it should give a brief overview of what you can expect.
+
+```
+Evauated expression: (7+3)*(6-3)+216/3^3+[x]
+Tested with: AMD Ryzen 7 3700X 8-Core Processor
+
+Parsing (Single Treaded):
+1 million passes: 1648 ms
+10 million passes: 13844 ms
+100 million passes: 139002 ms
+
+Parsing (Multithreaded via IntStream.range().parallel()):
+1 million passes: 386 ms
+10 million passes: 1797 ms
+100 million passes: 17799 ms
+
+Evaluating (Single Threaded):
+1 million passes: 403 ms
+10 million passes: 2246 ms
+100 million passes: 22357 ms
+
+Evaluating (Multithreaded via IntStream.range().parallel()):
+1 million passes: 146 ms
+10 million passes: 841 ms
+100 million passes: 7573 ms
+```
+
+The code for these tests you can find in the [demos](src/demo/java/io/github/lordtylus/jep).
+
+## How does it work?
+
+To get the evaluation result 3 tasks need to be performed.
+
+- Tokenizing the input string.
+- Building a tree by parsing the tokens.
+- Solving the tree bottom up to calculate the result.
+
+### Tokenizing
+
+Tokenizing reads the input string exactly once from left to right and splits it on each operator and parenthesis.
+
+An input string like `2*sqrt(2+[x])^2+5` would therefore be separated in tokens as follows:
+
+`2, *, sqrt(, 2, +, [x], ), ^, 2, +, 5`
+
+The tokenizer already keeps track of opening and closing parenthesis, so that the later parsing step runs a bit quicker.
+Additionally, everything between brackets is ignored, making it safe to use operators, whitespaces or
+parenthesis between them.
+
+Notice that the sqrt function is still attached to the opening parenthesis. This is not a mistake. A parenthesis token
+already has the function stored in a separate field, to help the parser in a later step.
+
+### Parsing
+
+Once the string is tokenized a recursive algorithm is used to parse the token list. For that, each parser is called one
+by
+one to see if it can work with the current list.
+
+The parenthesis parser checks if the first and last element of the token list are a pair of parentheses. If so it parses
+the function and passes everything between to the next parsers.
+
+The operation parser checks what the lowest ranking operator (which is not between parenthesis) is and splits the list
+there.
+
+In the above example the list is first separated into this:
+
+`2, *, sqrt(, 2, +, [x], ), ^, 3` + `5`
+
+Each sublist is then parsed individually.
+
+- `2` * `sqrt(, 2, +, [x], ), ^, 3`
+- `sqrt(, 2, +, [x], )` ^ `3`
+- sqrt(`2, +, [x]`)
+- `2` + `[x]`
+
+This will represent a tree structure.
+
+```
+    +
+   / \
+  *   5
+ / \ 
+2   ^
+   / \
+sqrt  3
+  |
+  +
+ / \
+2   x
+```
+
+Finally, if there's neither a parenthesis nor operator left for recursion, the remaining values are converted to numbers
+or retrieved from storage in case of variable.
+
+### Solving
+
+With the tree in place, all that is left to do is to solve starting on the lowest branch.
+So in the above case `2+x` is evaluated first. The square root of the result is taken, and then raised to the 3rd power.
+And so on and so forth.
+
+Since the first two steps only need to be performed once, the third step can be repeated with different variable storage
+values as many times as needed.
+
+## Vision for future
+
+The framework is lacking one very important feature still, which would be reporting parsing errors.
+With the approach described above it would be easy to find mismatched parenthesis or unrecognized functions. However,
+right now they are not reported yet. This will be added in a future release.
+
+Additionally, I would like to add the option to support variables without brackets. Doing would be more prone for
+parsing errors, but can make it easier to input expressions manually.  

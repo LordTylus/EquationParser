@@ -36,8 +36,10 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 1_000_000; i++)
                 Equation.parse(input);
 
-            // 1,633 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
+            // 1,648 ms
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+
+            System.out.println("1 million passes: " + duration + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
@@ -48,8 +50,10 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 10_000_000; i++)
                 Equation.parse(input);
 
-            // 13,453 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
+            // 13,844 ms
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+
+            System.out.println("10 million passes: " + duration + " ms");
         }
 
         // AMD Ryzen 7 3700X 8-Core Processor
@@ -60,8 +64,10 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 100_000_000; i++)
                 Equation.parse(input);
 
-            // 134,781 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms");
+            // 139,002 ms
+            long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+
+            System.out.println("100 million passes: " + duration + " ms");
         }
     }
 }
