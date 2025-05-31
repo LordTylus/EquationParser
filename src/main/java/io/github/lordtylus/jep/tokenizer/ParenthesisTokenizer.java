@@ -75,6 +75,7 @@ public final class ParenthesisTokenizer implements EquationTokenizer {
         else if (!substring.isBlank())
             tokenList.add(new ValueToken(substring));
 
+        token.setIndex(tokenList.size());
         tokenList.add(token);
 
         return true;

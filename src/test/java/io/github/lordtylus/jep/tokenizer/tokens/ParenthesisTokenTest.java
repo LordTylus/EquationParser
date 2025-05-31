@@ -204,4 +204,23 @@ class ParenthesisTokenTest {
 
         assertThrows(UnsupportedOperationException.class, result);
     }
+
+    @Test
+    void settingAClosingParenthesisLinksThemBidirectionally() {
+
+        /* Given */
+
+        ParenthesisToken sut1 = new ParenthesisToken('(');
+        ParenthesisToken sut2 = new ParenthesisToken(')');
+
+        /* When */
+
+        sut1.setClosing(sut2);
+
+        /* Then */
+
+        ParenthesisToken opening = sut2.getOpening();
+
+        assertSame(sut1, opening);
+    }
 }
