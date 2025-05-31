@@ -41,7 +41,7 @@ jobs:
       - name: Assemble Bundle
         run: |
           VERSION=$(./gradlew -q properties | grep "^version:" | awk '{ print $2 }')
-          ARTIFACT_DIR=bundle/io/github/lordtylus/equation-parser/${VERSION}
+          ARTIFACT_DIR=bundle/io/github/lordtylus/equation/equation-parser/${VERSION}
           mkdir -p "$ARTIFACT_DIR"
 
           cp build/libs/equation-parser-${VERSION}.jar "$ARTIFACT_DIR/"
