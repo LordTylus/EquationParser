@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.github.lordtylus.equation'
-version '1.2.0-SNAPSHOT'
+version '1.1.1'
 
 repositories {
     mavenCentral()
@@ -84,7 +84,7 @@ publishing {
                     developer {
                         id.set("LordTylus")
                         name.set("Martin Rökker")
-                        email.set("martin.roekker@email.com")
+                        email.set("martin.roekker@gmail.com")
                     }
                 }
 
