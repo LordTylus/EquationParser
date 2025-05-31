@@ -1,4 +1,4 @@
-name: Publish to Sonatype
+name: Publish Snapshot
 
 on:
   workflow_dispatch:
