@@ -42,22 +42,18 @@ jobs:
         with:
           servers: '[{"id": "ossrh", "username": "${{ secrets.OSSRH_USERNAME }}", "password": "${{ secrets.OSSRH_TOKEN }}"}]'
 
-      - name: Deploy to Sonatype SNAPSHOT
+      - name: Upload to Sonatype Central Publisher
         run: |
           VERSION=$(./gradlew -q properties | grep "^version:" | awk '{ print $2 }')
-          mvn deploy:deploy-file \
-            -DpomFile=build/publications/mavenJava/pom-default.xml \
-            -Dfile=build/libs/equation-parser-${VERSION}.jar \
-            -Dsources=build/libs/equation-parser-${VERSION}-sources.jar \
-            -Djavadoc=build/libs/equation-parser-${VERSION}-javadoc.jar \
-            -Dfiles=build/libs/equation-parser-${VERSION}.jar.asc,build/libs/equation-parser-${VERSION}-sources.jar.asc,build/libs/equation-parser-${VERSION}-javadoc.jar.asc,build/publications/mavenJava/pom-default.xml.asc \
-            -Dclassifiers=jar.asc,sources.asc,javadoc.asc,pom.asc \
-            -Dtypes=asc,asc,asc,asc \
-            -DrepositoryId=ossrh \
-            -Durl=https://central.sonatype.com/repository/maven-snapshots \
-            -DgroupId=io.github.lordtylus.equation \
-            -DartifactId=equation-parser \
-            -Dversion=${VERSION}
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          TOKEN=$(echo -n "${{ secrets.OSSRH_USERNAME }}:${{ secrets.OSSRH_TOKEN }}" | base64)
+          
+          curl -X POST https://central.sonatype.com/api/v1/publisher/upload \
+            -H "Authorization: Bearer $TOKEN" \
+            -F "file=@build/libs/equation-parser-${VERSION}.jar" \
+            -F "file=@build/publications/mavenJava/pom-default.xml" \
+            -F "file=@build/libs/equation-parser-${VERSION}-sources.jar" \
+            -F "file=@build/libs/equation-parser-${VERSION}-javadoc.jar" \
+            -F "file=@build/libs/equation-parser-${VERSION}.jar.asc" \
+            -F "file=@build/libs/equation-parser-${VERSION}-sources.jar.asc" \
+            -F "file=@build/libs/equation-parser-${VERSION}-javadoc.jar.asc" \
+            -F "file=@build/publications/mavenJava/pom-default.xml.asc"
