@@ -37,47 +37,24 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Assemble Bundle
+      - name: Configure Maven settings.xml
+        uses: s4u/maven-settings-action@v3.1.0
+        with:
+          servers: '[{"id": "ossrh", "username": "${{ secrets.OSSRH_USERNAME }}", "password": "${{ secrets.OSSRH_TOKEN }}"}]'
+
+      - name: Deploy to Sonatype SNAPSHOT
         run: |
           VERSION=$(./gradlew -q properties | grep "^version:" | awk '{ print $2 }')
-          ARTIFACT_DIR=bundle/io/github/lordtylus/equation-parser/${VERSION}
-          mkdir -p "$ARTIFACT_DIR"
-
-          cp build/libs/equation-parser-${VERSION}.jar "$ARTIFACT_DIR/"
-          cp build/libs/equation-parser-${VERSION}-sources.jar "$ARTIFACT_DIR/"
-          cp build/libs/equation-parser-${VERSION}-javadoc.jar "$ARTIFACT_DIR/"
-          cp build/publications/mavenJava/pom-default.xml "$ARTIFACT_DIR/equation-parser-${VERSION}.pom"
-
-          # Generate required .md5 and .sha1 files
-          for file in "$ARTIFACT_DIR"/*; do
-            md5sum "$file" | awk '{ print $1 }' > "$file.md5"
-            sha1sum "$file" | awk '{ print $1 }' > "$file.sha1"
-          done
-
-          cp build/libs/equation-parser-${VERSION}.jar.asc "$ARTIFACT_DIR/"
-          cp build/libs/equation-parser-${VERSION}-sources.jar.asc "$ARTIFACT_DIR/"
-          cp build/libs/equation-parser-${VERSION}-javadoc.jar.asc "$ARTIFACT_DIR/"
-          cp build/publications/mavenJava/pom-default.xml.asc "$ARTIFACT_DIR/equation-parser-${VERSION}.pom.asc"
-
-          cd bundle
-          zip -r ../artifact-bundle.zip .
-          cd ..
-
-      - name: Upload to Sonatype Central Publisher
-        run: |
-          response=$(curl --write-out "%{http_code}" --silent --output response.json \
-            -X POST https://central.sonatype.com/api/v1/publisher/upload \
-            -H "Authorization: Bearer $TOKEN" \
-            -F bundle=@artifact-bundle.zip)
-          
-          echo "HTTP status: $response"
-          cat response.json
-
-          if [[ "$response" -lt 200 || "$response" -ge 300 ]]; then
-            echo "❌ Upload failed with HTTP status $response"
-            exit 1
-          else
-            echo "✅ Upload successful"
-          fi
-        env:
-          TOKEN: ${{ secrets.SONATYPE_BEARER_TOKEN }}
+          mvn deploy:deploy-file \
+            -DpomFile=build/publications/mavenJava/pom-default.xml \
+            -Dfile=build/libs/equation-parser-${VERSION}.jar \
+            -Dsources=build/libs/equation-parser-${VERSION}-sources.jar \
+            -Djavadoc=build/libs/equation-parser-${VERSION}-javadoc.jar \
+            -Dfiles=build/libs/equation-parser-${VERSION}.jar.asc,build/libs/equation-parser-${VERSION}-sources.jar.asc,build/libs/equation-parser-${VERSION}-javadoc.jar.asc,build/publications/mavenJava/pom-default.xml.asc \
+            -Dclassifiers=jar.asc,sources.asc,javadoc.asc,pom.asc \
+            -Dtypes=asc,asc,asc,asc \
+            -DrepositoryId=ossrh \
+            -Durl=https://central.sonatype.com/repository/maven-snapshots \
+            -DgroupId=io.github.lordtylus.equation \
+            -DartifactId=equation-parser \
+            -Dversion=${VERSION}
