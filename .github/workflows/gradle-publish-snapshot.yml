@@ -37,23 +37,28 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Configure Maven settings.xml
-        uses: s4u/maven-settings-action@v3.1.0
-        with:
-          servers: '[{"id": "ossrh", "username": "${{ secrets.OSSRH_USERNAME }}", "password": "${{ secrets.OSSRH_TOKEN }}"}]'
-
       - name: Assemble Bundle
         run: |
           VERSION=$(./gradlew -q properties | grep "^version:" | awk '{ print $2 }')
-          mkdir -p bundle/io/github/lordtylus/equation-parser/${VERSION}
-          cp build/libs/equation-parser-${VERSION}.jar bundle/io/github/lordtylus/equation-parser/${VERSION}/
-          cp build/libs/equation-parser-${VERSION}-sources.jar bundle/io/github/lordtylus/equation-parser/${VERSION}/
-          cp build/libs/equation-parser-${VERSION}-javadoc.jar bundle/io/github/lordtylus/equation-parser/${VERSION}/
-          cp build/publications/mavenJava/pom-default.xml bundle/io/github/lordtylus/equation-parser/${VERSION}/equation-parser-${VERSION}.pom
-          cp build/libs/equation-parser-${VERSION}.jar.asc bundle/io/github/lordtylus/equation-parser/${VERSION}/
-          cp build/libs/equation-parser-${VERSION}-sources.jar.asc bundle/io/github/lordtylus/equation-parser/${VERSION}/
-          cp build/libs/equation-parser-${VERSION}-javadoc.jar.asc bundle/io/github/lordtylus/equation-parser/${VERSION}/
-          cp build/publications/mavenJava/pom-default.xml.asc bundle/io/github/lordtylus/equation-parser/${VERSION}/equation-parser-${VERSION}.pom.asc
+          ARTIFACT_DIR=bundle/io/github/lordtylus/equation-parser/${VERSION}
+          mkdir -p "$ARTIFACT_DIR"
+
+          cp build/libs/equation-parser-${VERSION}.jar "$ARTIFACT_DIR/"
+          cp build/libs/equation-parser-${VERSION}-sources.jar "$ARTIFACT_DIR/"
+          cp build/libs/equation-parser-${VERSION}-javadoc.jar "$ARTIFACT_DIR/"
+          cp build/publications/mavenJava/pom-default.xml "$ARTIFACT_DIR/equation-parser-${VERSION}.pom"
+
+          # Generate required .md5 and .sha1 files
+          for file in "$ARTIFACT_DIR"/*; do
+            md5sum "$file" | awk '{ print $1 }' > "$file.md5"
+            sha1sum "$file" | awk '{ print $1 }' > "$file.sha1"
+          done
+
+          cp build/libs/equation-parser-${VERSION}.jar.asc "$ARTIFACT_DIR/"
+          cp build/libs/equation-parser-${VERSION}-sources.jar.asc "$ARTIFACT_DIR/"
+          cp build/libs/equation-parser-${VERSION}-javadoc.jar.asc "$ARTIFACT_DIR/"
+          cp build/publications/mavenJava/pom-default.xml.asc "$ARTIFACT_DIR/equation-parser-${VERSION}.pom.asc"
+
           cd bundle
           zip -r ../artifact-bundle.zip .
           cd ..
