@@ -39,6 +39,26 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      - name: Deploy to Sonatype SNAPSHOT
+        run: |
+          VERSION=$(./gradlew -q properties | grep "^version:" | awk '{ print $2 }')
+          mvn deploy:deploy-file \
+            -DpomFile=build/publications/mavenJava/pom-default.xml \
+            -Dfile=build/libs/equation-parser-${VERSION}.jar \
+            -Dsources=build/libs/equation-parser-${VERSION}-sources.jar \
+            -Djavadoc=build/libs/equation-parser-${VERSION}-javadoc.jar \
+            -Dfiles=build/libs/equation-parser-${VERSION}.jar.asc,build/libs/equation-parser-${VERSION}-sources.jar.asc,build/libs/equation-parser-${VERSION}-javadoc.jar.asc,build/publications/mavenJava/pom-default.xml.asc \
+            -Dclassifiers=jar.asc,sources.asc,javadoc.asc,pom.asc \
+            -Dtypes=asc,asc,asc,asc \
+            -DrepositoryId=ossrh \
+            -Durl=https://central.sonatype.com/repository/maven-snapshots \
+            -DgroupId=io.github.lordtylus.equation \
+            -DartifactId=equation-parser \
+            -Dversion=${VERSION}
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+
   jacoco:
 
     runs-on: ubuntu-latest
