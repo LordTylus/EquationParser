@@ -60,8 +60,19 @@ jobs:
 
       - name: Upload to Sonatype Central Publisher
         run: |
-          TOKEN=$(echo -n "${{ secrets.OSSRH_USERNAME }}:${{ secrets.OSSRH_TOKEN }}" | base64)
-          
-          curl -X POST https://central.sonatype.com/api/v1/publisher/upload \
-            -H "Authorization: Bearer ${{ secrets.SONATYPE_TOKEN }}" \
+          response=$(curl --write-out "%{http_code}" --silent --output response.json \
+            -X POST https://central.sonatype.com/api/v1/publisher/upload \
+            -H "Authorization: Bearer $TOKEN" \
             -F bundle=@artifact-bundle.zip
+          
+          echo "HTTP status: $response"
+          cat response.json
+
+          if [[ "$response" -lt 200 || "$response" -ge 300 ]]; then
+            echo "❌ Upload failed with HTTP status $response"
+            exit 1
+          else
+            echo "✅ Upload successful"
+          fi
+        env:
+          TOKEN: ${{ secrets.SONATYPE_BEARER_TOKEN }}
