@@ -63,7 +63,7 @@ jobs:
           response=$(curl --write-out "%{http_code}" --silent --output response.json \
             -X POST https://central.sonatype.com/api/v1/publisher/upload \
             -H "Authorization: Bearer $TOKEN" \
-            -F bundle=@artifact-bundle.zip
+            -F bundle=@artifact-bundle.zip)
           
           echo "HTTP status: $response"
           cat response.json
