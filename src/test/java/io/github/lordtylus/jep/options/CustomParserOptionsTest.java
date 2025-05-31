@@ -26,7 +26,6 @@ import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
 import io.github.lordtylus.jep.tokenizer.TokenizerContext;
 import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -39,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled
 class CustomParserOptionsTest {
 
     @Test
