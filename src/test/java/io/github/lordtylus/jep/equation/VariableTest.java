@@ -190,7 +190,7 @@ class VariableTest {
     }
 
     @Test
-    void toStringIsCorrect() {
+    void toDisplayStringIsCorrect() {
 
         /* Given */
 
@@ -204,6 +204,27 @@ class VariableTest {
         /* When */
 
         String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("123.456789123456=123.456789123456", actual);
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Variable sut = new Variable("Test 123");
+
+        SimpleStorage storage = new SimpleStorage();
+        storage.putValue("Test 123", 123.456789123456);
+
+        Result result = sut.evaluate(storage);
+
+        /* When */
+
+        String actual = result.toString();
 
         /* Then */
 

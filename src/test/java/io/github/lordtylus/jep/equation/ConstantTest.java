@@ -171,7 +171,7 @@ class ConstantTest {
     }
 
     @Test
-    void toStringIsCorrect() {
+    void toDisplayStringIsCorrect() {
 
         /* Given */
 
@@ -182,6 +182,24 @@ class ConstantTest {
         /* When */
 
         String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("123.456789123456=123.456789123456", actual);
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Constant sut = new Constant(123.456789123456);
+
+        Result result = sut.evaluate();
+
+        /* When */
+
+        String actual = result.toString();
 
         /* Then */
 
