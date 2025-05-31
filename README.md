@@ -1,6 +1,7 @@
 # Equation Parser for Java
 
 [![Build](https://github.com/LordTylus/EquationParser/actions/workflows/gradle-main.yml/badge.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.lordtylus.equation/equation-parser.svg)](https://central.sonatype.com/artifact/io.github.lordtylus.equation/equation-parser)
 [![Coverage](.github/badges/jacoco.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
 [![Branches](.github/badges/branches.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
 [![License](https://img.shields.io/github/license/LordTylus/EquationParser)](https://github.com/LordTylus/EquationParser/blob/main/LICENSE)
@@ -97,26 +98,19 @@ You can install the latest release here:
 
 Maven:
 
-```groovy
-TBD
+```xml
+
+<dependency>
+    <groupId>io.github.lordtylus.equation</groupId>
+    <artifactId>equation-parser</artifactId>
+    <version>1.1.0</version>
+</dependency>
 ```
 
 Gradle:
 
 ```groovy
-repositories {
-    maven {
-        url 'https://maven.pkg.github.com/LordTylus/EquationParser'
-        credentials {
-            username = "<USERNAME>"
-            password = "<TOKEN>"
-        }
-    }
-}
-
-depedencies {
-    implementation 'io.github.lordtylus.equation:equation-parser:1.0'
-}
+implementation 'io.github.lordtylus.equation:equation-parser:1.1.0'
 ```
 
 Or you can install the latest snapshot build here:
@@ -130,14 +124,13 @@ repositories {
 }
 
 depedencies {
-    implementation 'io.github.lordtylus.equation:equation-parser:1.1-SNAPSHOT'
+    implementation 'io.github.lordtylus.equation:equation-parser:1.2.0-SNAPSHOT'
 }
 ```
 
 ## Demo
 
 ```java
-
 public static void main(String[] args) {
 
     String input = "2*(2+[x])^2+5";
@@ -259,7 +252,7 @@ or retrieved from storage in case of variable.
 
 ### Solving
 
-With the tree in place, all that is left to do is to solve starting on the lowest branch.
+With the tree in place, all that is left to do is to solve starting with the lowest branch.
 So in the above case `2+x` is evaluated first. The square root of the result is taken, and then raised to the 3rd power.
 And so on and so forth.
 
