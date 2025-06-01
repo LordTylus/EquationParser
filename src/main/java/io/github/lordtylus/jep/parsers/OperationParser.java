@@ -22,8 +22,8 @@ import io.github.lordtylus.jep.operators.OperatorParser;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
-import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.TokenPair;
 import lombok.NonNull;
 
 import java.util.Collection;
@@ -154,31 +154,26 @@ public final class OperationParser implements EquationParser {
 
             Token token = tokenizedEquation.get(i);
 
-            depth = token.adjustDepth(depth);
+            /*
+             * Since we are reading from right to left, depth will be negative when
+             * we encounter ). If this happens we jump to the ( one to save calculation time.
+             * If ( is not found, we have a parenthesis mismatch.
+             *
+             * Furthermore, if we ever encounter a ( it will also not have an opening one,
+             * also meaning a parenthesis mismatch, because we should have jumped over it
+             * once we encountered the closing one.
+             *
+             * Instead of checking for ParenthesisToken, Token pair is checked, as it ensures
+             * this parser can handle custom TokenPairs also.
+             */
+            if (token instanceof TokenPair tokenPair) {
 
-            if (depth != 0) {
+                TokenPair opening = tokenPair.getOpening();
 
-                /*
-                 * Since we are reading from right to left, depth will be negative when
-                 * we encounter ). If this happens we jump to the ( one to save calculation time.
-                 * If ( is not found, we have a parenthesis mismatch.
-                 *
-                 * Furthermore, if we ever encounter a ( it will also not have an opening one,
-                 * also meaning a parenthesis mismatch, because we should have jumped over it
-                 * once we encountered the closing one.
-                 */
-                if (token instanceof ParenthesisToken parenthesisToken) {
+                if (opening == null)
+                    return Optional.empty();
 
-                    ParenthesisToken opening = parenthesisToken.getOpening();
-
-                    if (opening == null)
-                        return Optional.empty();
-
-                    i = opening.getIndex();
-
-                    depth = 0;
-                }
-
+                i = opening.getIndex();
                 continue;
             }
 

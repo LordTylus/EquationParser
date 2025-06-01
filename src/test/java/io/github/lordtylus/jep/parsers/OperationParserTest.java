@@ -25,7 +25,6 @@ import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -34,7 +33,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -416,56 +414,5 @@ class OperationParserTest {
         /* Then */
 
         assertEquals("2+3", operation.toPattern(Locale.US));
-    }
-
-    @Test
-    void doesntBreakWhenOtherTokensAdjustingDepthAreInvolved() {
-
-        /* Given */
-
-        ParsingOptions options = ParsingOptions.defaultOptions();
-
-        Token testOpeningToken = new Token() {
-
-            @Override
-            public int adjustDepth(int currentDepth) {
-                return currentDepth + 1;
-            }
-
-            @Override
-            public String getString() {
-                return "";
-            }
-        };
-
-        Token testClosingToken = new Token() {
-
-            @Override
-            public int adjustDepth(int currentDepth) {
-                return currentDepth - 1;
-            }
-
-            @Override
-            public String getString() {
-                return "";
-            }
-        };
-
-        List<Token> tokenized = List.of(
-                new ValueToken("1"),
-                new OperatorToken('+'),
-                testOpeningToken,
-                new ValueToken("2"),
-                new OperatorToken('+'),
-                new ValueToken("3"),
-                testClosingToken);
-
-        /* When */
-
-        Executable result = () -> OperationParser.DEFAULT.parse(tokenized, 2, 4, options);
-
-        /* Then */
-
-        assertDoesNotThrow(result);
     }
 }

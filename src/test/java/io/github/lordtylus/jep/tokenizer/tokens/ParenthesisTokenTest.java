@@ -219,7 +219,7 @@ class ParenthesisTokenTest {
 
         /* Then */
 
-        ParenthesisToken opening = sut2.getOpening();
+        TokenPair opening = sut2.getOpening();
 
         assertSame(sut1, opening);
     }
