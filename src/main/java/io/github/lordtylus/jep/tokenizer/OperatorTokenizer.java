@@ -27,10 +27,14 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This tokenizer implementation reacts to parentheses ( and ) and add these
- * to the passed in token list.
+ * This tokenizer implementation reacts to operators in the token string and
+ * creates {@link OperatorToken} objects during tokenizing.
  * <p>
- * Everything that wasn't tokenized before an opening parenthesis will be added as a function token.
+ * Since this tokenizer is supposed to be called from the {@link EquationStringTokenizer}
+ * when a supported operator was found, this class does not check for the operator itself.
+ * <p>
+ * It just assumes when its called, it has work to do. The {@link #getDelimiters()} method
+ * helps with the decision-making.
  */
 @Getter
 public class OperatorTokenizer implements EquationTokenizer {

@@ -21,6 +21,7 @@ import lombok.NonNull;
 import lombok.Value;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -111,13 +112,13 @@ public class Operator {
      * This method is a filter for the passed operators, to the given order.
      *
      * @param order             order to filter for.
-     * @param relevantOperators List of operators to be filtered.
+     * @param relevantOperators Collection of operators to be filtered.
      * @return List of operators matching the given order, retaining same order as input list.
      * @throws NullPointerException If any given argument is null.
      */
     public static List<Operator> getRelevantOperatorsForOrder(
             int order,
-            @NonNull List<Operator> relevantOperators) {
+            @NonNull Collection<Operator> relevantOperators) {
 
         return relevantOperators.stream()
                 .filter(operator -> operator.getOrder() == order)

@@ -25,6 +25,7 @@ import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public final class ParenthesisParser implements EquationParser {
      * @param relevantFunctions functions this parser should recognize.
      */
     public ParenthesisParser(
-            @NonNull List<MathFunction> relevantFunctions) {
+            @NonNull Collection<MathFunction> relevantFunctions) {
 
         this.mathFunctionParser = new MathFunctionParser(relevantFunctions);
     }

@@ -86,7 +86,7 @@ public final class OperationParser implements EquationParser {
      * @param relevantOperators operators this parser should recognize.
      */
     public OperationParser(
-            @NonNull List<Operator> relevantOperators) {
+            @NonNull Collection<Operator> relevantOperators) {
 
         this.relevantOperatorOrders = Operator.getRelevantOrders(relevantOperators);
 
@@ -147,8 +147,6 @@ public final class OperationParser implements EquationParser {
             ParsingOptions options,
             Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
-
-        int depth = 0;
 
         for (int i = endIndex; i >= startIndex; i--) {
 
