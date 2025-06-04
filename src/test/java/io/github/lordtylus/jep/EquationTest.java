@@ -49,7 +49,7 @@ class EquationTest {
 
         /* Given / When */
 
-        Equation actual = Equation.parse(equation).orElseThrow();
+        Equation actual = Equation.parse(equation).get();
 
         /* Then */
 
@@ -76,7 +76,7 @@ class EquationTest {
 
         /* Given / When */
 
-        Equation actual = Equation.parse(equation).orElseThrow();
+        Equation actual = Equation.parse(equation).get();
 
         /* Then */
 
@@ -99,7 +99,7 @@ class EquationTest {
 
         /* Given / When */
 
-        Optional<? extends Equation> actual = Equation.parse(equation);
+        Optional<? extends Equation> actual = Equation.parse(equation).asOptional();
 
         /* Then */
 
@@ -126,7 +126,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse(equation).orElseThrow();
+        Equation sut = Equation.parse(equation).get();
 
         /* When */
 
@@ -147,7 +147,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse(equation).orElseThrow();
+        Equation sut = Equation.parse(equation).get();
 
         SimpleStorage storage = new SimpleStorage();
         storage.putValue("hallo", 4);
@@ -166,7 +166,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").get();
 
         SimpleStorage storage = new SimpleStorage();
         storage.putValue("hallo", 4);
@@ -216,7 +216,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").get();
 
         SimpleStorage storage = new SimpleStorage();
         storage.putValue("hallo", 4);
@@ -266,7 +266,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").get();
 
         SimpleStorage storage = new SimpleStorage();
         storage.putValue("hallo", 4);
@@ -316,7 +316,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").get();
 
         SimpleStorage storage = new SimpleStorage();
         storage.putValue("hallo", 4);
@@ -338,7 +338,7 @@ class EquationTest {
 
         /* Given */
 
-        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").get();
 
         SimpleStorage storage = new SimpleStorage();
         storage.putValue("hallo", 4);

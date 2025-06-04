@@ -168,6 +168,8 @@ public final class CustomParserOptions extends AbstractParserOptions {
         parserOptions.register(ParenthesisTokenizer.DEFAULT);
         parserOptions.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
 
+        parserOptions.setThrowsExceptionsOnError(false);
+
         return parserOptions;
     }
 
@@ -201,5 +203,13 @@ public final class CustomParserOptions extends AbstractParserOptions {
     @Override
     public void unregister(@NonNull EquationTokenizer tokenizer) {
         super.unregister(tokenizer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setThrowsExceptionsOnError(boolean throwsExceptionsOnError) {
+        super.setThrowsExceptionsOnError(throwsExceptionsOnError);
     }
 }

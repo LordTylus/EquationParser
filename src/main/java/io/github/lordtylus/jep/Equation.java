@@ -28,7 +28,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * This object represents a parsed equation string. Such as 2*(2+3)^[x]
@@ -94,7 +93,7 @@ public interface Equation {
      * @throws NullPointerException If any given argument is null.
      * @see ParsingOptions#defaultOptions()
      */
-    static Optional<Equation> parse(
+    static EquationOptional parse(
             @NonNull String equation) {
 
         return parse(equation, ParsingOptions.defaultOptions());
@@ -109,17 +108,27 @@ public interface Equation {
      * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
      * @throws NullPointerException If any given argument is null.
      */
-    static Optional<Equation> parse(
+    static EquationOptional parse(
             @NonNull String equation,
             @NonNull ParsingOptions parsingOptions) {
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
+        try {
 
-        ParseResult parseResult = EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
+            List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
 
-        if (parseResult.getParseType() == ParseType.OK)
-            return parseResult.getEquation();
+            ParseResult parseResult = EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
 
-        return Optional.empty();
+            if (parsingOptions.isThrowsExceptionsOnError() && parseResult.getParseType() == ParseType.ERROR)
+                throw new ParseException("Parsing failed with error: " + parseResult.getErrorMessage());
+
+            return EquationOptional.of(parseResult);
+
+        } catch (Throwable e) {
+
+            if (parsingOptions.isThrowsExceptionsOnError())
+                throw e;
+
+            return EquationOptional.of(e);
+        }
     }
 }

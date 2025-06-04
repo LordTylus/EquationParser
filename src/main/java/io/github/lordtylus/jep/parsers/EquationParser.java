@@ -60,7 +60,8 @@ public interface EquationParser {
      * @param startIndex        start index of the list to parse.
      * @param endIndex          endIndex of the List to parse.
      * @param parsingOptions    Options which serve as source for the Parsers to be used.
-     * @return A {@link ParseResult} containing the parsed {@link Equation} or error information if parsing was unsuccessful.
+     * @return A {@link ParseResult} containing the parsed {@link Equation} or error
+     * information if parsing was unsuccessful. The result will either have {@link ParseType#OK} or {@link ParseType#ERROR} others are not expected.
      */
     static ParseResult parseEquation(
             @NonNull List<Token> tokenizedEquation,
@@ -80,7 +81,7 @@ public interface EquationParser {
                 return result;
         }
 
-        return ParseResult.error("");
+        return ParseResult.error("This expression doesn't resemble an equation!");
     }
 
     /**

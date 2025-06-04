@@ -28,8 +28,7 @@ public class HigherRootsDemo {
 
         String input = "32^(1/5)";
 
-        Equation equation = Equation.parse(input).orElseThrow(
-                () -> new IllegalArgumentException("Could not parse!"));
+        Equation equation = Equation.parse(input).get();
 
         Result result = equation.evaluate();
 

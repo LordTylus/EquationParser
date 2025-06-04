@@ -36,8 +36,7 @@ public class EquationWithVariablesDemo {
 
         String input = "2*[x]^2+5";
 
-        Equation equation = Equation.parse(input).orElseThrow(
-                () -> new IllegalArgumentException("Could not parse!"));
+        Equation equation = Equation.parse(input).get();
 
         SimpleStorage storage = new SimpleStorage();
 

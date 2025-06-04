@@ -33,7 +33,7 @@ public class PerformanceDemo {
             long start = System.nanoTime();
 
             for (int i = 0; i < 1_000_000; i++)
-                Equation.parse(input).orElseThrow();
+                Equation.parse(input).get();
 
             long end = System.nanoTime();
 

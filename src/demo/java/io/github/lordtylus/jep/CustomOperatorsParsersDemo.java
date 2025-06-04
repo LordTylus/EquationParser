@@ -45,7 +45,7 @@ public class CustomOperatorsParsersDemo {
         CustomParserOptions parserOptions = CustomParserOptions.defaultWithOperators(operators);
 
         /* operators with same order are solved from left to right. so 4*10 ist calculated first. Then Modulo 3 which is 1. */
-        Equation equation = Equation.parse("2+4*10%3", parserOptions).orElseThrow();
+        Equation equation = Equation.parse("2+4*10%3", parserOptions).get();
 
         System.out.println(equation.evaluate().asDouble()); //3.0
     }
