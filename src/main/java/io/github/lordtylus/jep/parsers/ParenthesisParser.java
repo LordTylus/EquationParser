@@ -74,7 +74,7 @@ public final class ParenthesisParser implements EquationParser {
 
             if (first instanceof ParenthesisToken openingToken) {
                 if (!openingToken.isOpening())
-                    return ParseResult.error("");
+                    return ParseResult.error("Parenthesis mismatch, '(' expected!");
             } else {
                 return ParseResult.notMine();
             }
@@ -83,7 +83,7 @@ public final class ParenthesisParser implements EquationParser {
 
             if (last instanceof ParenthesisToken closingToken) {
                 if (!closingToken.isClosing())
-                    return ParseResult.error("");
+                    return ParseResult.error("Parenthesis mismatch, ')' missing!");
             } else {
                 return ParseResult.notMine();
             }
@@ -99,14 +99,14 @@ public final class ParenthesisParser implements EquationParser {
 
             Optional<MathFunction> function = mathFunctionParser.parse(functionName);
             if (function.isEmpty())
-                return ParseResult.error("");
+                return ParseResult.error("Unknown function " + functionName + "!");
 
             ParseResult inner = EquationParser.parseEquation(tokenizedEquation,
                     startIndex + 1, endIndex - 1, options);
 
             return switch (inner.getParseType()) {
                 case ERROR -> inner;
-                case NOT_MINE -> ParseResult.error("");
+                case NOT_MINE -> ParseResult.error("Not an equation inside parentheses!");
                 default -> ParseResult.ok(new Parenthesis(function.get(), inner.getNullableEquation()));
             };
 

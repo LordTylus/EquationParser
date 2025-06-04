@@ -62,7 +62,7 @@ public final class ConstantParser implements EquationParser {
             String trimmedEquation = token.getString().replace(" ", "");
 
             if (trimmedEquation.isEmpty())
-                return ParseResult.error("");
+                return ParseResult.error("Constant is empty!");
 
             int length = trimmedEquation.length();
 
@@ -78,7 +78,7 @@ public final class ConstantParser implements EquationParser {
                 if (c == '.' || c == ',') {
 
                     if (encounteredDecimal)
-                        return ParseResult.error("Malicious decimal points!");
+                        return ParseResult.error("Multiple decimal points!");
 
                     encounteredDecimal = true;
                     continue;

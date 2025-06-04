@@ -169,7 +169,7 @@ public final class OperationParser implements EquationParser {
                 TokenPair opening = tokenPair.getOpening();
 
                 if (opening == null)
-                    return Optional.empty();
+                    return ParseResult.error("Token pair mismatch! Could not find opening!");
 
                 i = opening.getIndex();
                 continue;
@@ -193,10 +193,10 @@ public final class OperationParser implements EquationParser {
 
                 return switch (leftEquation.getParseType()) {
                     case ERROR -> leftEquation;
-                    case NOT_MINE -> ParseResult.error("");
+                    case NOT_MINE -> ParseResult.error("Left operand is not an equation!");
                     default -> switch (rightEquation.getParseType()) {
                         case ERROR -> rightEquation;
-                        case NOT_MINE -> ParseResult.error("");
+                        case NOT_MINE -> ParseResult.error("Right operand is not an equation!");
                         default -> ParseResult.ok(new Operation(leftEquation.getNullableEquation(), rightEquation.getNullableEquation(), parsedOperator));
                     };
                 };
