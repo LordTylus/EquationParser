@@ -310,4 +310,47 @@ class EquationTest {
 
         assertEquals(expected, sb.toString());
     }
+
+    @Test
+    void toStaticEquationDisplaysCorrectString() {
+
+        /* Given */
+
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+
+        SimpleStorage storage = new SimpleStorage();
+        storage.putValue("hallo", 4);
+
+        Result result = sut.evaluate(storage);
+        StringBuilder sb = new StringBuilder();
+
+        /* When */
+
+        result.toStaticEquation(sb);
+
+        /* Then */
+
+        assertEquals("(2.0+((1.0+2.0)^2.0+(4.0+4)^2.0)+(2.0*2.0))+5.0", sb.toString());
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Equation sut = Equation.parse("(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5").orElseThrow();
+
+        SimpleStorage storage = new SimpleStorage();
+        storage.putValue("hallo", 4);
+
+        Result result = sut.evaluate(storage);
+
+        /* When */
+
+        String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("(2.0+((1.0+2.0)^2.0+(4.0+4)^2.0)+(2.0*2.0))+5.0=84.0", actual);
+    }
 }

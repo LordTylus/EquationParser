@@ -150,4 +150,59 @@ class ConstantTest {
 
         assertEquals("123.456789123456 = 123.456789123456\n", sb.toString());
     }
+
+    @Test
+    void toStaticEquationDisplaysCorrectString() {
+
+        /* Given */
+
+        Constant sut = new Constant(123.456789123456);
+
+        Result result = sut.evaluate();
+        StringBuilder sb = new StringBuilder();
+
+        /* When */
+
+        result.toStaticEquation(sb);
+
+        /* Then */
+
+        assertEquals("123.456789123456", sb.toString());
+    }
+
+    @Test
+    void toDisplayStringIsCorrect() {
+
+        /* Given */
+
+        Constant sut = new Constant(123.456789123456);
+
+        Result result = sut.evaluate();
+
+        /* When */
+
+        String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("123.456789123456=123.456789123456", actual);
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Constant sut = new Constant(123.456789123456);
+
+        Result result = sut.evaluate();
+
+        /* When */
+
+        String actual = result.toString();
+
+        /* Then */
+
+        assertEquals("123.456789123456=123.456789123456", actual);
+    }
 }

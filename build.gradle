@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.github.lordtylus.equation'
-version '1.1-SNAPSHOT'
+version '1.2.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -62,9 +62,38 @@ publishing {
         }
     }
     publications {
-        gpr(MavenPublication) {
+        mavenJava(MavenPublication) {
+
             artifactId 'equation-parser'
+
             from(components.java)
+
+            pom {
+                name.set("Equation Parser")
+                description.set("A generic and extendable framework to parse expressions and mathematical equations such as 4*(2+x)^2.")
+                url.set("https://github.com/LordTylus/EquationParser")
+
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("LordTylus")
+                        name.set("Martin Rökker")
+                        email.set("martin.roekker@gmail.com")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/LordTylus/EquationParser.git")
+                    developerConnection.set("scm:git:ssh://github.com:LordTylus/EquationParser.git")
+                    url.set("https://github.com/LordTylus/EquationParser.git")
+                }
+            }
         }
     }
 }

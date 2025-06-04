@@ -15,6 +15,8 @@
 */
 package io.github.lordtylus.jep.options;
 
+import io.github.lordtylus.jep.functions.StandardFunctions;
+import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.parsers.ConstantParser;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -87,6 +90,143 @@ class CustomParserOptionsTest {
 
         assertEquals(actual1, expected1);
         assertEquals(actual2, expected2);
+    }
+
+    @Test
+    void createWithOperatorsVararg() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.defaultWith(
+                StandardOperators.ADD, StandardOperators.SUB
+        );
+
+        /* When / Then */
+
+        CustomParserOptions expected = CustomParserOptions.empty();
+
+        OperationParser operationParser = new OperationParser(
+                List.of(StandardOperators.ADD, StandardOperators.SUB)
+        );
+
+        expected.register(new ParenthesisParser(StandardFunctions.all()));
+        expected.register(operationParser);
+        expected.register(ConstantParser.INSTANCE);
+        expected.register(VariableParser.INSTANCE);
+        expected.register(VariableTokenizer.INSTANCE);
+        expected.register(ParenthesisTokenizer.DEFAULT);
+        expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+
+        assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void createWithOperatorsCollection() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.defaultWithOperators(
+                List.of(StandardOperators.ADD, StandardOperators.SUB)
+        );
+
+        /* When / Then */
+
+        CustomParserOptions expected = CustomParserOptions.empty();
+
+        OperationParser operationParser = new OperationParser(
+                List.of(StandardOperators.ADD, StandardOperators.SUB)
+        );
+
+        expected.register(new ParenthesisParser(StandardFunctions.all()));
+        expected.register(operationParser);
+        expected.register(ConstantParser.INSTANCE);
+        expected.register(VariableParser.INSTANCE);
+        expected.register(VariableTokenizer.INSTANCE);
+        expected.register(ParenthesisTokenizer.DEFAULT);
+        expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+
+        assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void createWithFunctionsVararg() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.defaultWith(
+                StandardFunctions.SIN, StandardFunctions.ASIN
+        );
+
+        /* When / Then */
+
+        CustomParserOptions expected = CustomParserOptions.empty();
+
+        OperationParser operationParser = new OperationParser(StandardOperators.all());
+
+        expected.register(new ParenthesisParser(List.of(StandardFunctions.SIN, StandardFunctions.ASIN)));
+        expected.register(operationParser);
+        expected.register(ConstantParser.INSTANCE);
+        expected.register(VariableParser.INSTANCE);
+        expected.register(VariableTokenizer.INSTANCE);
+        expected.register(ParenthesisTokenizer.DEFAULT);
+        expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+
+        assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void createWithFunctionCollection() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.defaultWithFunctions(
+                List.of(StandardFunctions.SIN, StandardFunctions.ASIN)
+        );
+
+        /* When / Then */
+
+        CustomParserOptions expected = CustomParserOptions.empty();
+
+        OperationParser operationParser = new OperationParser(StandardOperators.all());
+
+        expected.register(new ParenthesisParser(List.of(StandardFunctions.SIN, StandardFunctions.ASIN)));
+        expected.register(operationParser);
+        expected.register(ConstantParser.INSTANCE);
+        expected.register(VariableParser.INSTANCE);
+        expected.register(VariableTokenizer.INSTANCE);
+        expected.register(ParenthesisTokenizer.DEFAULT);
+        expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+
+        assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void createWithFunctionAndOperatorCollection() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.defaultWith(
+                List.of(StandardFunctions.SIN, StandardFunctions.ASIN),
+                List.of(StandardOperators.ADD, StandardOperators.SUB)
+        );
+
+        /* When / Then */
+
+        CustomParserOptions expected = CustomParserOptions.empty();
+
+        OperationParser operationParser = new OperationParser(
+                List.of(StandardOperators.ADD, StandardOperators.SUB)
+        );
+
+        expected.register(new ParenthesisParser(List.of(StandardFunctions.SIN, StandardFunctions.ASIN)));
+        expected.register(operationParser);
+        expected.register(ConstantParser.INSTANCE);
+        expected.register(VariableParser.INSTANCE);
+        expected.register(VariableTokenizer.INSTANCE);
+        expected.register(ParenthesisTokenizer.DEFAULT);
+        expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+
+        assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test

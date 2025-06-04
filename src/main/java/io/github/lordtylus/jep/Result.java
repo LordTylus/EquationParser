@@ -146,4 +146,28 @@ public interface Result {
             @NonNull StringBuilder sb,
             @NonNull String currentIndent,
             @NonNull String indent);
+
+    /**
+     * Converts this result to a static parsable equation.
+     *
+     * @param sb the StringBuilder to used to build the equation.
+     */
+    void toStaticEquation(
+            @NonNull StringBuilder sb);
+
+    /**
+     * Returns a string used for displaying the whole equation and result which can also be used for toString() implementations.
+     *
+     * @return string in the form of 2.0*(1.0+4.0)^3.0=1000.0
+     */
+    default String toDisplayString() {
+
+        StringBuilder sb = new StringBuilder();
+
+        toStaticEquation(sb);
+        sb.append("=");
+        sb.append(result());
+
+        return sb.toString();
+    }
 }

@@ -16,11 +16,25 @@
 package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.functions.MathFunction;
+import io.github.lordtylus.jep.functions.StandardFunctions;
+import io.github.lordtylus.jep.operators.Operator;
+import io.github.lordtylus.jep.operators.StandardOperators;
+import io.github.lordtylus.jep.parsers.ConstantParser;
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.parsers.OperationParser;
+import io.github.lordtylus.jep.parsers.ParenthesisParser;
+import io.github.lordtylus.jep.parsers.VariableParser;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
+import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
+import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
+import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * These are custom {@link ParsingOptions} which allow to be freely configured.
@@ -57,6 +71,104 @@ public final class CustomParserOptions extends AbstractParserOptions {
                 .forEach(empty::register);
 
         return empty;
+    }
+
+    /**
+     * Creates a new and mutable {@link ParsingOptions} object which already contains all
+     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * <p>
+     * However both {@link EquationParser parsers} and {@link EquationTokenizer tokenizers} are already preconfigured to only accept the passed in {@link Operator operators}.
+     * <p>
+     * Limiting the number of operators is not expected to have an impact on performance.
+     *
+     * @param operators varargs with the operators to use for parsing.
+     * @return new mutable {@link CustomParserOptions} with edited default config for passed operators.
+     */
+    public static CustomParserOptions defaultWith(Operator... operators) {
+        return defaultWithOperators(Arrays.asList(operators));
+    }
+
+    /**
+     * Creates a new and mutable {@link ParsingOptions} object which already contains all
+     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * <p>
+     * However both {@link EquationParser parsers} and {@link EquationTokenizer tokenizers} are already preconfigured to only accept the passed in {@link Operator operators}.
+     * <p>
+     * Limiting the number of operators is not expected to have an impact on performance.
+     *
+     * @param operators collections with the operators to use for parsing.
+     * @return new mutable {@link CustomParserOptions} with edited default config for passed operators.
+     */
+    public static CustomParserOptions defaultWithOperators(Collection<Operator> operators) {
+        return defaultWith(StandardFunctions.all(), operators);
+    }
+
+    /**
+     * Creates a new and mutable {@link ParsingOptions} object which already contains all
+     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * <p>
+     * However the parsers are configured to only recognize the passed in {@link MathFunction functions}.
+     * <p>
+     * This Method can be used to add your own functions to be recognized or limit which of the pre-existing ones will be recognized.
+     * You can find all already existing ones by looking at {@link StandardFunctions}
+     * <p>
+     * Limiting the number of functions is not expected to have an impact on performance.
+     *
+     * @param functions varargs with the functions to use for parsing.
+     * @return new mutable {@link CustomParserOptions} with edited default config for passed functions.
+     */
+    public static CustomParserOptions defaultWith(MathFunction... functions) {
+        return defaultWithFunctions(Arrays.asList(functions));
+    }
+
+    /**
+     * Creates a new and mutable {@link ParsingOptions} object which already contains all
+     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * <p>
+     * However the parsers are configured to only recognize the passed in {@link MathFunction functions}.
+     * <p>
+     * This Method can be used to add your own functions to be recognized or limit which of the pre-existing ones will be recognized.
+     * You can find all already existing ones by looking at {@link StandardFunctions}
+     * <p>
+     * Limiting the number of functions is not expected to have an impact on performance.
+     *
+     * @param functions collection with the functions to use for parsing.
+     * @return new mutable {@link CustomParserOptions} with edited default config for passed functions.
+     */
+    public static CustomParserOptions defaultWithFunctions(Collection<MathFunction> functions) {
+        return defaultWith(functions, StandardOperators.all());
+    }
+
+    /**
+     * Creates a new and mutable {@link ParsingOptions} object which already contains all
+     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * <p>
+     * This method is a combination of {@link #defaultWith(Operator...)} and
+     * {@link #defaultWith(MathFunction...)} as it preconfigures these options to only work with the
+     * operators and functions which were passed in.
+     *
+     * @param mathFunctions collection with the functions to use for parsing.
+     * @param operators     collection with the operators to use for parsing.
+     * @return new mutable {@link CustomParserOptions} with edited default config for passed operators and functions.
+     */
+    public static CustomParserOptions defaultWith(
+            @NonNull Collection<MathFunction> mathFunctions,
+            @NonNull Collection<Operator> operators) {
+
+        CustomParserOptions parserOptions = CustomParserOptions.empty();
+
+        OperationParser operationParser = new OperationParser(operators);
+
+        parserOptions.register(new ParenthesisParser(mathFunctions));
+        parserOptions.register(operationParser);
+        parserOptions.register(ConstantParser.INSTANCE);
+        parserOptions.register(VariableParser.INSTANCE);
+
+        parserOptions.register(VariableTokenizer.INSTANCE);
+        parserOptions.register(ParenthesisTokenizer.DEFAULT);
+        parserOptions.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+
+        return parserOptions;
     }
 
     /**

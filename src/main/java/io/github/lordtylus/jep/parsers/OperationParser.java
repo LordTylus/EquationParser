@@ -24,6 +24,7 @@ import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
+import io.github.lordtylus.jep.tokenizer.tokens.TokenPair;
 import lombok.NonNull;
 
 import java.util.Collection;
@@ -85,7 +86,7 @@ public final class OperationParser implements EquationParser {
      * @param relevantOperators operators this parser should recognize.
      */
     public OperationParser(
-            @NonNull List<Operator> relevantOperators) {
+            @NonNull Collection<Operator> relevantOperators) {
 
         this.relevantOperatorOrders = Operator.getRelevantOrders(relevantOperators);
 
@@ -147,15 +148,34 @@ public final class OperationParser implements EquationParser {
             Map<Character, Operator> relevantOperators,
             CheckFunction checkFunction) {
 
-        int depth = 0;
-
         for (int i = endIndex; i >= startIndex; i--) {
 
             Token token = tokenizedEquation.get(i);
 
-            depth = token.adjustDepth(depth);
+            /*
+             * Since we are reading from right to left, depth will be negative when
+             * we encounter ). If this happens we jump to the ( one to save calculation time.
+             * If ( is not found, we have a parenthesis mismatch.
+             *
+             * Furthermore, if we ever encounter a ( it will also not have an opening one,
+             * also meaning a parenthesis mismatch, because we should have jumped over it
+             * once we encountered the closing one.
+             *
+             * Instead of checking for ParenthesisToken, Token pair is checked, as it ensures
+             * this parser can handle custom TokenPairs also.
+             */
+            if (token instanceof TokenPair tokenPair) {
 
-            if (depth == 0 && token instanceof OperatorToken operatorToken) {
+                TokenPair opening = tokenPair.getOpening();
+
+                if (opening == null)
+                    return Optional.empty();
+
+                i = opening.getIndex();
+                continue;
+            }
+
+            if (token instanceof OperatorToken operatorToken) {
 
                 if (!checkFunction.check(operatorToken.operator()))
                     continue;

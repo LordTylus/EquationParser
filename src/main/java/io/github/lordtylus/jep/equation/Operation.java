@@ -101,5 +101,17 @@ public record Operation(
             leftResult.print(sb, currentIndent + indent, indent);
             rightResult.print(sb, currentIndent + indent, indent);
         }
+
+        @Override
+        public void toStaticEquation(@NonNull StringBuilder sb) {
+            leftResult.toStaticEquation(sb);
+            sb.append(operator.toPattern());
+            rightResult.toStaticEquation(sb);
+        }
+
+        @Override
+        public String toString() {
+            return toDisplayString();
+        }
     }
 }

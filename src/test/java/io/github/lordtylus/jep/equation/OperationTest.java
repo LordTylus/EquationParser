@@ -186,4 +186,71 @@ class OperationTest {
 
         assertEquals(expected, sb.toString());
     }
+
+    @Test
+    void toStaticEquationDisplaysCorrectString() {
+
+        /* Given */
+
+        Constant left = new Constant(2.5);
+        Constant right = new Constant(5);
+        Operator operator = StandardOperators.MULT;
+
+        Operation sut = new Operation(left, right, operator);
+
+        Result result = sut.evaluate();
+        StringBuilder sb = new StringBuilder();
+
+        /* When */
+
+        result.toStaticEquation(sb);
+
+        /* Then */
+
+        assertEquals("2.5*5.0", sb.toString());
+    }
+
+    @Test
+    void toDisplayStringIsCorrect() {
+
+        /* Given */
+
+        Constant left = new Constant(2.5);
+        Constant right = new Constant(5);
+        Operator operator = StandardOperators.MULT;
+
+        Operation sut = new Operation(left, right, operator);
+
+        Result result = sut.evaluate();
+
+        /* When */
+
+        String actual = result.toDisplayString();
+
+        /* Then */
+
+        assertEquals("2.5*5.0=12.5", actual);
+    }
+
+    @Test
+    void toStringIsCorrect() {
+
+        /* Given */
+
+        Constant left = new Constant(2.5);
+        Constant right = new Constant(5);
+        Operator operator = StandardOperators.MULT;
+
+        Operation sut = new Operation(left, right, operator);
+
+        Result result = sut.evaluate();
+
+        /* When */
+
+        String actual = result.toString();
+
+        /* Then */
+
+        assertEquals("2.5*5.0=12.5", actual);
+    }
 }

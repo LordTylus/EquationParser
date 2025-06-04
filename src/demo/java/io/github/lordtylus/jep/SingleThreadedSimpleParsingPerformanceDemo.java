@@ -15,35 +15,28 @@
 */
 package io.github.lordtylus.jep;
 
-import io.github.lordtylus.jep.storages.SimpleStorage;
-
 import java.util.concurrent.TimeUnit;
 
 /**
- * This demo contains a simple performance test, which parses the equation once,
- * but calculates it 1 million, 10 million and 100 million times.
+ * This demo shows parsing of a very simple A + B equation.
+ * The longer an equation is, the more expensive parsing becomes.
+ * <p>
+ * This is pretty much the fastest you can get.
  */
-public class SingleThreadedCalculationPerformanceDemo {
+public class SingleThreadedSimpleParsingPerformanceDemo {
 
     public static void main(String[] args) {
 
-        String input = "(7+3)*(6-3)+216/3^3+[x]";
-        Equation equation = Equation.parse(input).orElseThrow();
-
-        SimpleStorage simpleStorage = new SimpleStorage();
+        String input = "[number 1]+[number 2]";
 
         // AMD Ryzen 7 3700X 8-Core Processor
         {
             long start = System.nanoTime();
 
-            for (int i = 0; i < 1_000_000; i++) {
+            for (int i = 0; i < 1_000_000; i++)
+                Equation.parse(input);
 
-                simpleStorage.putValue("x", i);
-
-                equation.evaluate(simpleStorage);
-            }
-
-            // 403 ms
+            // 544 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("1 million passes: " + duration + " ms");
@@ -54,14 +47,10 @@ public class SingleThreadedCalculationPerformanceDemo {
 
             long start = System.nanoTime();
 
-            for (int i = 0; i < 10_000_000; i++) {
+            for (int i = 0; i < 10_000_000; i++)
+                Equation.parse(input);
 
-                simpleStorage.putValue("x", i);
-
-                equation.evaluate(simpleStorage);
-            }
-
-            // 2,246 ms
+            // 3,077 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("10 million passes: " + duration + " ms");
@@ -72,14 +61,10 @@ public class SingleThreadedCalculationPerformanceDemo {
 
             long start = System.nanoTime();
 
-            for (int i = 0; i < 100_000_000; i++) {
+            for (int i = 0; i < 100_000_000; i++)
+                Equation.parse(input);
 
-                simpleStorage.putValue("x", i);
-
-                equation.evaluate(simpleStorage);
-            }
-
-            // 22,357 ms
+            // 30,339 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("100 million passes: " + duration + " ms");
