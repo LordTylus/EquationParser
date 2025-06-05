@@ -30,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 
 class EquationTest {
 
@@ -391,5 +393,24 @@ class EquationTest {
         /* Then */
 
         assertDoesNotThrow(result);
+    }
+
+    @Test
+    void returnsEquationOptionalWithException() {
+
+        /* Given */
+
+        CustomParserOptions customParserOptionsSpy = spy(CustomParserOptions.withDefaults());
+
+        Throwable throwable = new NullPointerException("Test");
+        doThrow(throwable).when(customParserOptionsSpy).getRegisteredParsers();
+
+        /* When */
+
+        EquationOptional actual = Equation.parse("(1+1)", customParserOptionsSpy);
+
+        /* Then */
+
+        assertEquals(throwable, actual.getThrowable());
     }
 }

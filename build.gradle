@@ -23,6 +23,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
+    testImplementation 'org.mockito:mockito-core:5.18.0'
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
@@ -47,6 +48,8 @@ jacocoTestReport {
 
 test {
     useJUnitPlatform()
+    /* Fixes warning introduced by mockito which is irrelevant here */
+    jvmArgs(['-XX:+EnableDynamicAgentLoading', '-Xshare:off'])
     finalizedBy(tasks.jacocoTestReport)
 }
 
