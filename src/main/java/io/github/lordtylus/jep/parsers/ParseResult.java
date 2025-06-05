@@ -53,7 +53,7 @@ public class ParseResult {
      * @return an optional with the parsed equation if parsing was successful
      */
     public Optional<Equation> getEquation() {
-        return Optional.of(equation);
+        return Optional.ofNullable(equation);
     }
 
     /**

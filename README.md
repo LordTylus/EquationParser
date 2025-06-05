@@ -10,8 +10,7 @@
 ## About
 
 This framework allows you to parse mathematical expressions such as `2*[x]^2+5` and calculate the result for a given
-value
-x.
+value x.
 
 In order to do that the equation is parsed using a recursive algorithm following the order of operations in a composite
 tree structure.
@@ -133,19 +132,38 @@ depedencies {
 ```java
 public static void main(String[] args) {
 
-    String input = "2*(2+[x])^2+5";
+    String input = "(7+3)*(6-3)+216/3^3";
 
-    Equation equation = Equation.parse(input).orElseThrow();
+    Equation equation = Equation.parse(input).get();
 
-    SimpleStorage storage = new SimpleStorage();
-    storage.putValue("x", 3);
+    Result result = equation.evaluate();
 
-    Result result = equation.evaluate(storage);
-    System.out.println(result.asDouble()); //23.0
+    System.out.println(result.asDouble()); //38.0
 }
 ```
 
 You can find more demos [here](src/demo/java/io/github/lordtylus/jep)
+
+## Parsing Errors
+
+This framework is able to report errors if they occur.
+
+Things like missing parenthesis, or unknown functions will be reported, and if configured even an exception can be
+thrown. However, the default just returns an Optional-like object containing the parsed equation, or an error for
+debugging.
+
+```java
+public static void main(String[] args) {
+
+    String input = "(7+3*2+12";
+
+    EquationOptional equation = Equation.parse(input);
+
+    System.out.println(equation.isPresent()); //False
+    System.out.println(equation.hasError()); //True
+    System.out.println(equation.getErrorMessage()); //Parenthesis mismatch, ')' missing!
+}
+```
 
 ## Performance
 
@@ -260,10 +278,6 @@ Since the first two steps only need to be performed once, the third step can be 
 values as many times as needed.
 
 ## Vision for future
-
-The framework is lacking one very important feature still, which would be reporting parsing errors.
-With the approach described above it would be easy to find mismatched parenthesis or unrecognized functions. However,
-right now they are not reported yet. This will be added in a future release.
 
 Additionally, I would like to add the option to support variables without brackets. Doing would be more prone for
 parsing errors, but can make it easier to input expressions manually.  

@@ -79,6 +79,9 @@ public final class ParenthesisParser implements EquationParser {
                 return ParseResult.notMine();
             }
 
+            if (openingToken.getClosing() == null)
+                return ParseResult.error("Parenthesis mismatch, ')' missing!");
+
             Token last = tokenizedEquation.get(endIndex);
 
             if (last instanceof ParenthesisToken closingToken) {
@@ -88,9 +91,6 @@ public final class ParenthesisParser implements EquationParser {
                 return ParseResult.notMine();
             }
 
-            if (openingToken.getClosing() == null)
-                return ParseResult.error("");
-
             if (openingToken.getClosing() != closingToken)
                 return ParseResult.notMine();
 
@@ -99,7 +99,7 @@ public final class ParenthesisParser implements EquationParser {
 
             Optional<MathFunction> function = mathFunctionParser.parse(functionName);
             if (function.isEmpty())
-                return ParseResult.error("Unknown function " + functionName + "!");
+                return ParseResult.error("Unknown function '" + functionName + "'!");
 
             ParseResult inner = EquationParser.parseEquation(tokenizedEquation,
                     startIndex + 1, endIndex - 1, options);
