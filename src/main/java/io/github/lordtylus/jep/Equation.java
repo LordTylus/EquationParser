@@ -19,6 +19,8 @@ import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
+import io.github.lordtylus.jep.parsers.ParseResult;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.storages.EmptyStorage;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
@@ -26,7 +28,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * This object represents a parsed equation string. Such as 2*(2+3)^[x]
@@ -88,11 +89,11 @@ public interface Equation {
      *
      * @param equation The equation to be parsed.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#isThrowsExceptionsOnError()} returns true, the exception will be thrown instead.
      * @throws NullPointerException If any given argument is null.
      * @see ParsingOptions#defaultOptions()
      */
-    static Optional<Equation> parse(
+    static EquationOptional parse(
             @NonNull String equation) {
 
         return parse(equation, ParsingOptions.defaultOptions());
@@ -104,15 +105,30 @@ public interface Equation {
      * @param equation       The equation to be parsed.
      * @param parsingOptions The {@link ParsingOptions} containing the {@link EquationParser parsers} to be used to parse the given equation.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#isThrowsExceptionsOnError()} returns true, the exception will be thrown instead.
      * @throws NullPointerException If any given argument is null.
      */
-    static Optional<Equation> parse(
+    static EquationOptional parse(
             @NonNull String equation,
             @NonNull ParsingOptions parsingOptions) {
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
+        try {
 
-        return EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
+            List<Token> tokenized = EquationStringTokenizer.tokenize(equation, parsingOptions);
+
+            ParseResult parseResult = EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
+
+            if (parsingOptions.isThrowsExceptionsOnError() && parseResult.getParseType() == ParseType.ERROR)
+                throw new ParseException("Parsing failed with error: " + parseResult.getErrorMessage());
+
+            return EquationOptional.of(parseResult);
+
+        } catch (Throwable e) {
+
+            if (parsingOptions.isThrowsExceptionsOnError())
+                throw e;
+
+            return EquationOptional.of(e);
+        }
     }
 }

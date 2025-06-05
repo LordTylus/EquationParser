@@ -16,6 +16,7 @@
 package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.EquationOptional;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 
@@ -41,6 +42,18 @@ public interface ParsingOptions {
     static ParsingOptions defaultOptions() {
         return DefaultParserOptions.INSTANCE;
     }
+
+    /**
+     * This method decides if in case of parsing errors or Exceptions
+     * if these exceptions should be thrown, or if they are to be collected inside
+     * the {@link EquationOptional}
+     * <p>
+     * The default behavior is that exceptions are not thrown, but if needed it can be changed
+     * using {@link CustomParserOptions}
+     *
+     * @return true if exceptions should be thrown.
+     */
+    boolean isThrowsExceptionsOnError();
 
     /**
      * Returns a Map containing a mapping of a character to the corresponding {@link EquationTokenizer}

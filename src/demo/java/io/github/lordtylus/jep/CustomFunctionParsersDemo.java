@@ -43,7 +43,7 @@ public class CustomFunctionParsersDemo {
 
         CustomParserOptions parserOptions = CustomParserOptions.defaultWithFunctions(functions);
 
-        Equation equation = Equation.parse("2+area(10)", parserOptions).orElseThrow();
+        Equation equation = Equation.parse("2+area(10)", parserOptions).get();
 
         System.out.println(equation.evaluate().asDouble()); //316.15926535...
     }

@@ -38,6 +38,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -90,6 +91,7 @@ class CustomParserOptionsTest {
 
         assertEquals(actual1, expected1);
         assertEquals(actual2, expected2);
+        assertFalse(sut.isThrowsExceptionsOnError());
     }
 
     @Test
@@ -494,5 +496,39 @@ class CustomParserOptionsTest {
         expected.put(']', VariableTokenizer.INSTANCE);
 
         assertEquals(actual, expected);
+    }
+
+    @Test
+    void canSetThrowsExceptionsIsFalseByDefault() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.empty();
+
+        /* When */
+
+        boolean actual = sut.isThrowsExceptionsOnError();
+
+        /* Then */
+
+        assertFalse(actual);
+    }
+
+    @Test
+    void canSetThrowsExceptions() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.empty();
+
+        /* When */
+
+        sut.setThrowsExceptionsOnError(true);
+
+        /* Then */
+
+        boolean actual = sut.isThrowsExceptionsOnError();
+
+        assertTrue(actual);
     }
 }

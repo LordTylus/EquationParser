@@ -15,9 +15,13 @@
 */
 package io.github.lordtylus.jep.options;
 
+import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +43,14 @@ public abstract class AbstractParserOptions implements ParsingOptions {
 
     private final Map<Character, EquationTokenizer> tokenizerMapping = new HashMap<>();
     private final Map<Character, EquationTokenizer> tokenizerMappingUnmodifiable = Collections.unmodifiableMap(tokenizerMapping);
+
+    /**
+     * Decides if the parsing of {@link Equation equations} should throw exceptions
+     * in case of an occurring error.
+     */
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
+    private boolean throwsExceptionsOnError;
 
     @Override
     public Map<Character, EquationTokenizer> getTokenizerForDelimiterMap() {

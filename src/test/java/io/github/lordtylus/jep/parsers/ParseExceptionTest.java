@@ -22,4 +22,20 @@ class ParseExceptionTest {
 
         assertSame(test, actual);
     }
+
+    @Test
+    void providesMessage() {
+
+        /* Given */
+
+        ParseException sut = new ParseException("Something went wrong");
+
+        /* When */
+
+        String actual = sut.getMessage();
+
+        /* Then */
+
+        assertSame("Something went wrong", actual);
+    }
 }

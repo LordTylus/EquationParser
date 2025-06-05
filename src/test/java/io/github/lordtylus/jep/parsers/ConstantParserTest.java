@@ -18,6 +18,7 @@ package io.github.lordtylus.jep.parsers;
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Constant;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
@@ -29,10 +30,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ConstantParserTest {
 
@@ -56,7 +57,10 @@ class ConstantParserTest {
 
         /* When */
 
-        Equation actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options).orElseThrow();
+        Equation actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, tokenized.size() - 1, options)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
@@ -85,11 +89,12 @@ class ConstantParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, tokenized.size() - 1, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @ParameterizedTest
@@ -114,11 +119,12 @@ class ConstantParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -132,11 +138,12 @@ class ConstantParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -150,11 +157,12 @@ class ConstantParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -168,11 +176,12 @@ class ConstantParserTest {
 
         /* When */
 
-        Optional<? extends Equation> actual = ConstantParser.INSTANCE.parse(tokenized, 0, tokenized.size() - 1, options);
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
 
         /* Then */
 
-        assertTrue(actual.isEmpty());
+        assertNotEquals(ParseType.OK, actual.getParseType());
     }
 
     @Test
@@ -191,10 +200,124 @@ class ConstantParserTest {
 
         /* When */
 
-        Constant constant = ConstantParser.INSTANCE.parse(tokenized, 2, 2, options).orElseThrow();
+        Equation actual = ConstantParser.INSTANCE
+                .parse(tokenized, 2, 2, options)
+                .getEquation()
+                .orElseThrow();
 
         /* Then */
 
-        assertEquals("2", constant.toPattern(Locale.US));
+        assertEquals("2", actual.toPattern(Locale.US));
+    }
+
+    @Test
+    void blankStringWillBeAnError() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("  "));
+
+        /* When */
+
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Constant is empty!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void multipleDecimalsInStringWillBeAnError() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1.2.3"));
+
+        /* When */
+
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Multiple decimal points!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void ignoresStringsThatAreNotNumbers() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("Test"));
+
+        /* When */
+
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void ignoresStringsThatAreTooLong() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("Test"),
+                new ValueToken("Test"));
+
+        /* When */
+
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 1, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void numbers0To9Supported() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1234567890"));
+
+        /* When */
+
+        ParseResult actual = ConstantParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.ok(new Constant(1234567890));
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 }

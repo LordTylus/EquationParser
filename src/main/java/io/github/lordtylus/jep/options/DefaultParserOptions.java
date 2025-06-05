@@ -54,5 +54,7 @@ public final class DefaultParserOptions extends AbstractParserOptions {
         register(VariableTokenizer.INSTANCE);
         register(ParenthesisTokenizer.DEFAULT);
         register(OperatorTokenizer.DEFAULT);
+
+        setThrowsExceptionsOnError(false);
     }
 }

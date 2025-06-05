@@ -17,12 +17,11 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * This interface is the base for parsing equation strings. It is expected that each {@link Equation} has one parser that is capable of creating the composite object hierarchy of parsed {@link Equation Equations}.
@@ -61,9 +60,10 @@ public interface EquationParser {
      * @param startIndex        start index of the list to parse.
      * @param endIndex          endIndex of the List to parse.
      * @param parsingOptions    Options which serve as source for the Parsers to be used.
-     * @return an optional with the parsed equation or empty if parsing failed.
+     * @return A {@link ParseResult} containing the parsed {@link Equation} or error
+     * information if parsing was unsuccessful. The result will either have {@link ParseType#OK} or {@link ParseType#ERROR} others are not expected.
      */
-    static Optional<Equation> parseEquation(
+    static ParseResult parseEquation(
             @NonNull List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,
@@ -75,14 +75,13 @@ public interface EquationParser {
 
             EquationParser parser = registeredParsers.get(i);
 
-            Optional<Equation> parsed = parser.parse(tokenizedEquation, startIndex, endIndex, parsingOptions)
-                    .map(Function.identity());
+            ParseResult result = parser.parse(tokenizedEquation, startIndex, endIndex, parsingOptions);
 
-            if (parsed.isPresent())
-                return parsed;
+            if (result.getParseType() != ParseType.NOT_MINE)
+                return result;
         }
 
-        return Optional.empty();
+        return ParseResult.error("This expression doesn't resemble an equation!");
     }
 
     /**
@@ -94,10 +93,10 @@ public interface EquationParser {
      * @param startIndex        start index of the list to parse.
      * @param endIndex          endIndex of the List to parse.
      * @param options           {@link ParsingOptions} to be used when recursively calling other parsers.
-     * @return Optional with parsed Equation if parsing was successful. If parsing failed the optional will be empty.
+     * @return A {@link ParseResult} containing the parsed {@link Equation} or error information if parsing was unsuccessful.
      * @throws ParseException If a parser cannot parse an equation string an empty optional is expected. This exception can be thrown if a parser encounters an unexpected situation it cannot recover from.
      */
-    Optional<? extends Equation> parse(
+    ParseResult parse(
             @NonNull List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,

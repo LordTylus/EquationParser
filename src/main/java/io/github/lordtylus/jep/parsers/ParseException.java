@@ -38,4 +38,13 @@ public class ParseException extends RuntimeException {
     public ParseException(Throwable cause) {
         super(cause);
     }
+
+    /**
+     * Creates a new ParseException with the given message
+     *
+     * @param message reason of the exception during parsing.
+     */
+    public ParseException(String message) {
+        super(message);
+    }
 }

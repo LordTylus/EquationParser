@@ -15,30 +15,22 @@
 */
 package io.github.lordtylus.jep;
 
-import java.util.concurrent.TimeUnit;
-
 /**
- * This is my Dev File I edit sometimes to test for different scenarios.
- * Sometimes when doing optimizations I want something I can check in to use for a while.
+ * This demo shows that a parenthesis mismatch will be reported as an error.
  * <p>
- * Don't mind it :-)
+ * For that, the parse Method returns an EquationOptional, which functions like a Java
+ * Optional and either contains the equation, the error or even a throwable.
  */
-public class PerformanceDemo {
+public class ParsingErrorsParenthesisDemo {
 
     public static void main(String[] args) {
 
-        String input = "(-3)+abs(7.3+3)*sin(6+([hallo]-2))+216/3^3";
+        String input = "(7+3*2+12";
 
-        {
-            long start = System.nanoTime();
+        EquationOptional equation = Equation.parse(input);
 
-            for (int i = 0; i < 1_000_000; i++)
-                Equation.parse(input).get();
-
-            long end = System.nanoTime();
-
-            // 2.558 ms
-            System.out.println(TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
-        }
+        System.out.println(equation.isPresent()); //False
+        System.out.println(equation.hasError()); //True
+        System.out.println(equation.getErrorMessage()); //Parenthesis mismatch, ')' missing!
     }
 }

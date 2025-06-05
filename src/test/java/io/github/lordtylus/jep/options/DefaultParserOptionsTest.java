@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class DefaultParserOptionsTest {
 
@@ -55,6 +56,22 @@ class DefaultParserOptionsTest {
         );
 
         assertEquals(actual, expected);
+    }
+
+    @Test
+    void doesNotThrowExceptionsOnError() {
+
+        /* Given */
+
+        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+
+        /* When */
+
+        boolean actual = sut.isThrowsExceptionsOnError();
+
+        /* Then */
+
+        assertFalse(actual);
     }
 
     @Test

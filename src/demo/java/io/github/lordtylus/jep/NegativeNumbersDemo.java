@@ -28,8 +28,7 @@ public class NegativeNumbersDemo {
 
         String input = "2*(-3)^3";
 
-        Equation equation = Equation.parse(input).orElseThrow(
-                () -> new IllegalArgumentException("Could not parse!"));
+        Equation equation = Equation.parse(input).get();
 
         Result result = equation.evaluate();
 

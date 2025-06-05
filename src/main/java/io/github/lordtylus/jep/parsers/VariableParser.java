@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This parser implementation parses the given input string and extracts the variable name from it.
@@ -46,7 +45,7 @@ public final class VariableParser implements EquationParser {
     public static final VariableParser INSTANCE = new VariableParser();
 
     @Override
-    public Optional<Variable> parse(
+    public ParseResult parse(
             @NonNull List<Token> tokenizedEquation,
             int startIndex,
             int endIndex,
@@ -55,24 +54,24 @@ public final class VariableParser implements EquationParser {
         try {
 
             if (endIndex - startIndex != 0)
-                return Optional.empty();
+                return ParseResult.notMine();
 
             Token token = tokenizedEquation.get(startIndex);
 
             if (!(token instanceof ValueToken))
-                return Optional.empty();
+                return ParseResult.notMine();
 
             String trimmedEquation = token.getString().trim();
 
             if (!trimmedEquation.startsWith("["))
-                return Optional.empty();
+                return ParseResult.notMine();
 
             if (!trimmedEquation.endsWith("]"))
-                return Optional.empty();
+                return ParseResult.notMine();
 
             trimmedEquation = trimmedEquation.substring(1, trimmedEquation.length() - 1);
 
-            return Optional.of(new Variable(trimmedEquation));
+            return ParseResult.ok(new Variable(trimmedEquation));
 
         } catch (RuntimeException e) {
             throw new ParseException(e);

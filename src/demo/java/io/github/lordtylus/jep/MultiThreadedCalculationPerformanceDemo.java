@@ -31,7 +31,7 @@ public class MultiThreadedCalculationPerformanceDemo {
     public static void main(String[] args) {
 
         String input = "(7+3)*(6-3)+216/3^3+[x]";
-        Equation equation = Equation.parse(input).orElseThrow();
+        Equation equation = Equation.parse(input).get();
 
         // AMD Ryzen 7 3700X 8-Core Processor
         {

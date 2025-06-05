@@ -27,8 +27,7 @@ public class BasicEquationDemo {
 
         String input = "(7+3)*(6-3)+216/3^3";
 
-        Equation equation = Equation.parse(input).orElseThrow(
-                () -> new IllegalArgumentException("Could not parse!"));
+        Equation equation = Equation.parse(input).get();
 
         Result result = equation.evaluate();
 
