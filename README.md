@@ -1,6 +1,6 @@
 # Equation Parser for Java
 
-[![Build](https://github.com/LordTylus/EquationParser/actions/workflows/gradle-main.yml/badge.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
+[![Build](https://github.com/LordTylus/EquationParser/actions/workflows/gradle-main.yml/badge.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle-main.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.lordtylus.equation/equation-parser.svg)](https://central.sonatype.com/artifact/io.github.lordtylus.equation/equation-parser)
 [![Coverage](.github/badges/jacoco.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
 [![Branches](.github/badges/branches.svg)](https://github.com/LordTylus/EquationParser/actions/workflows/gradle.yml)
