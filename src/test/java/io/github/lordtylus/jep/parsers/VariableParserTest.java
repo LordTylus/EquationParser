@@ -16,6 +16,7 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
@@ -30,6 +31,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.List;
 import java.util.Locale;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -183,5 +185,94 @@ class VariableParserTest {
         /* Then */
 
         assertEquals("[hallo]", actual.toPattern(Locale.ENGLISH));
+    }
+
+    @Test
+    void ignoresStringsThatAreTooLong() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("Test"),
+                new ValueToken("Test"));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 1, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void ignoresStringsNotStartingWithOpenBracket() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("Test]"));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void ignoresStringsNotEndingWithClosingBracket() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("[Test"));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void returnsResultWithVariableNameIfOk() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("[Test]"));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.ok(new Variable("Test"));
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 }
