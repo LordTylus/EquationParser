@@ -105,7 +105,7 @@ public final class ParenthesisParser implements EquationParser {
             ParseResult inner = EquationParser.parseEquation(tokenizedEquation,
                     startIndex + 1, endIndex - 1, options);
 
-            if (inner.getParseType() == ParseType.ERROR)
+            if (inner.getParseType() != ParseType.OK)
                 return inner;
 
             return ParseResult.ok(new Parenthesis(function.get(), inner.getNullableEquation()));

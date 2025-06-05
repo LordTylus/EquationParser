@@ -16,15 +16,19 @@
 package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
+import io.github.lordtylus.jep.equation.Constant;
+import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
+import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -32,8 +36,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OperationParserTest {
 
@@ -438,5 +444,232 @@ class OperationParserTest {
         /* Then */
 
         assertEquals("2+3", actual.toPattern(Locale.ENGLISH));
+    }
+
+    @Test
+    void ignoresListsThatAreTooSmall() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("Test"));
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void errorWhenParenthesisDontMatch() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                new ValueToken("2"),
+                new ParenthesisToken(')'));
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 3, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Token pair mismatch! Could not find opening!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void notMineWhenNoOperatorOutsideParenthesesWasFound() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        ParenthesisToken token1 = new ParenthesisToken('(');
+        ParenthesisToken token2 = new ParenthesisToken(')');
+        token1.setClosing(token2);
+
+        List<Token> tokenized = List.of(
+                token1,
+                new ValueToken("1"),
+                new OperatorToken('+'),
+                new ValueToken("2"),
+                token2);
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 4, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void errorWhenLeftOperandIsEmpty() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new OperatorToken('+'),
+                new ValueToken("1"),
+                new OperatorToken('*'),
+                new ValueToken("2")
+        );
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 3, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Left operand is empty!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void errorOnRightOperandBeingEmpty() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('*'),
+                new ValueToken("2"),
+                new OperatorToken('+')
+        );
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 3, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Right operand is empty!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void okWhenOperationIsValid() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('*'),
+                new ValueToken("2")
+        );
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 2, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.ok(new Operation(new Constant(1), new Constant(2), StandardOperators.MULT));
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void returnsErrorIfLeftOperandIsInvalid() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1.1.1"),
+                new OperatorToken('*'),
+                new ValueToken("2")
+        );
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 2, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Multiple decimal points!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void returnsErrorIfRightOperandIsInvalid() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('*'),
+                new ValueToken("test")
+        );
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 2, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("This expression doesn't resemble an equation!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void throwsParseExceptionWhenRuntimeErrorOccurred() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('*'),
+                new ValueToken("2")
+        );
+
+        /* When */
+
+        Executable result = () -> OperationParser.DEFAULT
+                .parse(tokenized, 0, 3, options);
+
+        /* Then */
+
+        assertThrows(ParseException.class, result);
     }
 }

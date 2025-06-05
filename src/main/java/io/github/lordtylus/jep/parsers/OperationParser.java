@@ -183,23 +183,25 @@ public final class OperationParser implements EquationParser {
                 int endLeft = i - 1;
                 int startRight = i + 1;
 
-                if (endLeft - startIndex < 0 || endIndex - startRight < 0)
-                    return ParseResult.notMine();
+                if (endLeft - startIndex < 0)
+                    return ParseResult.error("Left operand is empty!");
+
+                if (endIndex - startRight < 0)
+                    return ParseResult.error("Right operand is empty!");
 
                 ParseResult leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
+
+                if (leftEquation.getParseType() != ParseType.OK)
+                    return leftEquation;
+
                 ParseResult rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
+
+                if (rightEquation.getParseType() != ParseType.OK)
+                    return rightEquation;
 
                 Operator parsedOperator = OperatorParser.parse(relevantOperators, operatorToken.operator()).orElseThrow();
 
-                return switch (leftEquation.getParseType()) {
-                    case ERROR -> leftEquation;
-                    case NOT_MINE -> ParseResult.error("Left operand is not an equation!");
-                    default -> switch (rightEquation.getParseType()) {
-                        case ERROR -> rightEquation;
-                        case NOT_MINE -> ParseResult.error("Right operand is not an equation!");
-                        default -> ParseResult.ok(new Operation(leftEquation.getNullableEquation(), rightEquation.getNullableEquation(), parsedOperator));
-                    };
-                };
+                return ParseResult.ok(new Operation(leftEquation.getNullableEquation(), rightEquation.getNullableEquation(), parsedOperator));
             }
         }
 

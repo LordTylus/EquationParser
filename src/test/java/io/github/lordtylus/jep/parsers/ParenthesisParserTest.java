@@ -478,7 +478,7 @@ class ParenthesisParserTest {
     }
 
     @Test
-    void throwsParseErrorWhenRuntimeErrorOccurred() {
+    void throwsParseExceptionWhenRuntimeErrorOccurred() {
 
         /* Given */
 
