@@ -20,6 +20,7 @@ import io.github.lordtylus.jep.functions.MathFunction;
 import io.github.lordtylus.jep.functions.MathFunctionParser;
 import io.github.lordtylus.jep.functions.StandardFunctions;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
@@ -104,11 +105,10 @@ public final class ParenthesisParser implements EquationParser {
             ParseResult inner = EquationParser.parseEquation(tokenizedEquation,
                     startIndex + 1, endIndex - 1, options);
 
-            return switch (inner.getParseType()) {
-                case ERROR -> inner;
-                case NOT_MINE -> ParseResult.error("Not an equation inside parentheses!");
-                default -> ParseResult.ok(new Parenthesis(function.get(), inner.getNullableEquation()));
-            };
+            if (inner.getParseType() == ParseType.ERROR)
+                return inner;
+
+            return ParseResult.ok(new Parenthesis(function.get(), inner.getNullableEquation()));
 
         } catch (ParseException e) {
             throw e;
