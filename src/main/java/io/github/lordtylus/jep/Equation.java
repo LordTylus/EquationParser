@@ -89,7 +89,7 @@ public interface Equation {
      *
      * @param equation The equation to be parsed.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#isThrowsExceptionsOnError()} returns true, the exception will be thrown instead.
      * @throws NullPointerException If any given argument is null.
      * @see ParsingOptions#defaultOptions()
      */
@@ -105,7 +105,7 @@ public interface Equation {
      * @param equation       The equation to be parsed.
      * @param parsingOptions The {@link ParsingOptions} containing the {@link EquationParser parsers} to be used to parse the given equation.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances when something cannot be parsed, an empty Optional is returned. However, if the {@link EquationParser} implementation throws an exception for whatever reason, this exception will be returned instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#isThrowsExceptionsOnError()} returns true, the exception will be thrown instead.
      * @throws NullPointerException If any given argument is null.
      */
     static EquationOptional parse(

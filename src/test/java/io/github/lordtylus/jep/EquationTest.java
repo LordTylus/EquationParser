@@ -15,15 +15,20 @@
 */
 package io.github.lordtylus.jep;
 
+import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.storages.SimpleStorage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Locale;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EquationTest {
@@ -58,19 +63,19 @@ class EquationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-//            "1 ; 1",
-//            "-  1 ;-1",
-//            " [a b c]  ; [a b c]",
-//            " 1 + 1  ; 1+1",
-//            " 1 + 1 ^ 2 ; 1+1^2",
-//            " - 1 + 1 ^ 2  ; -1+1^2",
-//            " 2 *   ( 2 + 3 ) ^ 2 ; 2*(2+3)^2",
-//            "   2 * ( 2  +  3 ) ^ ( 1 / 2  ) ; 2*(2+3)^(1/2)",
+            "1 ; 1",
+            "-  1 ;-1",
+            " [a b c]  ; [a b c]",
+            " 1 + 1  ; 1+1",
+            " 1 + 1 ^ 2 ; 1+1^2",
+            " - 1 + 1 ^ 2  ; -1+1^2",
+            " 2 *   ( 2 + 3 ) ^ 2 ; 2*(2+3)^2",
+            "   2 * ( 2  +  3 ) ^ ( 1 / 2  ) ; 2*(2+3)^(1/2)",
             "   2 * (   2   +   3   ) ^ (  - 1 / 2 )  ; 2*(2+3)^(-1/2)",
-//            " 2   * s q r   t ( 2 + 3 ) ^ 2 ; 2*sqrt(2+3)^2",
-//            "  2 * s q r t  ( 2 + 3 ) ^ l o g ( 1/ 2 )  ; 2*sqrt(2+3)^log(1/2)",
-//            " (  - 3 )  + a b s (7   . 3 + 3  ) *  s i  n ( 6 +  ( [ h a l   l  o ] - 2 ) )   + 2 1 6 /    3^ 3 ; (-3)+abs(7.3+3)*sin(6+([ h a l   l  o ]-2))+216/3^3",
-//            "  (  ( ( 1 + 2   ) * ( 3 + 4 ) )+  ((  ( 1 - 2  ) ^ 2) + 5) )  ; (((1+2)*(3+4))+(((1-2)^2)+5))",
+            " 2   * s q r   t ( 2 + 3 ) ^ 2 ; 2*sqrt(2+3)^2",
+            "  2 * s q r t  ( 2 + 3 ) ^ l o g ( 1/ 2 )  ; 2*sqrt(2+3)^log(1/2)",
+            " (  - 3 )  + a b s (7   . 3 + 3  ) *  s i  n ( 6 +  ( [ h a l   l  o ] - 2 ) )   + 2 1 6 /    3^ 3 ; (-3)+abs(7.3+3)*sin(6+([ h a l   l  o ]-2))+216/3^3",
+            "  (  ( ( 1 + 2   ) * ( 3 + 4 ) )+  ((  ( 1 - 2  ) ^ 2) + 5) )  ; (((1+2)*(3+4))+(((1-2)^2)+5))",
     }, delimiter = ';')
     void parsesSpaces(String equation, String expected) {
 
@@ -352,5 +357,39 @@ class EquationTest {
         /* Then */
 
         assertEquals("(2.0+((1.0+2.0)^2.0+(4.0+4)^2.0)+(2.0*2.0))+5.0=84.0", actual);
+    }
+
+    @Test
+    void throwsExceptionIfOptionsDemandItOnParseError() {
+
+        /* Given */
+
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.setThrowsExceptionsOnError(true);
+
+        /* When */
+
+        Executable result = () -> Equation.parse("(1+1", customParserOptions);
+
+        /* Then */
+
+        assertThrows(ParseException.class, result);
+    }
+
+    @Test
+    void doesntThrowExceptionIfParsingIsSuccessful() {
+
+        /* Given */
+
+        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
+        customParserOptions.setThrowsExceptionsOnError(true);
+
+        /* When */
+
+        Executable result = () -> Equation.parse("(1+1)", customParserOptions);
+
+        /* Then */
+
+        assertDoesNotThrow(result);
     }
 }
