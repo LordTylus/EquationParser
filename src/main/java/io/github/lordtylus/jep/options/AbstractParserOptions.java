@@ -48,9 +48,10 @@ public abstract class AbstractParserOptions implements ParsingOptions {
      * Decides if the parsing of {@link Equation equations} should throw exceptions
      * in case of an occurring error.
      */
+    @NonNull
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private boolean throwsExceptionsOnError;
+    private ErrorBehavior errorBehavior = ErrorBehavior.ERROR_RESULT;
 
     @Override
     public Map<Character, EquationTokenizer> getTokenizerForDelimiterMap() {

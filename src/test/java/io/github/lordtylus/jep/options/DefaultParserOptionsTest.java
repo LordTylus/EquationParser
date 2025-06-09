@@ -15,6 +15,7 @@
 */
 package io.github.lordtylus.jep.options;
 
+import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ConstantParser;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class DefaultParserOptionsTest {
 
@@ -67,11 +67,11 @@ class DefaultParserOptionsTest {
 
         /* When */
 
-        boolean actual = sut.isThrowsExceptionsOnError();
+        ErrorBehavior actual = sut.getErrorBehavior();
 
         /* Then */
 
-        assertFalse(actual);
+        assertEquals(ErrorBehavior.ERROR_RESULT, actual);
     }
 
     @Test

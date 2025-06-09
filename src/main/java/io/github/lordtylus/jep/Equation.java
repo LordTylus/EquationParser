@@ -17,6 +17,7 @@ package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.parsers.ParseResult;
@@ -89,7 +90,7 @@ public interface Equation {
      *
      * @param equation The equation to be parsed.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#isThrowsExceptionsOnError()} returns true, the exception will be thrown instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#getErrorBehavior()} returns true, the exception will be thrown instead.
      * @throws NullPointerException If any given argument is null.
      * @see ParsingOptions#defaultOptions()
      */
@@ -105,7 +106,7 @@ public interface Equation {
      * @param equation       The equation to be parsed.
      * @param parsingOptions The {@link ParsingOptions} containing the {@link EquationParser parsers} to be used to parse the given equation.
      * @return Optional with parsed {@link Equation} or null if equation could not be parsed.
-     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#isThrowsExceptionsOnError()} returns true, the exception will be thrown instead.
+     * @throws ParseException       If a {@link EquationParser parser} in the {@link ParsingOptions options} encounters an unhandled exception. Under normal circumstances this exception would be returned as part of the {@link EquationOptional}, but if {@link ParsingOptions#getErrorBehavior()} returns true, the exception will be thrown instead.
      * @throws NullPointerException If any given argument is null.
      */
     static EquationOptional parse(
@@ -118,14 +119,14 @@ public interface Equation {
 
             ParseResult parseResult = EquationParser.parseEquation(tokenized, 0, tokenized.size() - 1, parsingOptions);
 
-            if (parsingOptions.isThrowsExceptionsOnError() && parseResult.getParseType() == ParseType.ERROR)
+            if (parsingOptions.getErrorBehavior() == ErrorBehavior.EXCEPTION && parseResult.getParseType() == ParseType.ERROR)
                 throw new ParseException("Parsing failed with error: " + parseResult.getErrorMessage());
 
             return EquationOptional.of(parseResult);
 
         } catch (Throwable e) {
 
-            if (parsingOptions.isThrowsExceptionsOnError())
+            if (parsingOptions.getErrorBehavior() == ErrorBehavior.EXCEPTION)
                 throw e;
 
             return EquationOptional.of(e);

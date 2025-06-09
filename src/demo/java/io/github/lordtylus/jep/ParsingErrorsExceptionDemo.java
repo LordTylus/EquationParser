@@ -17,6 +17,7 @@ package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ParseException;
 
 /**
@@ -32,7 +33,7 @@ public class ParsingErrorsExceptionDemo {
         String input = "(7+3*2+12";
 
         CustomParserOptions parserOptions = CustomParserOptions.withDefaults();
-        parserOptions.setThrowsExceptionsOnError(true);
+        parserOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         try {
 

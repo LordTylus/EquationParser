@@ -16,6 +16,7 @@
 package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.storages.SimpleStorage;
 import org.junit.jupiter.api.Test;
@@ -367,7 +368,7 @@ class EquationTest {
         /* Given */
 
         CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.setThrowsExceptionsOnError(true);
+        customParserOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         /* When */
 
@@ -384,7 +385,7 @@ class EquationTest {
         /* Given */
 
         CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.setThrowsExceptionsOnError(true);
+        customParserOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         /* When */
 

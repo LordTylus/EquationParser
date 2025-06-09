@@ -63,12 +63,7 @@ public final class CustomParserOptions extends AbstractParserOptions {
     public static CustomParserOptions withDefaults() {
 
         CustomParserOptions empty = empty();
-
-        DefaultParserOptions.INSTANCE.getRegisteredParsers()
-                .forEach(empty::register);
-
-        DefaultParserOptions.INSTANCE.getRegisteredTokenizers()
-                .forEach(empty::register);
+        DefaultParserOptions.setupDefault(empty);
 
         return empty;
     }
@@ -168,7 +163,7 @@ public final class CustomParserOptions extends AbstractParserOptions {
         parserOptions.register(ParenthesisTokenizer.DEFAULT);
         parserOptions.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
 
-        parserOptions.setThrowsExceptionsOnError(false);
+        parserOptions.setErrorBehavior(ErrorBehavior.ERROR_RESULT);
 
         return parserOptions;
     }
@@ -209,7 +204,7 @@ public final class CustomParserOptions extends AbstractParserOptions {
      * {@inheritDoc}
      */
     @Override
-    public void setThrowsExceptionsOnError(boolean throwsExceptionsOnError) {
-        super.setThrowsExceptionsOnError(throwsExceptionsOnError);
+    public void setErrorBehavior(ErrorBehavior errorBehavior) {
+        super.setErrorBehavior(errorBehavior);
     }
 }

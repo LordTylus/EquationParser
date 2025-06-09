@@ -22,6 +22,7 @@ import io.github.lordtylus.jep.parsers.VariableParser;
 import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
 import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
 import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
+import lombok.NonNull;
 
 /**
  * The default options contain the following parsers in order:
@@ -45,16 +46,21 @@ public final class DefaultParserOptions extends AbstractParserOptions {
     public static final DefaultParserOptions INSTANCE = new DefaultParserOptions();
 
     private DefaultParserOptions() {
+        setupDefault(this);
+    }
 
-        register(ParenthesisParser.DEFAULT);
-        register(OperationParser.DEFAULT);
-        register(ConstantParser.INSTANCE);
-        register(VariableParser.INSTANCE);
+    static void setupDefault(
+            @NonNull AbstractParserOptions parserOptions) {
 
-        register(VariableTokenizer.INSTANCE);
-        register(ParenthesisTokenizer.DEFAULT);
-        register(OperatorTokenizer.DEFAULT);
+        parserOptions.register(ParenthesisParser.DEFAULT);
+        parserOptions.register(OperationParser.DEFAULT);
+        parserOptions.register(ConstantParser.INSTANCE);
+        parserOptions.register(VariableParser.INSTANCE);
 
-        setThrowsExceptionsOnError(false);
+        parserOptions.register(VariableTokenizer.INSTANCE);
+        parserOptions.register(ParenthesisTokenizer.DEFAULT);
+        parserOptions.register(OperatorTokenizer.DEFAULT);
+
+        parserOptions.setErrorBehavior(ErrorBehavior.ERROR_RESULT);
     }
 }

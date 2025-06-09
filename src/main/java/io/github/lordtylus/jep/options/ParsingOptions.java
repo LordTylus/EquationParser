@@ -18,6 +18,7 @@ package io.github.lordtylus.jep.options;
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.EquationOptional;
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 
 import java.util.List;
@@ -51,9 +52,9 @@ public interface ParsingOptions {
      * The default behavior is that exceptions are not thrown, but if needed it can be changed
      * using {@link CustomParserOptions}
      *
-     * @return true if exceptions should be thrown.
+     * @return The currently configured ErrorBehavior. {@link ErrorBehavior#ERROR_RESULT} is default.
      */
-    boolean isThrowsExceptionsOnError();
+    ErrorBehavior getErrorBehavior();
 
     /**
      * Returns a Map containing a mapping of a character to the corresponding {@link EquationTokenizer}
@@ -84,4 +85,23 @@ public interface ParsingOptions {
      */
     List<EquationTokenizer> getRegisteredTokenizers();
 
+    /**
+     * This enum controls how parsing should behave in case an error is spotted during parsing.
+     * Errors aren't necessarily exceptions. However, this behavior also responsible for handling
+     * exceptions.
+     * <p>
+     * In this context, error is defined as a parsing error. Such as missing parenthesis or
+     * unknown functions.
+     */
+    enum ErrorBehavior {
+        /**
+         * If the error behavior is set to EXCEPTION, any parsing error or exception during parsing will result in a {@link ParseException} to be thrown.
+         */
+        EXCEPTION,
+        /**
+         * If ERROR_RESULT is configured, no exception will be thrown, and any occurring exceptions will be wrapped in
+         * {@link EquationOptional}. This is the default behavior.
+         */
+        ERROR_RESULT;
+    }
 }

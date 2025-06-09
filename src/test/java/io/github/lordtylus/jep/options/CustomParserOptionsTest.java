@@ -17,6 +17,7 @@ package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.functions.StandardFunctions;
 import io.github.lordtylus.jep.operators.StandardOperators;
+import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ConstantParser;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
@@ -38,7 +39,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -91,7 +91,7 @@ class CustomParserOptionsTest {
 
         assertEquals(actual1, expected1);
         assertEquals(actual2, expected2);
-        assertFalse(sut.isThrowsExceptionsOnError());
+        assertEquals(ErrorBehavior.ERROR_RESULT, sut.getErrorBehavior());
     }
 
     @Test
@@ -172,6 +172,7 @@ class CustomParserOptionsTest {
         expected.register(VariableTokenizer.INSTANCE);
         expected.register(ParenthesisTokenizer.DEFAULT);
         expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
+        expected.setErrorBehavior(ErrorBehavior.ERROR_RESULT);
 
         assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
     }
@@ -507,11 +508,11 @@ class CustomParserOptionsTest {
 
         /* When */
 
-        boolean actual = sut.isThrowsExceptionsOnError();
+        ErrorBehavior errorBehavior = sut.getErrorBehavior();
 
         /* Then */
 
-        assertFalse(actual);
+        assertEquals(ErrorBehavior.ERROR_RESULT, errorBehavior);
     }
 
     @Test
@@ -523,12 +524,12 @@ class CustomParserOptionsTest {
 
         /* When */
 
-        sut.setThrowsExceptionsOnError(true);
+        sut.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         /* Then */
 
-        boolean actual = sut.isThrowsExceptionsOnError();
+        ErrorBehavior actual = sut.getErrorBehavior();
 
-        assertTrue(actual);
+        assertEquals(ErrorBehavior.EXCEPTION, actual);
     }
 }
