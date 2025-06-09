@@ -18,6 +18,7 @@ package io.github.lordtylus.jep;
 import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ParseException;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
 import io.github.lordtylus.jep.storages.SimpleStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -85,6 +86,46 @@ class EquationTest {
         /* Given / When */
 
         Equation actual = Equation.parse(equation).get();
+
+        /* Then */
+
+        assertEquals(expected, actual.toPattern(Locale.ENGLISH));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "{hallo};[hallo]",
+            "{hallo}+1;[hallo]+1",
+            "{ h a l l o }+1;[ h a l l o ]+1",
+    }, delimiter = ';')
+    void parsesDifferentVariableStyle(String equation, String expected) {
+
+        /* Given / When */
+
+        CustomParsingOptions parsingOptions = CustomParsingOptions.withDefaults();
+        parsingOptions.setVariablePattern(StandardVariablePatterns.BRACES);
+
+        Equation actual = Equation.parse(equation, parsingOptions).get();
+
+        /* Then */
+
+        assertEquals(expected, actual.toPattern(Locale.ENGLISH));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "hallo;[hallo]",
+            "hallo+1;[hallo]+1",
+            " h a l l o +1;[h a l l o]+1",
+    }, delimiter = ';')
+    void parsesVariablesWithNoStyle(String equation, String expected) {
+
+        /* Given / When */
+
+        CustomParsingOptions parsingOptions = CustomParsingOptions.withDefaults();
+        parsingOptions.setVariablePattern(StandardVariablePatterns.NONE);
+
+        Equation actual = Equation.parse(equation, parsingOptions).get();
 
         /* Then */
 

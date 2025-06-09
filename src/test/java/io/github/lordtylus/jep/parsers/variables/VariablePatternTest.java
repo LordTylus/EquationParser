@@ -16,8 +16,11 @@
 package io.github.lordtylus.jep.parsers.variables;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VariablePatternTest {
@@ -37,16 +40,28 @@ class VariablePatternTest {
     }
 
     @Test
+    void canBeConstructedWithIdenticalOpeningAndClosingWhenNotEscaped() {
+
+        /* Given / When */
+
+        VariablePattern sut = new VariablePattern(false, '#', '#');
+
+        /* Then */
+
+        assertFalse(sut.isEscaped());
+        assertEquals('#', sut.openingCharacter());
+        assertEquals('#', sut.closingCharacter());
+    }
+
+    @Test
     void canBeConstructedWithIdenticalOpeningAndClosing() {
 
         /* Given / When */
 
-        VariablePattern sut = new VariablePattern(true, '#', '#');
+        Executable result = () -> new VariablePattern(true, '#', '#');
 
         /* Then */
 
-        assertTrue(sut.isEscaped());
-        assertEquals('#', sut.openingCharacter());
-        assertEquals('#', sut.closingCharacter());
+        assertThrows(IllegalArgumentException.class, result);
     }
 }

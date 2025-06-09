@@ -30,12 +30,12 @@ import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
  * @param isEscaped        This method signals both the {@link VariableTokenizer} and the {@link VariableParser} if there are any characters wrapping the variable name or not.
  *                         <p>
  *                         If this variable returns false the results of {@link #openingCharacter} and {@link #closingCharacter} are set to some default and are therefore to be ignored.
- * @param openingCharacter This method provides the opening character of a Variable.
+ * @param openingCharacter The opening character of a Variable.
  *                         <p>
  *                         The default implementation uses '[' but the implementation can use any other character.
  *                         However, the implementation has to be careful to not use any characters used by different parsers.
  *                         For example using any of the operators would lead to confusion and parsing errors.
- * @param closingCharacter This method provides the closing character of a Variable.
+ * @param closingCharacter The closing character of a Variable.
  *                         <p>
  *                         The default implementation uses ']' but the implementation can use any other character.
  *                         However, the implementation has to be careful to not use any characters used by different parsers.
@@ -46,4 +46,13 @@ public record VariablePattern(
         char openingCharacter,
         char closingCharacter) {
 
+    /**
+     * This constructor creates a new VariablePattern with the given settings.
+     *
+     * @throws IllegalArgumentException if {@link #openingCharacter} and {@link #closingCharacter} are identical.
+     */
+    public VariablePattern {
+        if (isEscaped && openingCharacter == closingCharacter)
+            throw new IllegalArgumentException("Characters must not be identical!");
+    }
 }
