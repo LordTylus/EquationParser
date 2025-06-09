@@ -45,8 +45,34 @@ x   2
 
 ## Variables
 
-Variables in the expression are currently added between brackets [] to allow use of numbers, spaces, and operators as
-variable names.
+Per default variables are expected to be wrapped between brackets [ and ].
+This behavior can be changed via configuration.
+
+You can find out how in the demos [here](src/demo/java/io/github/lordtylus/jep)
+
+Different variable styles have different up and downsides.
+
+| Feature                               | two distinct symbols                 | one symbol    | no symbol         |
+|---------------------------------------|--------------------------------------|---------------|-------------------|
+| Supported                             | ✅ [hello]                            | ✅ :hello:     | ✅ hello           |
+| Supports whitespaces                  | ✅ [h e l l o]                        | ✅ :h e l l o: | ✅ h e l l o       |
+| Supports leading trailing whitespaces | ✅ [ hello ]                          | ✅ : hello :   | ❌ [hello]         |
+| Supports operators                    | ✅ [h+o]                              | ✅ :h+o:       | ❌ [h]+[o]         |
+| Supports number-only names            | ✅ [123]                              | ✅ :123:       | ❌ 123 <- constant |
+| Supports nesting in name              | ✅ [h[1-1]o], ❌ [h]1-1[o] parse error | ❌ parse error | ❌ [h1]-[1o]       |
+
+Depending on how you want to use this framework you should choose what type of variables fits your use-case best.
+
+The default supports most types of variable names, and can be used when you don't have much control over the variable
+names yourself. This can happen if a different system writes those to a database, and you just read them from there.
+Additionally, it offers the least risk to encounter parsing errors.
+
+The default option might be too complicated for users to type in manually, so you can instead choose one of the other
+options. However, be aware that these options are more prone to errors due to a reduced feature set. Or unwanted
+limits in variable names.
+
+As you can see in the examples in the table above. Without any symbol you can produce valid strings that will be parsed,
+but not lead to the desired result.
 
 ## List of supported functions
 
@@ -279,5 +305,8 @@ values as many times as needed.
 
 ## Vision for future
 
-Additionally, I would like to add the option to support variables without brackets. Doing would be more prone for
-parsing errors, but can make it easier to input expressions manually.  
+It would be very nice, if this framework could also solve for variables in the future.
+
+Something like 2*x=4 and the framework is able to solve for x on its own. Alternatively, if using two variables like
+2/x+y where y=2+x it can then solve for x. However, I have not a single clue right now how to accomplish that, so it
+will be something for future me to find out. 

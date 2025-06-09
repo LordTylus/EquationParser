@@ -19,6 +19,7 @@ import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.storages.SimpleStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -454,5 +455,75 @@ class EquationTest {
         /* Then */
 
         assertEquals(throwable, actual.getThrowable());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "[hello] ; true ; [ ; ] ; true",
+            "[h e l l o] ; true ; [ ; ] ; true",
+            "[ hello ] ; true ; [ ; ] ; true",
+            "[h+o] ; true ; [ ; ] ; true",
+            "[123] ; true ; [ ; ] ; true",
+            "[h[1-1]o] ; true ; [ ; ] ; true",
+            "[h]1-1[o] ; true ; [ ; ] ; false",
+            ":hello: ; true ; : ; : ; true",
+            ":h e l l o: ; true ; : ; : ; true",
+            ": hello : ; true ; : ; : ; true",
+            ":h+o: ; true ; : ; : ; true",
+            ":123: ; true ; : ; : ; true",
+            ":h:1-1:o: ; true ; [ ; ] ; false",
+            "hello ; false ; 0 ; 0 ; true",
+            "h e l l o ; false ; 0 ; 0 ; true",
+            "h+o ; false ; 0 ; 0 ; true",
+            "123 ; false ; 0 ; 0 ; true",
+    }, delimiter = ';')
+    void parsesVariableDemos(String equation, boolean isEscaped, char opening, char closing, boolean expected) {
+
+        /* Given */
+
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.setVariablePattern(new VariablePattern(isEscaped, opening, closing));
+
+        /* When */
+
+        boolean actual = Equation.parse(equation, customParsingOptions).isPresent();
+
+        /* Then */
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "[hello] ; true ; [ ; ] ; [hello]",
+            "[h e l l o] ; true ; [ ; ] ; [h e l l o]",
+            "[ hello ] ; true ; [ ; ] ; [ hello ]",
+            "[h+o] ; true ; [ ; ] ; [h+o]",
+            "[123] ; true ; [ ; ] ; [123]",
+            "[h[1-1]o] ; true ; [ ; ] ; [h[1-1]o]",
+            ":hello: ; true ; : ; : ; [hello]",
+            ":h e l l o: ; true ; : ; : ; [h e l l o]",
+            ": hello : ; true ; : ; : ; [ hello ]",
+            ":h+o: ; true ; : ; : ; [h+o]",
+            ":123: ; true ; : ; : ; [123]",
+            "hello ; false ; 0 ; 0 ; [hello]",
+            "h e l l o ; false ; 0 ; 0 ; [h e l l o]",
+            "h+o ; false ; 0 ; 0 ; [h]+[o]",
+            "123 ; false ; 0 ; 0 ; 123",
+    }, delimiter = ';')
+    void parsesVariableDemos(String equation, boolean isEscaped, char opening, char closing, String expected) {
+
+        /* Given */
+
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.setVariablePattern(new VariablePattern(isEscaped, opening, closing));
+
+        /* When */
+
+        String actual = Equation.parse(equation, customParsingOptions).get().toPattern(Locale.ENGLISH);
+
+        /* Then */
+
+        assertEquals(expected, actual);
     }
 }
