@@ -17,7 +17,7 @@ package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.functions.MathFunction;
 import io.github.lordtylus.jep.functions.StandardFunctions;
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +29,7 @@ import java.util.Set;
  * First the function is defined, then a set with all supported functions is created.
  * We take the standard functions and add this one extra.
  * <p>
- * Then a {@link CustomParserOptions} object is created with all these functions.
+ * Then a {@link CustomParsingOptions} object is created with all these functions.
  */
 public class CustomFunctionParsersDemo {
 
@@ -41,7 +41,7 @@ public class CustomFunctionParsersDemo {
         Set<MathFunction> functions = new HashSet<>(StandardFunctions.all());
         functions.add(areaCircle);
 
-        CustomParserOptions parserOptions = CustomParserOptions.defaultWithFunctions(functions);
+        CustomParsingOptions parserOptions = CustomParsingOptions.defaultWithFunctions(functions);
 
         Equation equation = Equation.parse("2+area(10)", parserOptions).get();
 

@@ -38,12 +38,12 @@ public interface ParsingOptions {
     /**
      * Returns a list of {@link EquationParser} classes to be used for solving mathematical equations.
      * <p>
-     * See {@link DefaultParserOptions}
+     * See {@link DefaultParsingOptions}
      *
-     * @return {@link DefaultParserOptions} instance
+     * @return {@link DefaultParsingOptions} instance
      */
     static ParsingOptions defaultOptions() {
-        return DefaultParserOptions.INSTANCE;
+        return DefaultParsingOptions.INSTANCE;
     }
 
     /**
@@ -52,7 +52,7 @@ public interface ParsingOptions {
      * the {@link EquationOptional}
      * <p>
      * The default behavior is that exceptions are not thrown, but if needed it can be changed
-     * using {@link CustomParserOptions}
+     * using {@link CustomParsingOptions}
      *
      * @return The currently configured ErrorBehavior. {@link ErrorBehavior#ERROR_RESULT} is default.
      */

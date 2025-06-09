@@ -38,19 +38,19 @@ import lombok.NonNull;
  *     <li>{@link ParenthesisTokenizer#DEFAULT}</li>
  * </ul>
  */
-public final class DefaultParserOptions extends AbstractParserOptions {
+public final class DefaultParsingOptions extends AbstractParsingOptions {
 
     /**
      * Immutable singleton instance of this class
      */
-    public static final DefaultParserOptions INSTANCE = new DefaultParserOptions();
+    public static final DefaultParsingOptions INSTANCE = new DefaultParsingOptions();
 
-    private DefaultParserOptions() {
+    private DefaultParsingOptions() {
         setupDefault(this);
     }
 
     static void setupDefault(
-            @NonNull AbstractParserOptions parserOptions) {
+            @NonNull AbstractParsingOptions parserOptions) {
 
         parserOptions.register(ParenthesisParser.DEFAULT);
         parserOptions.register(OperationParser.DEFAULT);

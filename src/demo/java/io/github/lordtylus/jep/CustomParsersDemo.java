@@ -16,7 +16,7 @@
 package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.operators.StandardOperators;
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ConstantParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
@@ -35,7 +35,7 @@ public class CustomParsersDemo {
 
     public static void main(String[] args) {
 
-        CustomParserOptions parserOptions = CustomParserOptions.empty();
+        CustomParsingOptions parserOptions = CustomParsingOptions.empty();
 
         parserOptions.register(ConstantParser.INSTANCE);
         parserOptions.register(new OperationParser(List.of(

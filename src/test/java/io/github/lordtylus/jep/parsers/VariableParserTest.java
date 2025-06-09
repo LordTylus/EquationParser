@@ -17,7 +17,7 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Variable;
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
@@ -283,7 +283,7 @@ class VariableParserTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.setVariablePattern(StandardVariablePatterns.BRACES);
 
         List<Token> tokenized = List.of(
@@ -306,7 +306,7 @@ class VariableParserTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.setVariablePattern(StandardVariablePatterns.BRACES);
 
         List<Token> tokenized = List.of(
@@ -329,7 +329,7 @@ class VariableParserTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.setVariablePattern(StandardVariablePatterns.NONE);
 
         List<Token> tokenized = List.of(

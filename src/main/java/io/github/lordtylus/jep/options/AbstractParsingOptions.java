@@ -35,7 +35,7 @@ import java.util.Map;
  * This abstract implementation of {@link ParsingOptions} provides basic functionality
  * for adding and removing {@link EquationParser} objects for its implementations.
  */
-public abstract class AbstractParserOptions implements ParsingOptions {
+public abstract class AbstractParsingOptions implements ParsingOptions {
 
     private final List<EquationParser> registeredParsers = new ArrayList<>();
     private final List<EquationParser> registeredParsersUnmodifiable = Collections.unmodifiableList(registeredParsers);

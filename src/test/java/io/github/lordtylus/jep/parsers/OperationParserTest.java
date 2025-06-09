@@ -19,7 +19,7 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Constant;
 import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.StandardOperators;
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
@@ -158,18 +158,18 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.unregister(OperationParser.DEFAULT);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
-        customParserOptions.register(sut);
+        customParsingOptions.register(sut);
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParsingOptions);
 
         /* When */
 
         Equation actual = sut
-                .parse(tokenized, 0, tokenized.size() - 1, customParserOptions)
+                .parse(tokenized, 0, tokenized.size() - 1, customParsingOptions)
                 .getEquation()
                 .orElseThrow();
 
@@ -202,18 +202,18 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.unregister(OperationParser.DEFAULT);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
-        customParserOptions.register(sut);
+        customParsingOptions.register(sut);
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParsingOptions);
 
         /* When */
 
         Equation actual = sut
-                .parse(tokenized, 0, tokenized.size() - 1, customParserOptions)
+                .parse(tokenized, 0, tokenized.size() - 1, customParsingOptions)
                 .getEquation()
                 .orElseThrow();
 
@@ -251,18 +251,18 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.unregister(OperationParser.DEFAULT);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
-        customParserOptions.register(sut);
+        customParsingOptions.register(sut);
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParsingOptions);
 
         /* When */
 
         ParseResult actual = sut
-                .parse(tokenized, 0, 0, customParserOptions);
+                .parse(tokenized, 0, 0, customParsingOptions);
 
         /* Then */
 
@@ -317,18 +317,18 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.unregister(OperationParser.DEFAULT);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.SUB));
-        customParserOptions.register(sut);
+        customParsingOptions.register(sut);
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParsingOptions);
 
         /* When */
 
         ParseResult actual = sut
-                .parse(tokenized, 0, 0, customParserOptions);
+                .parse(tokenized, 0, 0, customParsingOptions);
 
         /* Then */
 
@@ -355,18 +355,18 @@ class OperationParserTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.unregister(OperationParser.DEFAULT);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.unregister(OperationParser.DEFAULT);
 
         OperationParser sut = new OperationParser(List.of(StandardOperators.ADD, StandardOperators.POW));
-        customParserOptions.register(sut);
+        customParsingOptions.register(sut);
 
-        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParserOptions);
+        List<Token> tokenized = EquationStringTokenizer.tokenize(equation, customParsingOptions);
 
         /* When */
 
         ParseResult actual = sut
-                .parse(tokenized, 0, 0, customParserOptions);
+                .parse(tokenized, 0, 0, customParsingOptions);
 
         /* Then */
 

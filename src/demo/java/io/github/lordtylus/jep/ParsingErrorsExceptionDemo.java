@@ -15,7 +15,7 @@
 */
 package io.github.lordtylus.jep;
 
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ParseException;
@@ -24,7 +24,7 @@ import io.github.lordtylus.jep.parsers.ParseException;
  * This Demo shows how to set up the {@link ParsingOptions} in order to receive
  * exceptions instead of empty optionals.
  * <p>
- * This is only possible using {@link CustomParserOptions} and can easily enable using the appropriate setter.
+ * This is only possible using {@link CustomParsingOptions} and can easily enable using the appropriate setter.
  */
 public class ParsingErrorsExceptionDemo {
 
@@ -32,7 +32,7 @@ public class ParsingErrorsExceptionDemo {
 
         String input = "(7+3*2+12";
 
-        CustomParserOptions parserOptions = CustomParserOptions.withDefaults();
+        CustomParsingOptions parserOptions = CustomParsingOptions.withDefaults();
         parserOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         try {

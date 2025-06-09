@@ -44,14 +44,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CustomParserOptionsTest {
+class CustomParsingOptionsTest {
 
     @Test
     void createsEmpty() {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -69,7 +69,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -102,13 +102,13 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.defaultWith(
+        CustomParsingOptions sut = CustomParsingOptions.defaultWith(
                 StandardOperators.ADD, StandardOperators.SUB
         );
 
         /* When / Then */
 
-        CustomParserOptions expected = CustomParserOptions.empty();
+        CustomParsingOptions expected = CustomParsingOptions.empty();
 
         OperationParser operationParser = new OperationParser(
                 List.of(StandardOperators.ADD, StandardOperators.SUB)
@@ -130,13 +130,13 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.defaultWithOperators(
+        CustomParsingOptions sut = CustomParsingOptions.defaultWithOperators(
                 List.of(StandardOperators.ADD, StandardOperators.SUB)
         );
 
         /* When / Then */
 
-        CustomParserOptions expected = CustomParserOptions.empty();
+        CustomParsingOptions expected = CustomParsingOptions.empty();
 
         OperationParser operationParser = new OperationParser(
                 List.of(StandardOperators.ADD, StandardOperators.SUB)
@@ -158,13 +158,13 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.defaultWith(
+        CustomParsingOptions sut = CustomParsingOptions.defaultWith(
                 StandardFunctions.SIN, StandardFunctions.ASIN
         );
 
         /* When / Then */
 
-        CustomParserOptions expected = CustomParserOptions.empty();
+        CustomParsingOptions expected = CustomParsingOptions.empty();
 
         OperationParser operationParser = new OperationParser(StandardOperators.all());
 
@@ -184,13 +184,13 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.defaultWithFunctions(
+        CustomParsingOptions sut = CustomParsingOptions.defaultWithFunctions(
                 List.of(StandardFunctions.SIN, StandardFunctions.ASIN)
         );
 
         /* When / Then */
 
-        CustomParserOptions expected = CustomParserOptions.empty();
+        CustomParsingOptions expected = CustomParsingOptions.empty();
 
         OperationParser operationParser = new OperationParser(StandardOperators.all());
 
@@ -210,14 +210,14 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.defaultWith(
+        CustomParsingOptions sut = CustomParsingOptions.defaultWith(
                 List.of(StandardFunctions.SIN, StandardFunctions.ASIN),
                 List.of(StandardOperators.ADD, StandardOperators.SUB)
         );
 
         /* When / Then */
 
-        CustomParserOptions expected = CustomParserOptions.empty();
+        CustomParsingOptions expected = CustomParsingOptions.empty();
 
         OperationParser operationParser = new OperationParser(
                 List.of(StandardOperators.ADD, StandardOperators.SUB)
@@ -239,7 +239,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -261,7 +261,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
         sut.register(ConstantParser.INSTANCE);
 
         /* When */
@@ -285,7 +285,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -307,7 +307,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
         sut.register(ParenthesisTokenizer.DEFAULT);
 
         /* When */
@@ -324,7 +324,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
         sut.register(ParenthesisTokenizer.DEFAULT);
 
         /* When */
@@ -348,7 +348,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -372,7 +372,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -395,7 +395,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -422,7 +422,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -449,7 +449,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -471,7 +471,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
         sut.register(VariableTokenizer.INSTANCE);
 
         EquationTokenizer toRemove = new EquationTokenizer() {
@@ -507,7 +507,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -523,7 +523,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -541,7 +541,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 
@@ -557,7 +557,7 @@ class CustomParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.empty();
+        CustomParsingOptions sut = CustomParsingOptions.empty();
 
         /* When */
 

@@ -1,7 +1,7 @@
 package io.github.lordtylus.jep.tokenizer;
 
-import io.github.lordtylus.jep.options.CustomParserOptions;
-import io.github.lordtylus.jep.options.DefaultParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
+import io.github.lordtylus.jep.options.DefaultParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
@@ -23,7 +23,7 @@ class VariableTokenizerTest {
         /* Given */
 
         TokenizerContext tokenizerContext = new TokenizerContext();
-        ParsingOptions parsingOptions = DefaultParserOptions.INSTANCE;
+        ParsingOptions parsingOptions = DefaultParsingOptions.INSTANCE;
 
         VariableTokenizer sut = VariableTokenizer.INSTANCE;
 
@@ -44,7 +44,7 @@ class VariableTokenizerTest {
         /* Given */
 
         TokenizerContext tokenizerContext = new TokenizerContext();
-        CustomParserOptions parsingOptions = CustomParserOptions.withDefaults();
+        CustomParsingOptions parsingOptions = CustomParsingOptions.withDefaults();
         parsingOptions.setVariablePattern(StandardVariablePatterns.NONE);
 
         VariableTokenizer sut = VariableTokenizer.INSTANCE;
@@ -66,7 +66,7 @@ class VariableTokenizerTest {
         /* Given */
 
         TokenizerContext tokenizerContext = new TokenizerContext();
-        ParsingOptions parsingOptions = DefaultParserOptions.INSTANCE;
+        ParsingOptions parsingOptions = DefaultParsingOptions.INSTANCE;
 
         VariableTokenizer sut = VariableTokenizer.INSTANCE;
 
@@ -88,7 +88,7 @@ class VariableTokenizerTest {
         /* Given */
 
         TokenizerContext tokenizerContext = new TokenizerContext();
-        ParsingOptions parsingOptions = DefaultParserOptions.INSTANCE;
+        ParsingOptions parsingOptions = DefaultParsingOptions.INSTANCE;
 
         VariableTokenizer sut = VariableTokenizer.INSTANCE;
 

@@ -35,14 +35,14 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DefaultParserOptionsTest {
+class DefaultParsingOptionsTest {
 
     @Test
     void containsCorrectParsers() {
 
         /* Given */
 
-        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+        DefaultParsingOptions sut = DefaultParsingOptions.INSTANCE;
 
         /* When */
 
@@ -65,7 +65,7 @@ class DefaultParserOptionsTest {
 
         /* Given */
 
-        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+        DefaultParsingOptions sut = DefaultParsingOptions.INSTANCE;
 
         /* When */
 
@@ -81,7 +81,7 @@ class DefaultParserOptionsTest {
 
         /* Given */
 
-        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+        DefaultParsingOptions sut = DefaultParsingOptions.INSTANCE;
 
         /* When */
 
@@ -97,7 +97,7 @@ class DefaultParserOptionsTest {
 
         /* Given */
 
-        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+        DefaultParsingOptions sut = DefaultParsingOptions.INSTANCE;
 
         /* When */
 
@@ -119,7 +119,7 @@ class DefaultParserOptionsTest {
 
         /* Given */
 
-        CustomParserOptions sut = CustomParserOptions.withDefaults();
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
 
         /* When */
 

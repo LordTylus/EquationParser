@@ -17,7 +17,7 @@ package io.github.lordtylus.jep;
 
 import io.github.lordtylus.jep.operators.Operator;
 import io.github.lordtylus.jep.operators.StandardOperators;
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +29,7 @@ import java.util.Set;
  * First the operator is defined, then a set with all supported operators is created.
  * We take the standard operators and add this one extra.
  * <p>
- * Then a {@link CustomParserOptions} object is created with all these operators.
+ * Then a {@link CustomParsingOptions} object is created with all these operators.
  */
 public class CustomOperatorsParsersDemo {
 
@@ -42,7 +42,7 @@ public class CustomOperatorsParsersDemo {
         Set<Operator> operators = new HashSet<>(StandardOperators.all());
         operators.add(modulo);
 
-        CustomParserOptions parserOptions = CustomParserOptions.defaultWithOperators(operators);
+        CustomParsingOptions parserOptions = CustomParsingOptions.defaultWithOperators(operators);
 
         /* operators with same order are solved from left to right. so 4*10 ist calculated first. Then Modulo 3 which is 1. */
         Equation equation = Equation.parse("2+4*10%3", parserOptions).get();

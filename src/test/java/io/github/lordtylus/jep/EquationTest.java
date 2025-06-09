@@ -15,7 +15,7 @@
 */
 package io.github.lordtylus.jep;
 
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions.ErrorBehavior;
 import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.storages.SimpleStorage;
@@ -367,12 +367,12 @@ class EquationTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         /* When */
 
-        Executable result = () -> Equation.parse("(1+1", customParserOptions);
+        Executable result = () -> Equation.parse("(1+1", customParsingOptions);
 
         /* Then */
 
@@ -384,12 +384,12 @@ class EquationTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptions = CustomParserOptions.withDefaults();
-        customParserOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
+        CustomParsingOptions customParsingOptions = CustomParsingOptions.withDefaults();
+        customParsingOptions.setErrorBehavior(ErrorBehavior.EXCEPTION);
 
         /* When */
 
-        Executable result = () -> Equation.parse("(1+1)", customParserOptions);
+        Executable result = () -> Equation.parse("(1+1)", customParsingOptions);
 
         /* Then */
 
@@ -401,14 +401,14 @@ class EquationTest {
 
         /* Given */
 
-        CustomParserOptions customParserOptionsSpy = spy(CustomParserOptions.withDefaults());
+        CustomParsingOptions customParsingOptionsSpy = spy(CustomParsingOptions.withDefaults());
 
         Throwable throwable = new NullPointerException("Test");
-        doThrow(throwable).when(customParserOptionsSpy).getRegisteredParsers();
+        doThrow(throwable).when(customParsingOptionsSpy).getRegisteredParsers();
 
         /* When */
 
-        EquationOptional actual = Equation.parse("(1+1)", customParserOptionsSpy);
+        EquationOptional actual = Equation.parse("(1+1)", customParsingOptionsSpy);
 
         /* Then */
 

@@ -43,65 +43,65 @@ import java.util.Collection;
  * be used when Parsing Equations using {@link Equation#parse(String, ParsingOptions)}
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CustomParserOptions extends AbstractParserOptions {
+public final class CustomParsingOptions extends AbstractParsingOptions {
 
     /**
      * Creates a new Empty {@link ParsingOptions} object which is mutable can be manipulated
      * using {@link #register(EquationParser)} and {@link #unregister(EquationParser)}
      *
-     * @return new mutable empty {@link CustomParserOptions} object
+     * @return new mutable empty {@link CustomParsingOptions} object
      */
-    public static CustomParserOptions empty() {
-        return new CustomParserOptions();
+    public static CustomParsingOptions empty() {
+        return new CustomParsingOptions();
     }
 
     /**
      * Creates a new and mutable {@link ParsingOptions} object which already contains all
-     * {@link EquationParser} objects from {@link DefaultParserOptions#INSTANCE}
+     * {@link EquationParser} objects from {@link DefaultParsingOptions#INSTANCE}
      *
-     * @return new mutable {@link CustomParserOptions} object with default {@link EquationParser parsers}
+     * @return new mutable {@link CustomParsingOptions} object with default {@link EquationParser parsers}
      */
-    public static CustomParserOptions withDefaults() {
+    public static CustomParsingOptions withDefaults() {
 
-        CustomParserOptions empty = empty();
-        DefaultParserOptions.setupDefault(empty);
+        CustomParsingOptions empty = empty();
+        DefaultParsingOptions.setupDefault(empty);
 
         return empty;
     }
 
     /**
      * Creates a new and mutable {@link ParsingOptions} object which already contains all
-     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * {@link EquationParser} objects found in {@link DefaultParsingOptions#INSTANCE}.
      * <p>
      * However both {@link EquationParser parsers} and {@link EquationTokenizer tokenizers} are already preconfigured to only accept the passed in {@link Operator operators}.
      * <p>
      * Limiting the number of operators is not expected to have an impact on performance.
      *
      * @param operators varargs with the operators to use for parsing.
-     * @return new mutable {@link CustomParserOptions} with edited default config for passed operators.
+     * @return new mutable {@link CustomParsingOptions} with edited default config for passed operators.
      */
-    public static CustomParserOptions defaultWith(Operator... operators) {
+    public static CustomParsingOptions defaultWith(Operator... operators) {
         return defaultWithOperators(Arrays.asList(operators));
     }
 
     /**
      * Creates a new and mutable {@link ParsingOptions} object which already contains all
-     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * {@link EquationParser} objects found in {@link DefaultParsingOptions#INSTANCE}.
      * <p>
      * However both {@link EquationParser parsers} and {@link EquationTokenizer tokenizers} are already preconfigured to only accept the passed in {@link Operator operators}.
      * <p>
      * Limiting the number of operators is not expected to have an impact on performance.
      *
      * @param operators collections with the operators to use for parsing.
-     * @return new mutable {@link CustomParserOptions} with edited default config for passed operators.
+     * @return new mutable {@link CustomParsingOptions} with edited default config for passed operators.
      */
-    public static CustomParserOptions defaultWithOperators(Collection<Operator> operators) {
+    public static CustomParsingOptions defaultWithOperators(Collection<Operator> operators) {
         return defaultWith(StandardFunctions.all(), operators);
     }
 
     /**
      * Creates a new and mutable {@link ParsingOptions} object which already contains all
-     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * {@link EquationParser} objects found in {@link DefaultParsingOptions#INSTANCE}.
      * <p>
      * However the parsers are configured to only recognize the passed in {@link MathFunction functions}.
      * <p>
@@ -111,15 +111,15 @@ public final class CustomParserOptions extends AbstractParserOptions {
      * Limiting the number of functions is not expected to have an impact on performance.
      *
      * @param functions varargs with the functions to use for parsing.
-     * @return new mutable {@link CustomParserOptions} with edited default config for passed functions.
+     * @return new mutable {@link CustomParsingOptions} with edited default config for passed functions.
      */
-    public static CustomParserOptions defaultWith(MathFunction... functions) {
+    public static CustomParsingOptions defaultWith(MathFunction... functions) {
         return defaultWithFunctions(Arrays.asList(functions));
     }
 
     /**
      * Creates a new and mutable {@link ParsingOptions} object which already contains all
-     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * {@link EquationParser} objects found in {@link DefaultParsingOptions#INSTANCE}.
      * <p>
      * However the parsers are configured to only recognize the passed in {@link MathFunction functions}.
      * <p>
@@ -129,15 +129,15 @@ public final class CustomParserOptions extends AbstractParserOptions {
      * Limiting the number of functions is not expected to have an impact on performance.
      *
      * @param functions collection with the functions to use for parsing.
-     * @return new mutable {@link CustomParserOptions} with edited default config for passed functions.
+     * @return new mutable {@link CustomParsingOptions} with edited default config for passed functions.
      */
-    public static CustomParserOptions defaultWithFunctions(Collection<MathFunction> functions) {
+    public static CustomParsingOptions defaultWithFunctions(Collection<MathFunction> functions) {
         return defaultWith(functions, StandardOperators.all());
     }
 
     /**
      * Creates a new and mutable {@link ParsingOptions} object which already contains all
-     * {@link EquationParser} objects found in {@link DefaultParserOptions#INSTANCE}.
+     * {@link EquationParser} objects found in {@link DefaultParsingOptions#INSTANCE}.
      * <p>
      * This method is a combination of {@link #defaultWith(Operator...)} and
      * {@link #defaultWith(MathFunction...)} as it preconfigures these options to only work with the
@@ -145,13 +145,13 @@ public final class CustomParserOptions extends AbstractParserOptions {
      *
      * @param mathFunctions collection with the functions to use for parsing.
      * @param operators     collection with the operators to use for parsing.
-     * @return new mutable {@link CustomParserOptions} with edited default config for passed operators and functions.
+     * @return new mutable {@link CustomParsingOptions} with edited default config for passed operators and functions.
      */
-    public static CustomParserOptions defaultWith(
+    public static CustomParsingOptions defaultWith(
             @NonNull Collection<MathFunction> mathFunctions,
             @NonNull Collection<Operator> operators) {
 
-        CustomParserOptions parserOptions = CustomParserOptions.empty();
+        CustomParsingOptions parserOptions = CustomParsingOptions.empty();
 
         OperationParser operationParser = new OperationParser(operators);
 

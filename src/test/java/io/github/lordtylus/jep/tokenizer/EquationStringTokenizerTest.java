@@ -15,7 +15,7 @@
 */
 package io.github.lordtylus.jep.tokenizer;
 
-import io.github.lordtylus.jep.options.CustomParserOptions;
+import io.github.lordtylus.jep.options.CustomParsingOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,7 +58,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        ParsingOptions options = CustomParserOptions.withDefaults();
+        ParsingOptions options = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -98,7 +98,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        ParsingOptions options = CustomParserOptions.withDefaults();
+        ParsingOptions options = CustomParsingOptions.withDefaults();
 
         /* When */
 
@@ -141,7 +141,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.unregister(ParenthesisTokenizer.DEFAULT);
         options.register(new ParenthesisTokenizer(false));
 
@@ -186,7 +186,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.unregister(ParenthesisTokenizer.DEFAULT);
         options.unregister(OperatorTokenizer.DEFAULT);
         options.register(new ParenthesisTokenizer(false));
@@ -232,7 +232,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.unregister(ParenthesisTokenizer.DEFAULT);
 
         /* When */
@@ -277,7 +277,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.unregister(ParenthesisTokenizer.DEFAULT);
         options.unregister(OperatorTokenizer.DEFAULT);
 
@@ -324,7 +324,7 @@ class EquationStringTokenizerTest {
 
         /* Given */
 
-        CustomParserOptions options = CustomParserOptions.withDefaults();
+        CustomParsingOptions options = CustomParsingOptions.withDefaults();
         options.unregister(ParenthesisTokenizer.DEFAULT);
         options.unregister(OperatorTokenizer.DEFAULT);
 
