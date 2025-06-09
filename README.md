@@ -52,14 +52,14 @@ You can find out how in the demos [here](src/demo/java/io/github/lordtylus/jep)
 
 Different variable styles have different up and downsides.
 
-| Feature                               | two distinct symbols                 | one symbol    | no symbol         |
-|---------------------------------------|--------------------------------------|---------------|-------------------|
-| Supported                             | ✅ [hello]                            | ✅ :hello:     | ✅ hello           |
-| Supports whitespaces                  | ✅ [h e l l o]                        | ✅ :h e l l o: | ✅ h e l l o       |
-| Supports leading trailing whitespaces | ✅ [ hello ]                          | ✅ : hello :   | ❌ [hello]         |
-| Supports operators                    | ✅ [h+o]                              | ✅ :h+o:       | ❌ [h]+[o]         |
-| Supports number-only names            | ✅ [123]                              | ✅ :123:       | ❌ 123 <- constant |
-| Supports nesting in name              | ✅ [h[1-1]o], ❌ [h]1-1[o] parse error | ❌ parse error | ❌ [h1]-[1o]       |
+| Feature                               | two distinct symbols                     | one symbol    | no symbol         |
+|---------------------------------------|------------------------------------------|---------------|-------------------|
+| Supported                             | ✅ [hello]                                | ✅ :hello:     | ✅ hello           |
+| Supports whitespaces                  | ✅ [h e l l o]                            | ✅ :h e l l o: | ✅ h e l l o       |
+| Supports leading trailing whitespaces | ✅ [ hello ]                              | ✅ : hello :   | ❌ [hello]         |
+| Supports operators                    | ✅ [h+o]                                  | ✅ :h+o:       | ❌ [h]+[o]         |
+| Supports number-only names            | ✅ [123]                                  | ✅ :123:       | ❌ 123 <- constant |
+| Supports nesting in name              | ✅ [h[1-1]o],<br/>❌ [h]1-1[o] parse error | ❌ parse error | ❌ [h1]-[1o]       |
 
 Depending on how you want to use this framework you should choose what type of variables fits your use-case best.
 
