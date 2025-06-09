@@ -49,7 +49,13 @@ public final class VariableTokenizer implements EquationTokenizer {
         if (!variablePattern.isEscaped())
             return Collections.emptySet();
 
-        return Set.of(variablePattern.openingCharacter(), variablePattern.closingCharacter());
+        char opening = variablePattern.openingCharacter();
+        char closing = variablePattern.closingCharacter();
+
+        if (opening == closing)
+            return Set.of(opening);
+
+        return Set.of(opening, closing);
     }
 
     @Override
@@ -62,10 +68,26 @@ public final class VariableTokenizer implements EquationTokenizer {
             @NonNull TokenizerContext context,
             @NonNull ParsingOptions parsingOptions) {
 
-        if (currentCharacter == parsingOptions.getVariablePattern().openingCharacter())
-            context.increaseBracketCount();
-        else
-            context.decreaseBracketCount();
+        VariablePattern variablePattern = parsingOptions.getVariablePattern();
+        char opening = variablePattern.openingCharacter();
+        char closing = variablePattern.closingCharacter();
+
+        boolean isSame = opening == closing;
+
+        if (!isSame) {
+
+            if (currentCharacter == opening)
+                context.increaseBracketCount();
+            else
+                context.decreaseBracketCount();
+
+        } else {
+
+            if (context.isSplitProhibited())
+                context.decreaseBracketCount();
+            else
+                context.increaseBracketCount();
+        }
 
         return false;
     }

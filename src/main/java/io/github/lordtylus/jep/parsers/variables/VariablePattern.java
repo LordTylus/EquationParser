@@ -35,24 +35,19 @@ import io.github.lordtylus.jep.tokenizer.VariableTokenizer;
  *                         The default implementation uses '[' but the implementation can use any other character.
  *                         However, the implementation has to be careful to not use any characters used by different parsers.
  *                         For example using any of the operators would lead to confusion and parsing errors.
+ *                         <p>
+ *                         Can be the same as the closing character, though this may come with some downsides.
  * @param closingCharacter The closing character of a Variable.
  *                         <p>
  *                         The default implementation uses ']' but the implementation can use any other character.
  *                         However, the implementation has to be careful to not use any characters used by different parsers.
  *                         For example using any of the operators would lead to confusion and parsing errors.
+ *                         <p>
+ *                         Can be the same as the opening character, though this may come with some downsides.
  */
 public record VariablePattern(
         boolean isEscaped,
         char openingCharacter,
         char closingCharacter) {
 
-    /**
-     * This constructor creates a new VariablePattern with the given settings.
-     *
-     * @throws IllegalArgumentException if {@link #openingCharacter} and {@link #closingCharacter} are identical.
-     */
-    public VariablePattern {
-        if (isEscaped && openingCharacter == closingCharacter)
-            throw new IllegalArgumentException("Characters must not be identical!");
-    }
 }

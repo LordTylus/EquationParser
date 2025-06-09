@@ -55,12 +55,8 @@ public abstract class AbstractParsingOptions implements ParsingOptions {
     @Setter(AccessLevel.PROTECTED)
     private ErrorBehavior errorBehavior = ErrorBehavior.ERROR_RESULT;
 
-    /**
-     * Decides how variables should be read during parsing.
-     */
     @NonNull
     @Getter
-    @Setter(AccessLevel.PROTECTED)
     private VariablePattern variablePattern = StandardVariablePatterns.BRACKETS;
 
     @Override
@@ -110,8 +106,7 @@ public abstract class AbstractParsingOptions implements ParsingOptions {
 
         this.registeredTokenizers.add(tokenizer);
 
-        for (Character delimiter : tokenizer.getDelimitersFor(this))
-            this.tokenizerMapping.put(delimiter, tokenizer);
+        rebuildCharacterMapping();
     }
 
     /**
@@ -120,9 +115,30 @@ public abstract class AbstractParsingOptions implements ParsingOptions {
      * @param tokenizer {@link EquationTokenizer} to be removed
      */
     protected void unregister(@NonNull EquationTokenizer tokenizer) {
+        this.registeredTokenizers.remove(tokenizer);
 
-        if (this.registeredTokenizers.remove(tokenizer))
-            for (Character delimiter : tokenizer.getDelimitersFor(this))
-                this.tokenizerMapping.remove(delimiter);
+        rebuildCharacterMapping();
+    }
+
+    /**
+     * Decides how variables should be read during parsing.
+     *
+     * @param variablePattern to be used.
+     */
+    protected void setVariablePattern(
+            @NonNull VariablePattern variablePattern) {
+
+        this.variablePattern = variablePattern;
+
+        rebuildCharacterMapping();
+    }
+
+    private void rebuildCharacterMapping() {
+
+        this.tokenizerMapping.clear();
+
+        for (EquationTokenizer tokenizer : this.registeredTokenizers)
+            for (char c : tokenizer.getDelimitersFor(this))
+                this.tokenizerMapping.put(c, tokenizer);
     }
 }

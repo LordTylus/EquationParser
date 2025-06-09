@@ -95,7 +95,7 @@ class EquationTest {
     @ParameterizedTest
     @CsvSource(value = {
             "{hallo};[hallo]",
-            "{hallo}+1;[hallo]+1",
+            "{ha+llo}+1;[ha+llo]+1",
             "{ h a l l o }+1;[ h a l l o ]+1",
     }, delimiter = ';')
     void parsesDifferentVariableStyle(String equation, String expected) {

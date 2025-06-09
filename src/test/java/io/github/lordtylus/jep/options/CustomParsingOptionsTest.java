@@ -467,6 +467,90 @@ class CustomParsingOptionsTest {
     }
 
     @Test
+    void mappingUpdatesAfterChangeOfVariablePattern() {
+
+        /* Given */
+
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
+
+        /* When */
+
+        sut.setVariablePattern(StandardVariablePatterns.TAGS);
+
+        /* Then */
+
+        Map<Character, EquationTokenizer> actual = sut.getTokenizerForDelimiterMap();
+
+        Map<Character, EquationTokenizer> expected = new HashMap<>();
+        expected.put('<', VariableTokenizer.INSTANCE);
+        expected.put('>', VariableTokenizer.INSTANCE);
+        expected.put('(', ParenthesisTokenizer.DEFAULT);
+        expected.put(')', ParenthesisTokenizer.DEFAULT);
+        expected.put('*', OperatorTokenizer.DEFAULT);
+        expected.put('+', OperatorTokenizer.DEFAULT);
+        expected.put('-', OperatorTokenizer.DEFAULT);
+        expected.put('/', OperatorTokenizer.DEFAULT);
+        expected.put('^', OperatorTokenizer.DEFAULT);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void whenVariablesUseSameOpeningAndClosingCharacterItOnlyAppearsOnceInMap() {
+
+        /* Given */
+
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
+
+        /* When */
+
+        sut.setVariablePattern(new VariablePattern(true, ':', ':'));
+
+        /* Then */
+
+        Map<Character, EquationTokenizer> actual = sut.getTokenizerForDelimiterMap();
+
+        Map<Character, EquationTokenizer> expected = new HashMap<>();
+        expected.put(':', VariableTokenizer.INSTANCE);
+        expected.put('(', ParenthesisTokenizer.DEFAULT);
+        expected.put(')', ParenthesisTokenizer.DEFAULT);
+        expected.put('*', OperatorTokenizer.DEFAULT);
+        expected.put('+', OperatorTokenizer.DEFAULT);
+        expected.put('-', OperatorTokenizer.DEFAULT);
+        expected.put('/', OperatorTokenizer.DEFAULT);
+        expected.put('^', OperatorTokenizer.DEFAULT);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void whenVariablesDontHaveSpecialPatternTheyWontShowUp() {
+
+        /* Given */
+
+        CustomParsingOptions sut = CustomParsingOptions.withDefaults();
+
+        /* When */
+
+        sut.setVariablePattern(StandardVariablePatterns.NONE);
+
+        /* Then */
+
+        Map<Character, EquationTokenizer> actual = sut.getTokenizerForDelimiterMap();
+
+        Map<Character, EquationTokenizer> expected = new HashMap<>();
+        expected.put('(', ParenthesisTokenizer.DEFAULT);
+        expected.put(')', ParenthesisTokenizer.DEFAULT);
+        expected.put('*', OperatorTokenizer.DEFAULT);
+        expected.put('+', OperatorTokenizer.DEFAULT);
+        expected.put('-', OperatorTokenizer.DEFAULT);
+        expected.put('/', OperatorTokenizer.DEFAULT);
+        expected.put('^', OperatorTokenizer.DEFAULT);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
     void removingATokenizerThatIsNotAddedWontAlterAnything() {
 
         /* Given */
