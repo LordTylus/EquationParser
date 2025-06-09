@@ -64,7 +64,7 @@ public final class EquationStringTokenizer {
             if (tokenizer == null)
                 continue;
 
-            if (tokenizer.handle(beginIndex, i, c, equation, tokenList, context))
+            if (tokenizer.handle(beginIndex, i, c, equation, tokenList, context, options))
                 beginIndex = i + 1;
         }
 

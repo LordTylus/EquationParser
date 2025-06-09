@@ -476,12 +476,13 @@ class CustomParserOptionsTest {
 
         EquationTokenizer toRemove = new EquationTokenizer() {
             @Override
-            public Set<Character> getDelimiters() {
+            public Set<Character> getDelimitersFor(ParsingOptions parsingOptions) {
                 return Set.of('[');
             }
 
             @Override
-            public boolean handle(int beginIndex, int currentIndex, char currentCharacter, String equation, List<Token> tokenList, TokenizerContext context) {
+            public boolean handle(int beginIndex, int currentIndex, char currentCharacter,
+                    String equation, List<Token> tokenList, TokenizerContext context, ParsingOptions options) {
                 return false;
             }
         };

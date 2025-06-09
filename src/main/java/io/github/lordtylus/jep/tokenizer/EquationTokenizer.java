@@ -15,6 +15,7 @@
 */
 package io.github.lordtylus.jep.tokenizer;
 
+import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.NonNull;
 
@@ -30,9 +31,10 @@ public interface EquationTokenizer {
     /**
      * Returns a set of delimiters this tokenizer recognizes and works with.
      *
-     * @return character set of delimiters
+     * @param parsingOptions options to use for parsing. This may have influence on what delimiters are being used.
+     * @return character set of delimiters. Can be empty.
      */
-    Set<Character> getDelimiters();
+    Set<Character> getDelimitersFor(@NonNull ParsingOptions parsingOptions);
 
     /**
      * This method is invoked by the {@link EquationStringTokenizer} while tokenizing the equation string.
@@ -50,6 +52,7 @@ public interface EquationTokenizer {
      * @param equation         equation string to be tokenized.
      * @param tokenList        mutable List of Tokens this tokenizer can add a token to.
      * @param context          the {@link TokenizerContext} for tokenizers to store and exchange data.
+     * @param parsingOptions   the current {@link ParsingOptions} used so that the tokenizers account things the parsers need.
      * @return true if this tokenizer added a token to the list.
      */
     boolean handle(
@@ -58,5 +61,6 @@ public interface EquationTokenizer {
             char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
-            @NonNull TokenizerContext context);
+            @NonNull TokenizerContext context,
+            @NonNull ParsingOptions parsingOptions);
 }

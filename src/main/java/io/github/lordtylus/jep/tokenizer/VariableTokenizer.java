@@ -15,11 +15,14 @@
 */
 package io.github.lordtylus.jep.tokenizer;
 
+import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +40,17 @@ public final class VariableTokenizer implements EquationTokenizer {
      */
     public static final VariableTokenizer INSTANCE = new VariableTokenizer();
 
-    private final Set<Character> delimiters = Set.of('[', ']');
+    @Override
+    public Set<Character> getDelimitersFor(
+            @NonNull ParsingOptions parsingOptions) {
+
+        VariablePattern variablePattern = parsingOptions.getVariablePattern();
+
+        if (!variablePattern.isEscaped())
+            return Collections.emptySet();
+
+        return Set.of(variablePattern.openingCharacter(), variablePattern.closingCharacter());
+    }
 
     @Override
     public boolean handle(
@@ -46,9 +59,10 @@ public final class VariableTokenizer implements EquationTokenizer {
             char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
-            @NonNull TokenizerContext context) {
+            @NonNull TokenizerContext context,
+            @NonNull ParsingOptions parsingOptions) {
 
-        if (currentCharacter == '[')
+        if (currentCharacter == parsingOptions.getVariablePattern().openingCharacter())
             context.increaseBracketCount();
         else
             context.decreaseBracketCount();

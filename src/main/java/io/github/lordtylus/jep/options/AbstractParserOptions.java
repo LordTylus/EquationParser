@@ -104,13 +104,13 @@ public abstract class AbstractParserOptions implements ParsingOptions {
      */
     protected void register(@NonNull EquationTokenizer tokenizer) {
 
-        for (Character delimiter : tokenizer.getDelimiters())
+        for (Character delimiter : tokenizer.getDelimitersFor(this))
             if (this.tokenizerMapping.containsKey(delimiter))
                 throw new IllegalArgumentException("Tokenizer already exists!");
 
         this.registeredTokenizers.add(tokenizer);
 
-        for (Character delimiter : tokenizer.getDelimiters())
+        for (Character delimiter : tokenizer.getDelimitersFor(this))
             this.tokenizerMapping.put(delimiter, tokenizer);
     }
 
@@ -122,7 +122,7 @@ public abstract class AbstractParserOptions implements ParsingOptions {
     protected void unregister(@NonNull EquationTokenizer tokenizer) {
 
         if (this.registeredTokenizers.remove(tokenizer))
-            for (Character delimiter : tokenizer.getDelimiters())
+            for (Character delimiter : tokenizer.getDelimitersFor(this))
                 this.tokenizerMapping.remove(delimiter);
     }
 }

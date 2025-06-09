@@ -15,6 +15,7 @@
 */
 package io.github.lordtylus.jep.tokenizer;
 
+import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
@@ -33,7 +34,7 @@ import java.util.Set;
  * Since this tokenizer is supposed to be called from the {@link EquationStringTokenizer}
  * when a supported operator was found, this class does not check for the operator itself.
  * <p>
- * It just assumes when its called, it has work to do. The {@link #getDelimiters()} method
+ * It just assumes when its called, it has work to do. The {@link #getDelimitersFor(ParsingOptions)} method
  * helps with the decision-making.
  */
 @Getter
@@ -58,13 +59,19 @@ public class OperatorTokenizer implements EquationTokenizer {
     }
 
     @Override
+    public Set<Character> getDelimitersFor(ParsingOptions parsingOptions) {
+        return delimiters;
+    }
+
+    @Override
     public boolean handle(
             int beginIndex,
             int currentIndex,
             char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
-            @NonNull TokenizerContext context) {
+            @NonNull TokenizerContext context,
+            @NonNull ParsingOptions parsingOptions) {
 
         if (context.isSplitProhibited())
             return false;

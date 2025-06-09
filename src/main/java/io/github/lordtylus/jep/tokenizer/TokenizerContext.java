@@ -28,7 +28,7 @@ public class TokenizerContext {
 
     private int bracketCount;
 
-    private Deque<ParenthesisToken> openingTokens = new ArrayDeque<>(25);
+    private final Deque<ParenthesisToken> openingTokens = new ArrayDeque<>(25);
 
     /**
      * This method saves an opening parenthesis Token to the context.

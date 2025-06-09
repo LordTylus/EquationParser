@@ -15,6 +15,7 @@
 */
 package io.github.lordtylus.jep.tokenizer;
 
+import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
@@ -45,13 +46,19 @@ public final class ParenthesisTokenizer implements EquationTokenizer {
     private final boolean tokenizeFunctions;
 
     @Override
+    public Set<Character> getDelimitersFor(ParsingOptions parsingOptions) {
+        return delimiters;
+    }
+
+    @Override
     public boolean handle(
             int beginIndex,
             int currentIndex,
             char currentCharacter,
             @NonNull String equation,
             @NonNull List<Token> tokenList,
-            @NonNull TokenizerContext context) {
+            @NonNull TokenizerContext context,
+            @NonNull ParsingOptions parsingOptions) {
 
         if (context.isSplitProhibited())
             return false;
