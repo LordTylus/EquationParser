@@ -17,8 +17,10 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Variable;
+import io.github.lordtylus.jep.options.CustomParserOptions;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.OperatorToken;
 import io.github.lordtylus.jep.tokenizer.tokens.ParenthesisToken;
@@ -272,6 +274,75 @@ class VariableParserTest {
         /* Then */
 
         ParseResult expected = ParseResult.ok(new Variable("Test"));
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void canWorkWithBraces() {
+
+        /* Given */
+
+        CustomParserOptions options = CustomParserOptions.withDefaults();
+        options.setVariablePattern(StandardVariablePatterns.BRACES);
+
+        List<Token> tokenized = List.of(
+                new ValueToken("{Test}"));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.ok(new Variable("Test"));
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void doesNotParseBracketsIfBracesIsConfigured() {
+
+        /* Given */
+
+        CustomParserOptions options = CustomParserOptions.withDefaults();
+        options.setVariablePattern(StandardVariablePatterns.BRACES);
+
+        List<Token> tokenized = List.of(
+                new ValueToken("[Test]"));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.notMine();
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void parsesStringAsIsIfNothingIsEscaped() {
+
+        /* Given */
+
+        CustomParserOptions options = CustomParserOptions.withDefaults();
+        options.setVariablePattern(StandardVariablePatterns.NONE);
+
+        List<Token> tokenized = List.of(
+                new ValueToken(" [ T e s t ] "));
+
+        /* When */
+
+        ParseResult actual = VariableParser.INSTANCE
+                .parse(tokenized, 0, 0, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.ok(new Variable("[ T e s t ]"));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }

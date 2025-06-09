@@ -17,6 +17,7 @@ package io.github.lordtylus.jep.parsers;
 
 import io.github.lordtylus.jep.equation.Variable;
 import io.github.lordtylus.jep.options.ParsingOptions;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
 import io.github.lordtylus.jep.tokenizer.tokens.ValueToken;
 import lombok.AccessLevel;
@@ -62,14 +63,18 @@ public final class VariableParser implements EquationParser {
                 return ParseResult.notMine();
 
             String trimmedEquation = token.getString().trim();
+            VariablePattern variablePattern = options.getVariablePattern();
 
-            if (!trimmedEquation.startsWith("["))
-                return ParseResult.notMine();
+            if (variablePattern.isEscaped()) {
 
-            if (!trimmedEquation.endsWith("]"))
-                return ParseResult.notMine();
+                if (trimmedEquation.charAt(0) != variablePattern.openingCharacter())
+                    return ParseResult.notMine();
 
-            trimmedEquation = trimmedEquation.substring(1, trimmedEquation.length() - 1);
+                if (trimmedEquation.charAt(trimmedEquation.length() - 1) != variablePattern.closingCharacter())
+                    return ParseResult.notMine();
+
+                trimmedEquation = trimmedEquation.substring(1, trimmedEquation.length() - 1);
+            }
 
             return ParseResult.ok(new Variable(trimmedEquation));
 

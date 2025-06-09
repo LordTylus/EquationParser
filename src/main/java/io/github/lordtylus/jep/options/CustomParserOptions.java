@@ -211,7 +211,7 @@ public final class CustomParserOptions extends AbstractParserOptions {
      * {@inheritDoc}
      */
     @Override
-    protected void setVariablePattern(@NonNull VariablePattern variablePattern) {
+    public void setVariablePattern(@NonNull VariablePattern variablePattern) {
         super.setVariablePattern(variablePattern);
     }
 }
