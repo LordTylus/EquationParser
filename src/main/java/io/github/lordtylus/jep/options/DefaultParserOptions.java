@@ -60,7 +60,5 @@ public final class DefaultParserOptions extends AbstractParserOptions {
         parserOptions.register(VariableTokenizer.INSTANCE);
         parserOptions.register(ParenthesisTokenizer.DEFAULT);
         parserOptions.register(OperatorTokenizer.DEFAULT);
-
-        parserOptions.setErrorBehavior(ErrorBehavior.ERROR_RESULT);
     }
 }

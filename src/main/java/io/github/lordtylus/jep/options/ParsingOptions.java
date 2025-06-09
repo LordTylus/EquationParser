@@ -19,6 +19,8 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.EquationOptional;
 import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 
 import java.util.List;
@@ -55,6 +57,17 @@ public interface ParsingOptions {
      * @return The currently configured ErrorBehavior. {@link ErrorBehavior#ERROR_RESULT} is default.
      */
     ErrorBehavior getErrorBehavior();
+
+    /**
+     * This method defines how variables are expected to be escaped in the equation string.
+     * <p>
+     * The default configuration will use {@link StandardVariablePatterns#BRACKETS}
+     * <p>
+     * Which means that an equation string has to look like "2+[x]". Changing it to {@link StandardVariablePatterns#NONE} would allow to have them in the form of "2+x"
+     *
+     * @return VariablePattern pattern to be used when parsing variables.
+     */
+    VariablePattern getVariablePattern();
 
     /**
      * Returns a Map containing a mapping of a character to the corresponding {@link EquationTokenizer}

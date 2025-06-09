@@ -36,7 +36,7 @@ public class CustomOperatorsParsersDemo {
     public static void main(String[] args) {
 
         /* Most programming languages place Modulo operator on the same order as multiplication and division.*/
-        Operator modulo = new Operator(StandardOperators.MULT.getOrder(), '%',
+        Operator modulo = new Operator(StandardOperators.MULT.order(), '%',
                 (a, b) -> a.doubleValue() % b.doubleValue());
 
         Set<Operator> operators = new HashSet<>(StandardOperators.all());

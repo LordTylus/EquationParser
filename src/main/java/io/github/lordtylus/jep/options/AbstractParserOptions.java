@@ -17,6 +17,8 @@ package io.github.lordtylus.jep.options;
 
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.parsers.EquationParser;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -52,6 +54,14 @@ public abstract class AbstractParserOptions implements ParsingOptions {
     @Getter
     @Setter(AccessLevel.PROTECTED)
     private ErrorBehavior errorBehavior = ErrorBehavior.ERROR_RESULT;
+
+    /**
+     * Decides how variables should be read during parsing.
+     */
+    @NonNull
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
+    private VariablePattern variablePattern = StandardVariablePatterns.BRACKETS;
 
     @Override
     public Map<Character, EquationTokenizer> getTokenizerForDelimiterMap() {

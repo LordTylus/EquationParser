@@ -18,7 +18,6 @@ package io.github.lordtylus.jep.operators;
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Parenthesis;
 import lombok.NonNull;
-import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,15 +44,15 @@ import java.util.function.BiFunction;
  * The standard implementations of this framework respect this order.
  * <p>
  * In case custom operators are created alongside the standard ones, it's important to think about how it would fit in the PEMDAS order to not result in unexpected results.
+ *
+ * @param order        the order of operators. Operators with a lower number will be solved last. Operators with the same number are solved left to right.
+ * @param pattern      the symbol of the operator.
+ * @param evalFunction the function applying the operation to the two given numbers.
  */
-@Value
-public class Operator {
-
-    int order;
-    char pattern;
-
-    @NonNull
-    BiFunction<Number, Number, Number> evalFunction;
+public record Operator(
+        int order,
+        char pattern,
+        @NonNull BiFunction<Number, Number, Number> evalFunction) {
 
     /**
      * Returns the symbol of the operator.
@@ -103,7 +102,7 @@ public class Operator {
         Set<Integer> sortedSet = new TreeSet<>();
 
         for (Operator relevantOperator : relevantOperators)
-            sortedSet.add(relevantOperator.getOrder());
+            sortedSet.add(relevantOperator.order());
 
         return new ArrayList<>(sortedSet);
     }
@@ -121,7 +120,7 @@ public class Operator {
             @NonNull Collection<Operator> relevantOperators) {
 
         return relevantOperators.stream()
-                .filter(operator -> operator.getOrder() == order)
+                .filter(operator -> operator.order() == order)
                 .toList();
     }
 }

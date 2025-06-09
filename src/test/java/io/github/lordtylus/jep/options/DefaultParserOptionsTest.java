@@ -21,6 +21,8 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
 import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
@@ -72,6 +74,22 @@ class DefaultParserOptionsTest {
         /* Then */
 
         assertEquals(ErrorBehavior.ERROR_RESULT, actual);
+    }
+
+    @Test
+    void usesBracketsForVariables() {
+
+        /* Given */
+
+        DefaultParserOptions sut = DefaultParserOptions.INSTANCE;
+
+        /* When */
+
+        VariablePattern actual = sut.getVariablePattern();
+
+        /* Then */
+
+        assertEquals(StandardVariablePatterns.BRACKETS, actual);
     }
 
     @Test

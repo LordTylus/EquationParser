@@ -96,7 +96,7 @@ public final class OperationParser implements EquationParser {
             Map<Character, Operator> operatorMap = new HashMap<>();
 
             for (Operator operator : operators)
-                operatorMap.put(operator.getPattern(), operator);
+                operatorMap.put(operator.pattern(), operator);
 
             operatorsMap.put(operatorOrder,
                     new OperatorInformation(operatorMap));
@@ -219,7 +219,7 @@ public final class OperationParser implements EquationParser {
                 .map(OperatorInformation::operators)
                 .map(Map::values)
                 .flatMap(Collection::stream)
-                .map(Operator::getPattern)
+                .map(Operator::pattern)
                 .collect(Collectors.toSet());
     }
 

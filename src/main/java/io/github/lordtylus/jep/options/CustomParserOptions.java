@@ -25,6 +25,7 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
 import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
@@ -163,8 +164,6 @@ public final class CustomParserOptions extends AbstractParserOptions {
         parserOptions.register(ParenthesisTokenizer.DEFAULT);
         parserOptions.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
 
-        parserOptions.setErrorBehavior(ErrorBehavior.ERROR_RESULT);
-
         return parserOptions;
     }
 
@@ -206,5 +205,13 @@ public final class CustomParserOptions extends AbstractParserOptions {
     @Override
     public void setErrorBehavior(ErrorBehavior errorBehavior) {
         super.setErrorBehavior(errorBehavior);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setVariablePattern(@NonNull VariablePattern variablePattern) {
+        super.setVariablePattern(variablePattern);
     }
 }

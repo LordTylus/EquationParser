@@ -36,9 +36,9 @@ class OperatorParserTest {
         Operator operator3 = new Operator(3, '*', (a, b) -> a.doubleValue() * b.doubleValue());
 
         Map<Character, Operator> operatorMap = new HashMap<>();
-        operatorMap.put(operator1.getPattern(), operator1);
-        operatorMap.put(operator2.getPattern(), operator2);
-        operatorMap.put(operator3.getPattern(), operator3);
+        operatorMap.put(operator1.pattern(), operator1);
+        operatorMap.put(operator2.pattern(), operator2);
+        operatorMap.put(operator3.pattern(), operator3);
 
         /* When */
 
@@ -59,9 +59,9 @@ class OperatorParserTest {
         Operator operator3 = new Operator(3, '*', (a, b) -> a.doubleValue() * b.doubleValue());
 
         Map<Character, Operator> operatorMap = new HashMap<>();
-        operatorMap.put(operator1.getPattern(), operator1);
-        operatorMap.put(operator2.getPattern(), operator2);
-        operatorMap.put(operator3.getPattern(), operator3);
+        operatorMap.put(operator1.pattern(), operator1);
+        operatorMap.put(operator2.pattern(), operator2);
+        operatorMap.put(operator3.pattern(), operator3);
 
         /* When */
 

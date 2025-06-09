@@ -23,6 +23,8 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.OperationParser;
 import io.github.lordtylus.jep.parsers.ParenthesisParser;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.tokenizer.EquationTokenizer;
 import io.github.lordtylus.jep.tokenizer.OperatorTokenizer;
 import io.github.lordtylus.jep.tokenizer.ParenthesisTokenizer;
@@ -92,6 +94,7 @@ class CustomParserOptionsTest {
         assertEquals(actual1, expected1);
         assertEquals(actual2, expected2);
         assertEquals(ErrorBehavior.ERROR_RESULT, sut.getErrorBehavior());
+        assertEquals(StandardVariablePatterns.BRACKETS, sut.getVariablePattern());
     }
 
     @Test
@@ -172,7 +175,6 @@ class CustomParserOptionsTest {
         expected.register(VariableTokenizer.INSTANCE);
         expected.register(ParenthesisTokenizer.DEFAULT);
         expected.register(new OperatorTokenizer(operationParser.getOperatorCharacters()));
-        expected.setErrorBehavior(ErrorBehavior.ERROR_RESULT);
 
         assertThat(sut).usingRecursiveComparison().isEqualTo(expected);
     }
@@ -531,5 +533,39 @@ class CustomParserOptionsTest {
         ErrorBehavior actual = sut.getErrorBehavior();
 
         assertEquals(ErrorBehavior.EXCEPTION, actual);
+    }
+
+    @Test
+    void usesBracketsForVariablesByDefault() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.empty();
+
+        /* When */
+
+        VariablePattern actual = sut.getVariablePattern();
+
+        /* Then */
+
+        assertEquals(StandardVariablePatterns.BRACKETS, actual);
+    }
+
+    @Test
+    void canSetVariablePattern() {
+
+        /* Given */
+
+        CustomParserOptions sut = CustomParserOptions.empty();
+
+        /* When */
+
+        sut.setVariablePattern(StandardVariablePatterns.BRACES);
+
+        /* Then */
+
+        VariablePattern actual = sut.getVariablePattern();
+
+        assertEquals(StandardVariablePatterns.BRACES, actual);
     }
 }
