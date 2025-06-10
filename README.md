@@ -203,8 +203,9 @@ Here is an overview of a very basic performance test. Please note that evaluatio
 and therefore will likely differ for you. However, it should give a brief overview of what you can expect.
 
 ```
-Evauated expression: (7+3)*(6-3)+216/3^3+[x]
+Evaluated expression: (7+3)*(6-3)+216/3^3+[x]
 Tested with: AMD Ryzen 7 3700X 8-Core Processor
+Measured: Real Time
 
 Parsing (Single Treaded):
 1 million passes: 1418 ms
