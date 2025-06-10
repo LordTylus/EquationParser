@@ -20,6 +20,7 @@ import io.github.lordtylus.jep.Result;
 import io.github.lordtylus.jep.Storage;
 import io.github.lordtylus.jep.functions.MathFunction;
 import io.github.lordtylus.jep.functions.StandardFunctions;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import lombok.NonNull;
 
 import java.util.Locale;
@@ -51,8 +52,11 @@ public record Parenthesis(
     }
 
     @Override
-    public String toPattern(@NonNull Locale locale) {
-        return function.toPattern() + "(" + inner.toPattern(locale) + ")";
+    public String toPattern(
+            @NonNull Locale locale,
+            @NonNull VariablePattern variablePattern) {
+
+        return function.toPattern() + "(" + inner.toPattern(locale, variablePattern) + ")";
     }
 
     /**

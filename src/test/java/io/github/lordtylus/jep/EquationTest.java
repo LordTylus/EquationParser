@@ -68,6 +68,40 @@ class EquationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "1;1",
+            "110;110",
+            "123.456;123,456",
+            "123,456;123,456",
+            "[hallo];{hallo}",
+            "[hallo]+1;{hallo}+1",
+            "123.44*3;123,44*3",
+            "sqrt(4+3);sqrt(4+3)",
+            "sqrt(9)+cbrt(8);sqrt(9)+cbrt(8)",
+            "(sqrt(9)+cbrt(8))+4;(sqrt(9)+cbrt(8))+4",
+            "1+2*3-4/2^2;1+2*3-4/2^2",
+            "2+(s q r t(  9 )+ c  b r t (  8 ) ) + 4  ,  4;2+(sqrt(9)+cbrt(8))+4,4",
+            "(2+((1+2)^2+(4+[hallo])^2)+(2*2))+5;(2+((1+2)^2+(4+{hallo})^2)+(2*2))+5",
+            "(-3)+abs(7.3+3)*sin(6+([hallo]-2))+216/3^3;(-3)+abs(7,3+3)*sin(6+({hallo}-2))+216/3^3"
+    }, delimiter = ';')
+    void printsDifferentPattern(String equation, String expected) {
+
+        /* Given */
+
+        VariablePattern braces = StandardVariablePatterns.BRACES;
+
+        Equation sut = Equation.parse(equation).get();
+
+        /* When */
+
+        String actual = sut.toPattern(Locale.GERMAN, braces);
+
+        /* Then */
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
             "1 ; 1",
             "-  1 ;-1",
             " [a b c]  ; [a b c]",

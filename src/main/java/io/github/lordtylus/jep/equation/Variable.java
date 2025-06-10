@@ -19,6 +19,7 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.Result;
 import io.github.lordtylus.jep.Storage;
 import io.github.lordtylus.jep.parsers.VariableParser;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import lombok.NonNull;
 
 import java.util.Locale;
@@ -43,8 +44,17 @@ public record Variable(
     }
 
     @Override
-    public String toPattern(@NonNull Locale locale) {
-        return "[" + name + "]";
+    public String toPattern(
+            @NonNull Locale locale,
+            @NonNull VariablePattern variablePattern) {
+
+        if (!variablePattern.isEscaped())
+            return name;
+
+        char opening = variablePattern.openingCharacter();
+        char closing = variablePattern.closingCharacter();
+
+        return opening + name + closing;
     }
 
     /**

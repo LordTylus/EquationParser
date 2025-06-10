@@ -16,6 +16,8 @@
 package io.github.lordtylus.jep.equation;
 
 import io.github.lordtylus.jep.Result;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.storages.SimpleStorage;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +41,86 @@ class VariableTest {
         /* Then */
 
         String expected = "[Test 123]";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void canOutputPatternEnglishBraces() {
+
+        /* Given */
+
+        VariablePattern pattern = StandardVariablePatterns.BRACES;
+
+        Variable sut = new Variable("Test 123");
+
+        /* When */
+
+        String actual = sut.toPattern(Locale.ENGLISH, pattern);
+
+        /* Then */
+
+        String expected = "{Test 123}";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void canOutputPatternEnglishTags() {
+
+        /* Given */
+
+        VariablePattern pattern = StandardVariablePatterns.TAGS;
+
+        Variable sut = new Variable("Test 123");
+
+        /* When */
+
+        String actual = sut.toPattern(Locale.ENGLISH, pattern);
+
+        /* Then */
+
+        String expected = "<Test 123>";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void canOutputPatternEnglishCustom() {
+
+        /* Given */
+
+        VariablePattern pattern = new VariablePattern(true, '#', '#');
+
+        Variable sut = new Variable("Test 123");
+
+        /* When */
+
+        String actual = sut.toPattern(Locale.ENGLISH, pattern);
+
+        /* Then */
+
+        String expected = "#Test 123#";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void canOutputPatternEnglishNoPattern() {
+
+        /* Given */
+
+        VariablePattern pattern = StandardVariablePatterns.NONE;
+
+        Variable sut = new Variable("Test 123");
+
+        /* When */
+
+        String actual = sut.toPattern(Locale.ENGLISH, pattern);
+
+        /* Then */
+
+        String expected = "Test 123";
 
         assertEquals(expected, actual);
     }

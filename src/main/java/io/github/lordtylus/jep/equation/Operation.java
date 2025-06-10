@@ -20,6 +20,7 @@ import io.github.lordtylus.jep.Result;
 import io.github.lordtylus.jep.Storage;
 import io.github.lordtylus.jep.operators.Operator;
 import io.github.lordtylus.jep.parsers.OperationParser;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import lombok.NonNull;
 
 import java.util.Locale;
@@ -65,8 +66,13 @@ public record Operation(
     }
 
     @Override
-    public String toPattern(@NonNull Locale locale) {
-        return left.toPattern(locale) + operator.toPattern() + right.toPattern(locale);
+    public String toPattern(
+            @NonNull Locale locale,
+            @NonNull VariablePattern variablePattern) {
+
+        return left.toPattern(locale, variablePattern)
+                + operator.toPattern()
+                + right.toPattern(locale, variablePattern);
     }
 
     /**

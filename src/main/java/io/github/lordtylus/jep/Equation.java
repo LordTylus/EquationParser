@@ -22,6 +22,8 @@ import io.github.lordtylus.jep.parsers.EquationParser;
 import io.github.lordtylus.jep.parsers.ParseException;
 import io.github.lordtylus.jep.parsers.ParseResult;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
+import io.github.lordtylus.jep.parsers.variables.StandardVariablePatterns;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import io.github.lordtylus.jep.storages.EmptyStorage;
 import io.github.lordtylus.jep.tokenizer.EquationStringTokenizer;
 import io.github.lordtylus.jep.tokenizer.tokens.Token;
@@ -77,13 +79,33 @@ public interface Equation {
      * Converts the parsed {@link Equation} back into a localized String pattern.
      * <p>
      * The Locale may be used by implementations for purposes of formatting numbers to the correct decimal points.
+     * <p>
+     * For display of variables the default {@link StandardVariablePatterns#BRACKETS} are chosen.
      *
      * @param locale the Locale to be used.
      * @return parsable string pattern of the given equation
      * @throws NullPointerException If any given argument is null.
      */
+    default String toPattern(
+            @NonNull Locale locale) {
+        return toPattern(locale, StandardVariablePatterns.BRACKETS);
+    }
+
+    /**
+     * Converts the parsed {@link Equation} back into a localized String pattern.
+     * <p>
+     * The Locale may be used by implementations for purposes of formatting numbers to the correct decimal points.
+     * A {@link VariablePattern} can be used to format variable names in the desired form. But be careful,
+     * depending on the variable names, the resulting string may not be parsable anymore.
+     *
+     * @param locale          the Locale to be used.
+     * @param variablePattern {@link VariablePattern} to be used for formatting.
+     * @return String representation of the equation.
+     * @throws NullPointerException If any given argument is null.
+     */
     String toPattern(
-            @NonNull Locale locale);
+            @NonNull Locale locale,
+            @NonNull VariablePattern variablePattern);
 
     /**
      * Parses the given equation String using the default {@link ParsingOptions}.

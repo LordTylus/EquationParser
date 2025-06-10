@@ -19,6 +19,7 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.Result;
 import io.github.lordtylus.jep.Storage;
 import io.github.lordtylus.jep.parsers.ConstantParser;
+import io.github.lordtylus.jep.parsers.variables.VariablePattern;
 import lombok.NonNull;
 
 import java.text.DecimalFormat;
@@ -43,7 +44,9 @@ public record Constant(
     }
 
     @Override
-    public String toPattern(@NonNull Locale locale) {
+    public String toPattern(
+            @NonNull Locale locale,
+            @NonNull VariablePattern variablePattern) {
 
         NumberFormat formatter = new DecimalFormat(DECIMAL_FORMAT,
                 DecimalFormatSymbols.getInstance(locale));
