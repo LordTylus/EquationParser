@@ -128,14 +128,14 @@ Maven:
 <dependency>
     <groupId>io.github.lordtylus.equation</groupId>
     <artifactId>equation-parser</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-implementation 'io.github.lordtylus.equation:equation-parser:1.1.1'
+implementation 'io.github.lordtylus.equation:equation-parser:1.2.0'
 ```
 
 Or you can install the latest snapshot build here:
@@ -149,7 +149,7 @@ repositories {
 }
 
 depedencies {
-    implementation 'io.github.lordtylus.equation:equation-parser:1.2.0-SNAPSHOT'
+    implementation 'io.github.lordtylus.equation:equation-parser:1.3.0-SNAPSHOT'
 }
 ```
 
