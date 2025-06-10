@@ -43,7 +43,7 @@ public class SingleThreadedCalculationPerformanceDemo {
                 equation.evaluate(simpleStorage);
             }
 
-            // 403 ms
+            // 386 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("1 million passes: " + duration + " ms");
@@ -61,7 +61,7 @@ public class SingleThreadedCalculationPerformanceDemo {
                 equation.evaluate(simpleStorage);
             }
 
-            // 2,246 ms
+            // 2,299 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("10 million passes: " + duration + " ms");
@@ -79,7 +79,7 @@ public class SingleThreadedCalculationPerformanceDemo {
                 equation.evaluate(simpleStorage);
             }
 
-            // 22,357 ms
+            // 23,027 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("100 million passes: " + duration + " ms");

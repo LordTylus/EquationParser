@@ -36,7 +36,7 @@ public class MultiThreadedParsingPerformanceDemo {
             IntStream.range(0, 1_000_000).parallel()
                     .forEach((i) -> Equation.parse(input));
 
-            // 386 ms
+            // 333 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("1 million passes: " + duration + " ms");
@@ -49,7 +49,7 @@ public class MultiThreadedParsingPerformanceDemo {
             IntStream.range(0, 10_000_000).parallel()
                     .forEach((i) -> Equation.parse(input));
 
-            // 1,797 ms
+            // 1,858 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("10 million passes: " + duration + " ms");
@@ -62,7 +62,7 @@ public class MultiThreadedParsingPerformanceDemo {
             IntStream.range(0, 100_000_000).parallel()
                     .forEach((i) -> Equation.parse(input));
 
-            // 17,799 ms
+            // 17,854 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("100 million passes: " + duration + " ms");

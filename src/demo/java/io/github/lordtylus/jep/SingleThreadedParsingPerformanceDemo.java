@@ -36,7 +36,7 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 1_000_000; i++)
                 Equation.parse(input);
 
-            // 1,648 ms
+            // 1,418 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("1 million passes: " + duration + " ms");
@@ -50,7 +50,7 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 10_000_000; i++)
                 Equation.parse(input);
 
-            // 13,844 ms
+            // 11,795 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("10 million passes: " + duration + " ms");
@@ -64,7 +64,7 @@ public class SingleThreadedParsingPerformanceDemo {
             for (int i = 0; i < 100_000_000; i++)
                 Equation.parse(input);
 
-            // 139,002 ms
+            // 116,833 ms
             long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
             System.out.println("100 million passes: " + duration + " ms");

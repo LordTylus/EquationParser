@@ -207,24 +207,24 @@ Evauated expression: (7+3)*(6-3)+216/3^3+[x]
 Tested with: AMD Ryzen 7 3700X 8-Core Processor
 
 Parsing (Single Treaded):
-1 million passes: 1648 ms
-10 million passes: 13844 ms
-100 million passes: 139002 ms
+1 million passes: 1418 ms
+10 million passes: 11795 ms
+100 million passes: 116833 ms
 
 Parsing (Multithreaded via IntStream.range().parallel()):
-1 million passes: 386 ms
-10 million passes: 1797 ms
-100 million passes: 17799 ms
+1 million passes: 333 ms
+10 million passes: 1858 ms
+100 million passes: 17854 ms
 
 Evaluating (Single Threaded):
-1 million passes: 403 ms
-10 million passes: 2246 ms
-100 million passes: 22357 ms
+1 million passes: 386 ms
+10 million passes: 2299 ms
+100 million passes: 23027 ms
 
 Evaluating (Multithreaded via IntStream.range().parallel()):
-1 million passes: 146 ms
-10 million passes: 841 ms
-100 million passes: 7573 ms
+1 million passes: 142 ms
+10 million passes: 809 ms
+100 million passes: 7538 ms
 ```
 
 The code for these tests you can find in the [demos](src/demo/java/io/github/lordtylus/jep).
