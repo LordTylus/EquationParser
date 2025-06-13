@@ -54,8 +54,9 @@ public final class EquationStringTokenizer {
         int beginIndex = 0;
 
         TokenizerContext context = new TokenizerContext();
-
-        for (int i = 0; i < equation.length(); i++) {
+        int length = equation.length();
+        
+        for (int i = 0; i < length; i++) {
 
             char c = equation.charAt(i);
 

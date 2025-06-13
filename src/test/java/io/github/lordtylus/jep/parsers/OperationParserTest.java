@@ -651,6 +651,31 @@ class OperationParserTest {
     }
 
     @Test
+    void returnsErrorIfOperatorIsNotRecognized() {
+
+        /* Given */
+
+        ParsingOptions options = ParsingOptions.defaultOptions();
+
+        List<Token> tokenized = List.of(
+                new ValueToken("1"),
+                new OperatorToken('#'),
+                new ValueToken("2")
+        );
+
+        /* When */
+
+        ParseResult actual = OperationParser.DEFAULT
+                .parse(tokenized, 0, 2, options);
+
+        /* Then */
+
+        ParseResult expected = ParseResult.error("Operator '#' not recognized!");
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
     void throwsParseExceptionWhenRuntimeErrorOccurred() {
 
         /* Given */
