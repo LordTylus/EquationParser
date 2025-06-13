@@ -19,11 +19,6 @@ import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Parenthesis;
 import lombok.NonNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.BiFunction;
 
 /**
@@ -81,46 +76,5 @@ public record Operator(
             @NonNull Number b) {
 
         return evalFunction.apply(a, b);
-    }
-
-    /**
-     * This method takes a list of operators and extracts its order information into a new list.
-     * The result will be sorted ascending meaning that the lowest ranking order such as 0 for addition is first in the list.
-     * <p>
-     * Since the Iterable can contain any number of operators it is possible that the resulting List is not continuous, and gaps may occur.
-     * For example {@link StandardOperators#ADD} and {@link StandardOperators#POW} would result in a List containing {0, 2}.
-     * <p>
-     * This method is used for parsing to ensure the set order of operation is respected and the resulting binary tree can be solved as expected.
-     *
-     * @param relevantOperators Iterable of operators
-     * @return List containing the extract orders of operators, sorted ascending, without duplicates.
-     * @throws NullPointerException If any given argument is null.
-     */
-    public static List<Integer> getRelevantOrders(
-            @NonNull Iterable<Operator> relevantOperators) {
-
-        Set<Integer> sortedSet = new TreeSet<>();
-
-        for (Operator relevantOperator : relevantOperators)
-            sortedSet.add(relevantOperator.order());
-
-        return new ArrayList<>(sortedSet);
-    }
-
-    /**
-     * This method is a filter for the passed operators, to the given order.
-     *
-     * @param order             order to filter for.
-     * @param relevantOperators Collection of operators to be filtered.
-     * @return List of operators matching the given order, retaining same order as input list.
-     * @throws NullPointerException If any given argument is null.
-     */
-    public static List<Operator> getRelevantOperatorsForOrder(
-            int order,
-            @NonNull Collection<Operator> relevantOperators) {
-
-        return relevantOperators.stream()
-                .filter(operator -> operator.order() == order)
-                .toList();
     }
 }

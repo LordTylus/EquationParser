@@ -18,7 +18,6 @@ package io.github.lordtylus.jep.parsers;
 import io.github.lordtylus.jep.Equation;
 import io.github.lordtylus.jep.equation.Operation;
 import io.github.lordtylus.jep.operators.Operator;
-import io.github.lordtylus.jep.operators.OperatorParser;
 import io.github.lordtylus.jep.operators.StandardOperators;
 import io.github.lordtylus.jep.options.ParsingOptions;
 import io.github.lordtylus.jep.parsers.ParseResult.ParseType;
@@ -29,10 +28,10 @@ import lombok.NonNull;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This parser parses operations such as 1+2 by extracting the operator and splitting the string in two expressions.
@@ -77,8 +76,8 @@ public final class OperationParser implements EquationParser {
      */
     public static final OperationParser DEFAULT = new OperationParser(StandardOperators.all());
 
-    private final List<Integer> relevantOperatorOrders;
-    private final Map<Integer, OperatorInformation> operatorsMap = new HashMap<>();
+    private final int lowest;
+    private final Map<Character, Operator> characterToOperatorMap = new HashMap<>();
 
     /**
      * Creates a new Parser instance with the {@link Operator operators} to use for parsing.
@@ -88,19 +87,18 @@ public final class OperationParser implements EquationParser {
     public OperationParser(
             @NonNull Collection<Operator> relevantOperators) {
 
-        this.relevantOperatorOrders = Operator.getRelevantOrders(relevantOperators);
+        int lowestOperatorOrder = Integer.MAX_VALUE;
 
-        for (int operatorOrder : relevantOperatorOrders) {
+        for (Operator relevantOperator : relevantOperators) {
 
-            List<Operator> operators = Operator.getRelevantOperatorsForOrder(operatorOrder, relevantOperators);
-            Map<Character, Operator> operatorMap = new HashMap<>();
+            char pattern = relevantOperator.toPattern();
 
-            for (Operator operator : operators)
-                operatorMap.put(operator.pattern(), operator);
+            characterToOperatorMap.put(pattern, relevantOperator);
 
-            operatorsMap.put(operatorOrder,
-                    new OperatorInformation(operatorMap));
+            lowestOperatorOrder = Math.min(lowestOperatorOrder, relevantOperator.order());
         }
+
+        this.lowest = lowestOperatorOrder;
     }
 
     @Override
@@ -115,23 +113,83 @@ public final class OperationParser implements EquationParser {
             if (endIndex - startIndex < 2)
                 return ParseResult.notMine();
 
-            for (int relevantLevel : relevantOperatorOrders) {
+            int operatorIndex = -1;
+            int order = Integer.MAX_VALUE;
+            Operator operator = null;
 
-                OperatorInformation operatorInformation = operatorsMap.get(relevantLevel);
+            for (int i = endIndex; i >= startIndex; i--) {
 
-                ParseResult parseResult = tryParse(
-                        tokenizedEquation,
-                        startIndex,
-                        endIndex,
-                        options,
-                        operatorInformation.operators,
-                        operatorInformation.operators::containsKey);
+                Token token = tokenizedEquation.get(i);
 
-                if (parseResult.getParseType() != ParseType.NOT_MINE)
-                    return parseResult;
+                /*
+                 * Since we are reading from right to left, depth will be negative when
+                 * we encounter ). If this happens we jump to the ( one to save calculation time.
+                 * If ( is not found, we have a parenthesis mismatch.
+                 *
+                 * Furthermore, if we ever encounter a ( it will also not have an opening one,
+                 * also meaning a parenthesis mismatch, because we should have jumped over it
+                 * once we encountered the closing one.
+                 *
+                 * Instead of checking for ParenthesisToken, Token pair is checked, as it ensures
+                 * this parser can handle custom TokenPairs also.
+                 */
+                if (token instanceof TokenPair tokenPair) {
+
+                    TokenPair opening = tokenPair.getOpening();
+
+                    if (opening == null)
+                        return ParseResult.error("Token pair mismatch! Could not find opening!");
+
+                    i = opening.getIndex();
+                    continue;
+                }
+
+                if (token instanceof OperatorToken operatorToken) {
+
+                    Operator currentOperator = characterToOperatorMap.get(operatorToken.operator());
+
+                    if (currentOperator == null)
+                        return ParseResult.error("Operator '" + operatorToken.operator() + "' not recognized!");
+
+                    int thisOrder = currentOperator.order();
+
+                    /* If this operator is lower than all others we found so far, then this operator is the new lowest. */
+                    if (thisOrder < order) {
+                        order = thisOrder;
+                        operatorIndex = i;
+                        operator = currentOperator;
+                    }
+
+                    /* we reached the lowest order possible, we can stop. We won't find anything that's lower. */
+                    if (order == lowest)
+                        break;
+                }
             }
 
-            return ParseResult.notMine();
+            /* If no operator was found, we are done here. */
+            if (operatorIndex == -1)
+                return ParseResult.notMine();
+
+            int endLeft = operatorIndex - 1;
+            int startRight = operatorIndex + 1;
+
+            if (endLeft - startIndex < 0)
+                return ParseResult.error("Left operand is empty!");
+
+            if (endIndex - startRight < 0)
+                return ParseResult.error("Right operand is empty!");
+
+            ParseResult leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
+
+            if (leftEquation.getParseType() != ParseType.OK)
+                return leftEquation;
+
+            ParseResult rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
+
+            if (rightEquation.getParseType() != ParseType.OK)
+                return rightEquation;
+
+            return ParseResult.ok(new Operation(leftEquation.getNullableEquation(), rightEquation.getNullableEquation(), operator));
 
         } catch (ParseException e) {
             throw e;
@@ -140,97 +198,12 @@ public final class OperationParser implements EquationParser {
         }
     }
 
-    private static ParseResult tryParse(
-            List<Token> tokenizedEquation,
-            int startIndex,
-            int endIndex,
-            ParsingOptions options,
-            Map<Character, Operator> relevantOperators,
-            CheckFunction checkFunction) {
-
-        for (int i = endIndex; i >= startIndex; i--) {
-
-            Token token = tokenizedEquation.get(i);
-
-            /*
-             * Since we are reading from right to left, depth will be negative when
-             * we encounter ). If this happens we jump to the ( one to save calculation time.
-             * If ( is not found, we have a parenthesis mismatch.
-             *
-             * Furthermore, if we ever encounter a ( it will also not have an opening one,
-             * also meaning a parenthesis mismatch, because we should have jumped over it
-             * once we encountered the closing one.
-             *
-             * Instead of checking for ParenthesisToken, Token pair is checked, as it ensures
-             * this parser can handle custom TokenPairs also.
-             */
-            if (token instanceof TokenPair tokenPair) {
-
-                TokenPair opening = tokenPair.getOpening();
-
-                if (opening == null)
-                    return ParseResult.error("Token pair mismatch! Could not find opening!");
-
-                i = opening.getIndex();
-                continue;
-            }
-
-            if (token instanceof OperatorToken operatorToken) {
-
-                if (!checkFunction.check(operatorToken.operator()))
-                    continue;
-
-                int endLeft = i - 1;
-                int startRight = i + 1;
-
-                if (endLeft - startIndex < 0)
-                    return ParseResult.error("Left operand is empty!");
-
-                if (endIndex - startRight < 0)
-                    return ParseResult.error("Right operand is empty!");
-
-                ParseResult leftEquation = EquationParser.parseEquation(tokenizedEquation, startIndex, endLeft, options);
-
-                if (leftEquation.getParseType() != ParseType.OK)
-                    return leftEquation;
-
-                ParseResult rightEquation = EquationParser.parseEquation(tokenizedEquation, startRight, endIndex, options);
-
-                if (rightEquation.getParseType() != ParseType.OK)
-                    return rightEquation;
-
-                Operator parsedOperator = OperatorParser.parse(relevantOperators, operatorToken.operator()).orElseThrow();
-
-                return ParseResult.ok(new Operation(leftEquation.getNullableEquation(), rightEquation.getNullableEquation(), parsedOperator));
-            }
-        }
-
-        return ParseResult.notMine();
-    }
-
     /**
      * This method figures out the symbols of all operators to be recognized by this parser.
      *
      * @return Set of characters for operator symbols.
      */
     public Set<Character> getOperatorCharacters() {
-
-        return operatorsMap.values().stream()
-                .map(OperatorInformation::operators)
-                .map(Map::values)
-                .flatMap(Collection::stream)
-                .map(Operator::pattern)
-                .collect(Collectors.toSet());
-    }
-
-    private interface CheckFunction {
-
-        boolean check(char c);
-
-    }
-
-    private record OperatorInformation(
-            Map<Character, Operator> operators
-    ) {
+        return new HashSet<>(characterToOperatorMap.keySet());
     }
 }
