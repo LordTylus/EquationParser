@@ -20,8 +20,8 @@ sourceSets {
 
 dependencies {
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
 
     testImplementation 'org.mockito:mockito-core:5.18.0'
     testImplementation 'org.assertj:assertj-core:3.27.3'
